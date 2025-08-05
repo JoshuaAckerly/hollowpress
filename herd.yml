@@ -1,0 +1,5 @@
+integrations:
+  forge:
+    hollowpress.graveyardjokes.com:
+      site-id: 2807112
+      server-id: 901820
