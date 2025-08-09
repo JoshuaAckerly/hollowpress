@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Footer: React.FC = () => (
-    <footer style={{ padding: '1rem', textAlign: 'center', background: '#222', color: '#fff' }}>
+    <footer className="py-4 text-center bg-[var(--background)] fixed bottom-0 left-0 w-full">
         <p>&copy; {new Date().getFullYear()} Hollow Press. All rights reserved.</p>
     </footer>
 );

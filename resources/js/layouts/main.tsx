@@ -4,7 +4,7 @@ import Header from "@/components/header";
 
 const Main = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div>
       <Header />
       <main className="flex-grow">{children}</main>
       <Footer />
