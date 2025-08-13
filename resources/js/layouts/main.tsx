@@ -6,7 +6,7 @@ const Main = ({ children }: { children: React.ReactNode }) => {
   return (
     <div>
       <Header />
-      <main className="flex-grow">{children}</main>
+      <main className="flex-grow text-white">{children}</main>
       <Footer />
     </div>
   );
