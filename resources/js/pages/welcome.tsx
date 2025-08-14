@@ -46,10 +46,10 @@ const Welcome: React.FC = () => {
             {/* About section with mapped items */}
             <section className="bg-[var(--foreground)] py-8">
                 <div className="container mx-auto">
-                    <h2 className="mb-4 text-center text-4xl font-bold text-white">About Hollow Press</h2>
-                    <p className="mb-8 text-center text-lg text-white">
-                        Hollow Press is a creative studio dedicated to exploring the intersection of art and technology.
-                    </p>
+                    <div className="flex justify-between">
+                        <h4 className="mb-4 text-2xl font-bold text-white left-0">Featured Artist</h4>
+                        <h4 className="mb-4 text-2xl font-bold text-white right-0 underline">View All</h4>
+                    </div>
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                         {products.map((product) => (
                             <div key={product.id} className="rounded bg-[var(--background)] p-4">
