@@ -59,63 +59,54 @@ const Welcome: React.FC = () => {
         <Main>
             {/* Hero section with background image */}
             <section
-                className="relative z-0 bg-[var(--background)] bg-cover bg-center"
-                style={{
-                    backgroundImage: `url(${cdn}/images/HollowPressLandingPageImage.webp)`,
-                }}
+                className="relative z-0 bg-cover bg-center"
+                style={{ backgroundImage: `url(${cdn}/images/HollowPressLandingPageImage.webp)` }}
             >
-                <div className="flex flex-col items-center bg-black/50 py-24">
-                    <h2 className="rounded bg-[var(--primary-foreground)] p-2 text-5xl text-white">Hollow Press</h2>
-                    <h3 className="mt-4 rounded bg-[var(--primary-foreground)] p-2 text-3xl text-white">Faith in Shadows</h3>
-                    <button className="mt-6 rounded bg-[var(--background)] p-2 text-3xl text-white">Meet Our Artist</button>
+                <div className="bg-black/40">
+                    <div className="container py-28 text-center">
+                        <div className="card mx-auto max-w-3xl bg-black/60">
+                            <h2 className="text-5xl font-extrabold text-white">Hollow Press</h2>
+                            <h3 className="mt-3 text-2xl text-white/90">Faith in Shadows</h3>
+                            <div className="mt-6">
+                                <a className="btn btn-primary" href="#about">Meet Our Artist</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
             {/* About section with mapped items */}
-            <section className="bg-[var(--foreground)] py-8">
-                <div className="container mx-auto">
-                    <div className="flex justify-between">
-                        <h4 className="mb-4 text-2xl font-bold text-white left-0">Featured Artist</h4>
-                        <h4 className="mb-4 text-2xl font-bold text-white right-0 underline">View All</h4>
+            <section id="about" className="py-12">
+                <div className="container">
+                    <div className="flex items-center justify-between mb-6">
+                        <h4 className="heading">Featured Artist</h4>
+                        <a className="muted underline" href="#">View All</a>
                     </div>
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                         {products.map((product) => (
-                            <div key={product.id} className="md:w-sm p-4 text-center">
-                                <img src={product.img} alt={product.name} className="h-auto w-full md:w-sm rounded" />
-                                <h4 className="text-xl font-bold text-white">{product.name}</h4>
-                                <p className="text-lg text-white underline">{product.description}</p>
+                            <div key={product.id} className="card text-center">
+                                <img src={product.img} alt={product.name} className="h-48 w-full object-cover rounded" />
+                                <h4 className="mt-4 text-xl font-bold">{product.name}</h4>
+                                <p className="mt-2 muted">{product.description}</p>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            <section className="bg-[var(--foreground)] py-8">
-                <div className="container mx-auto">
-                    <h4 className="mb-4 text-2xl font-bold text-white">Latest Blogs</h4>
+            <section id="blogs" className="py-12">
+                <div className="container">
+                    <h4 className="heading">Latest Blogs</h4>
 
-                    <div className="flex flex-col md:flex-row gap-4">
-                        {/* Blog list */}
-                        <div className="grid grid-cols-1 gap-4 w-full">
-                            {blogs.map((blog) => (
-                                <div key={blog.id} className=" p-4">
-                                    <img src={blog.img} alt={blog.title} className="h-auto w-full md:w-sm" />
-                                    <h4 className="text-xl font-bold text-white">{blog.title}</h4>
-                                    <p className="text-lg text-white underline">{blog.content}</p>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Single blog image */}
-                        <div className="w-full right-0 p-4 text-center">
-                            <img
-                                src={`${cdn}/images/EnigmaticDeep-SeaCreatureBioluminescentFantasyFishwithGlowingEyeandPearl-likeSkin copy.webp`}
-                                alt="Blog Image 1"
-                                className="h-auto w-full rounded"
-                            />
-                            <h4 className="text-xl font-bold text-white">Blog Image 1</h4>
-                            <p className="text-lg text-white underline">Description for Blog Image 1</p>
-                        </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+                        {blogs.map((blog) => (
+                            <div key={blog.id} className="card">
+                                <img src={blog.img} alt={blog.title} className="h-40 w-full object-cover rounded" />
+                                <h4 className="mt-3 text-lg font-semibold">{blog.title}</h4>
+                                <p className="mt-2 muted">{blog.content}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>

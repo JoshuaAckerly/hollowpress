@@ -4,9 +4,9 @@ import Header from "@/components/header";
 
 const Main = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div>
+    <div className="min-h-screen flex flex-col bg-[var(--background)] text-[var(--foreground)]">
       <Header />
-      <main className="flex-grow text-white">{children}</main>
+      <main className="flex-grow">{children}</main>
       <Footer />
     </div>
   );

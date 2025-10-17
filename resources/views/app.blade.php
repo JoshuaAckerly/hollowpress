@@ -19,16 +19,7 @@
             })();
         </script>
 
-        {{-- Inline style to set the HTML background color based on our theme in app.css --}}
-        <style>
-            html {
-                background-color: oklch(1 0 0);
-            }
-
-            html.dark {
-                background-color: oklch(0.145 0 0);
-            }
-        </style>
+        {{-- Background styling is handled in `resources/css/app.css` now --}}
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
