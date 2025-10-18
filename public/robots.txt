@@ -1,2 +1,10 @@
 User-agent: *
 Disallow:
+
+# Disallow developer/admin/settings routes
+Disallow: /admin
+Disallow: /settings
+Disallow: /login
+Disallow: /register
+
+Sitemap: https://hollowpress.graveyardjokes.com/sitemap.xml
