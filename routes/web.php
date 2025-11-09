@@ -4,8 +4,23 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('welcome');
+    $posts = \App\Models\Post::latest()->take(3)->get();
+    $artists = \App\Models\Artist::with(['albums', 'events'])->take(3)->get();
+    return Inertia::render('welcome', [
+        'posts' => $posts,
+        'artists' => $artists
+    ]);
 })->name('home');
+
+Route::resource('posts', \App\Http\Controllers\PostController::class);
+Route::resource('artists', \App\Http\Controllers\ArtistController::class)->only(['index', 'show']);
+
+Route::get('/sponsored', function () {
+    $sponsoredArtist = \App\Models\Artist::with(['albums', 'events'])->first();
+    return Inertia::render('Sponsored', [
+        'artist' => $sponsoredArtist
+    ]);
+})->name('sponsored');
 
 Route::redirect('/login', '/', 301);
 Route::redirect('/register', '/', 301);

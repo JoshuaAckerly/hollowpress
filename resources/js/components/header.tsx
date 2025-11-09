@@ -9,9 +9,8 @@ const Header: React.FC = () => {
                 <nav aria-label="Main navigation">
                     <ul className="flex space-x-6 text-sm">
                         <li><a className="hover:underline" href="/">Home</a></li>
-                        <li><a className="hover:underline" href="/#about">About</a></li>
-                        <li><a className="hover:underline" href="/#contact">Sponsored Artist</a></li>
-                        <li><a className="hover:underline" href="/#blogs">Blogs</a></li>
+                        <li><a className="hover:underline" href="/sponsored">Sponsored Artist</a></li>
+                        <li><a className="hover:underline" href="/posts">Blogs</a></li>
                     </ul>
                 </nav>
             </div>
