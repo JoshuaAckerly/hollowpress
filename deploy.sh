@@ -3,7 +3,7 @@
 cd /home/forge/your-domain.com
 
 # Pull latest changes
-git pull origin main
+git pull https://github.com/JoshuaAckerly/hollowpress.git main
 
 # Install/update composer dependencies
 composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
