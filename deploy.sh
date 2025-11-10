@@ -12,16 +12,19 @@ composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 npm ci
 npm run build
 
-# Run database migrations
-php artisan migrate --force
-
-# Seed database if needed (only on first deploy)
-# php artisan db:seed --force
+# Run database migrations (use migrate:fresh for clean slate)
+php artisan migrate:fresh --seed --force
 
 # Clear and cache config
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
+
+# Clear all caches first
+php artisan cache:clear
+php artisan view:clear
+php artisan config:clear
+php artisan route:clear
 
 # Restart queue workers
 php artisan queue:restart
