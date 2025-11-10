@@ -12,8 +12,15 @@ composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 npm ci
 npm run build
 
-# Drop all tables and recreate
-php artisan migrate:reset --force
+# Manually drop tables to ensure clean state
+php artisan tinker --execute="
+use Illuminate\Support\Facades\DB;
+DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+DB::statement('DROP TABLE IF EXISTS albums, events, artists, posts, cache, jobs, users, migrations, password_reset_tokens, sessions;');
+DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+"
+
+# Run fresh migrations and seed
 php artisan migrate --force
 php artisan db:seed --force
 
