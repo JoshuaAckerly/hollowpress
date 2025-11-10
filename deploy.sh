@@ -12,12 +12,9 @@ composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 npm ci
 npm run build
 
-# Drop database and recreate
-mysql -u$DB_USERNAME -p$DB_PASSWORD -e "DROP DATABASE IF EXISTS $DB_DATABASE; CREATE DATABASE $DB_DATABASE;"
-
-# Run fresh migrations and seed
-php artisan migrate --force
-php artisan db:seed --force
+# Database setup handled manually
+# Run: php artisan migrate --force
+# Run: php artisan db:seed --force
 
 # Clear and cache config
 php artisan config:cache
