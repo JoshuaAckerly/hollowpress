@@ -13,7 +13,7 @@ npm ci
 npm run build
 
 # Reset database properly
-php artisan db:reset --seed
+php artisan db:reset --seed --no-interaction
 
 # Clear and cache config
 php artisan config:cache
