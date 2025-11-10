@@ -47,6 +47,11 @@ A modern Laravel + React starter kit built with Inertia.js, TypeScript, and Tail
 
 This runs Laravel server, queue worker, and Vite dev server concurrently.
 
+5. **Seed the database**
+   ```bash
+   php artisan db:seed
+   ```
+
 ## Development Commands
 
 - `composer run dev` - Start all development servers
@@ -73,13 +78,36 @@ This runs Laravel server, queue worker, and Vite dev server concurrently.
 ## Features
 
 - ⚡ Hot module replacement with Vite
-- 🎨 Tailwind CSS with custom components
+- 🎨 Tailwind CSS with dark theme design
 - 🔧 TypeScript support
-- 📱 Responsive design with Radix UI
+- 📱 Responsive design with modern UI
 - 🚀 Server-side rendering ready
-- 🧪 Testing setup with PHPUnit
+- 🧪 Comprehensive testing suite
 - 📝 Code formatting with Prettier
 - 🔍 ESLint configuration
+- 📚 Complete blog system with CRUD operations
+- 🎭 Artist profiles with albums and events
+- 🌙 Dark theme implementation
+- 🚀 Laravel Forge deployment ready
+
+## Deployment
+
+The application is ready for deployment on Laravel Forge. See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.
+
+### Quick Deploy to Forge:
+1. Create site with repository: `https://github.com/JoshuaAckerly/hollowpress.git`
+2. Set environment variables from `.env.example`
+3. Deploy and run: `php artisan db:seed --class=ProductionSeeder`
+
+## Current Status
+
+✅ **Completed Features:**
+- Blog system with create, read, update, delete
+- Artist profiles with albums and events
+- Dark theme UI design
+- Comprehensive test suite
+- Production deployment configuration
+- Database seeders with sample content
 
 ## License
 
