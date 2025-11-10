@@ -12,8 +12,8 @@ composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 npm ci
 npm run build
 
-# Run database migrations (use migrate:fresh for clean slate)
-php artisan migrate:fresh --seed --force
+# Reset database properly
+php artisan db:reset --seed
 
 # Clear and cache config
 php artisan config:cache
