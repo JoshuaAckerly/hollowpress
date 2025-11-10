@@ -12,22 +12,8 @@ composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 npm ci
 npm run build
 
-# Manually drop tables in correct order
-php artisan tinker --execute="
-use Illuminate\Support\Facades\DB;
-DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-DB::statement('DROP TABLE IF EXISTS events;');
-DB::statement('DROP TABLE IF EXISTS albums;');
-DB::statement('DROP TABLE IF EXISTS artists;');
-DB::statement('DROP TABLE IF EXISTS posts;');
-DB::statement('DROP TABLE IF EXISTS cache;');
-DB::statement('DROP TABLE IF EXISTS jobs;');
-DB::statement('DROP TABLE IF EXISTS users;');
-DB::statement('DROP TABLE IF EXISTS migrations;');
-DB::statement('DROP TABLE IF EXISTS password_reset_tokens;');
-DB::statement('DROP TABLE IF EXISTS sessions;');
-DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-"
+# Drop database and recreate
+mysql -u$DB_USERNAME -p$DB_PASSWORD -e "DROP DATABASE IF EXISTS $DB_DATABASE; CREATE DATABASE $DB_DATABASE;"
 
 # Run fresh migrations and seed
 php artisan migrate --force
