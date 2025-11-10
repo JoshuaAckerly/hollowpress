@@ -12,11 +12,20 @@ composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 npm ci
 npm run build
 
-# Manually drop tables to ensure clean state
+# Manually drop tables in correct order
 php artisan tinker --execute="
 use Illuminate\Support\Facades\DB;
 DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-DB::statement('DROP TABLE IF EXISTS albums, events, artists, posts, cache, jobs, users, migrations, password_reset_tokens, sessions;');
+DB::statement('DROP TABLE IF EXISTS events;');
+DB::statement('DROP TABLE IF EXISTS albums;');
+DB::statement('DROP TABLE IF EXISTS artists;');
+DB::statement('DROP TABLE IF EXISTS posts;');
+DB::statement('DROP TABLE IF EXISTS cache;');
+DB::statement('DROP TABLE IF EXISTS jobs;');
+DB::statement('DROP TABLE IF EXISTS users;');
+DB::statement('DROP TABLE IF EXISTS migrations;');
+DB::statement('DROP TABLE IF EXISTS password_reset_tokens;');
+DB::statement('DROP TABLE IF EXISTS sessions;');
 DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 "
 
