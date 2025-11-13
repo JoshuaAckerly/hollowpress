@@ -12,9 +12,9 @@ composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 npm ci
 npm run build
 
-# Database setup handled manually
-# Run: php artisan migrate --force
-# Run: php artisan db:seed --force
+# Wipe and rebuild database with seeding
+echo "🗄️ Wiping and rebuilding database..."
+php artisan migrate:fresh --force --seed
 
 # Clear and cache config
 php artisan config:cache
