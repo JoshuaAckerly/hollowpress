@@ -13,7 +13,7 @@ declare -A PROJECTS=(
 )
 
 declare -A PORTS=(
-    ["hollowpress"]="13714"
+    ["hollowpress"]="13720"
     ["project2"]="13715"
     ["project3"]="13716"
     ["project4"]="13717"

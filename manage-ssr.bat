@@ -11,7 +11,7 @@ set "PROJECT_project3=C:\path\to\project3"
 set "PROJECT_project4=C:\path\to\project4"
 set "PROJECT_project5=C:\path\to\project5"
 
-set "PORT_hollowpress=13714"
+set "PORT_hollowpress=13720"
 set "PORT_project2=13715"
 set "PORT_project3=13716"
 set "PORT_project4=13717"
@@ -160,7 +160,7 @@ goto :eof
 echo Usage: %0 [start^|stop^|restart^|status] [project_name^|all]
 echo.
 echo Available projects:
-echo   - hollowpress (port 13714)
+echo   - hollowpress (port 13720)
 echo   - project2 (port 13715)
 echo   - project3 (port 13716)
 echo   - project4 (port 13717)
