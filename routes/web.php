@@ -22,6 +22,16 @@ Route::get('/sponsored', function () {
     ]);
 })->name('sponsored');
 
+Route::get('/about', function () {
+    return Inertia::render('About');
+})->name('about');
+
+Route::get('/contact', [\App\Http\Controllers\ContactController::class, 'index'])->name('contact');
+Route::post('/contact', [\App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');
+
+Route::get('/case-studies', [\App\Http\Controllers\CaseStudyController::class, 'index'])->name('case-studies.index');
+Route::get('/case-studies/{slug}', [\App\Http\Controllers\CaseStudyController::class, 'show'])->name('case-studies.show');
+
 Route::redirect('/login', '/', 301);
 Route::redirect('/register', '/', 301);
 Route::redirect('/forgot-password', '/', 301);
