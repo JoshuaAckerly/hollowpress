@@ -7,9 +7,10 @@
 - [ ] File upload functionality
 - [ ] Search functionality
 - [ ] Pagination components
-- [ ] Dark mode toggle
+- [ ] Dark mode toggle (site-wide)
 - [ ] Email notifications
-- [ ] API endpoints
+- [x] Demo post creation (no auth required)
+- [x] Basic API endpoints (documented)
 
 ## Portfolio Enhancements
 ### Essential Pages
@@ -74,16 +75,16 @@
 - [ ] Performance optimization
 
 ## Documentation
-- [ ] API documentation
+- [x] API documentation
 - [ ] Component documentation
 - [ ] Deployment guide
 - [ ] Contributing guidelines
 - [ ] Code style guide
 
 ## Security
-- [ ] CSRF protection setup
-- [ ] Rate limiting
-- [ ] Input sanitization
+- [x] CSRF protection setup
+- [x] Rate limiting (demo posts: 5 per hour per IP)
+- [x] Input sanitization (via Laravel validation)
 - [ ] Security headers
 - [ ] Vulnerability scanning
 
@@ -108,3 +109,8 @@
 - [x] Configure Laravel Forge deployment
 - [x] Create production database setup
 - [x] Add deployment documentation
+- [x] Demo post system with sandbox database
+- [x] Rate limiting for demo posts (5 per hour per IP)
+- [x] Auto-cleanup command for demo posts (48 hour expiry)
+- [x] Demo post UI with visual indicators
+- [x] Scheduled task for daily cleanup

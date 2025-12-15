@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\DemoPost;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -10,8 +11,21 @@ class PostController extends Controller
 {
     public function index()
     {
+        // Merge real posts and demo posts
+        $posts = Post::latest()->get()->map(function ($post) {
+            $post->is_demo = false;
+            return $post;
+        });
+
+        $demoPosts = DemoPost::latest()->get()->map(function ($post) {
+            $post->is_demo = true;
+            return $post;
+        });
+
+        $allPosts = $posts->merge($demoPosts)->sortByDesc('created_at')->values();
+
         return Inertia::render('Posts/Index', [
-            'posts' => Post::latest()->get()
+            'posts' => $allPosts
         ]);
     }
 

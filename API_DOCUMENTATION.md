@@ -12,6 +12,7 @@ HollowPress is a content management platform for music artists, posts, albums, a
 
 - [Authentication](#authentication)
 - [Posts API](#posts-api)
+- [Demo Posts](#demo-posts)
 - [Artists API](#artists-api)
 - [Settings API](#settings-api)
 - [Data Models](#data-models)
@@ -268,6 +269,87 @@ Authorization: Bearer {token}
 ```
 
 **Response:** `200 OK` - Returns Inertia page for post editing form
+
+---
+
+## Demo Posts
+
+Demo posts allow visitors to test post creation without authentication. Perfect for showcasing the platform's features to potential clients.
+
+### Features
+
+- **No Authentication Required** - Create posts without logging in
+- **Rate Limited** - 5 demo posts per IP address per hour
+- **Auto-Cleanup** - Demo posts automatically deleted after 48 hours
+- **Visual Indicator** - Demo posts display with a "DEMO" badge
+- **Sandbox Environment** - Keeps demo data separate from production posts
+
+### Create Demo Post
+
+```http
+POST /demo/posts
+Content-Type: application/json
+
+{
+  "title": "string (required, max:255)",
+  "content": "string (required, min:10)",
+  "author_name": "string (required, max:255)",
+  "author_type": "string (required, enum: 'artist' | 'user')"
+}
+```
+
+**Response:** `302 Redirect` to `/posts` with success message
+```json
+{
+  "message": "Demo post created! It will be removed in 48 hours."
+}
+```
+
+**Rate Limit Error:** `302 Redirect` with error message
+```json
+{
+  "error": "Too many demo posts created. Please try again in X minutes."
+}
+```
+
+### Create Demo Post Form
+
+```http
+GET /demo/posts/create
+```
+
+**Response:** `200 OK` - Returns Inertia page for demo post creation form with information banner
+
+### Delete Demo Post
+
+```http
+DELETE /demo/posts/{id}
+```
+
+**Response:** `302 Redirect` to `/posts` with success message
+```json
+{
+  "message": "Demo post deleted successfully!"
+}
+```
+
+### Cleanup Command
+
+Demo posts older than 48 hours are automatically cleaned up via scheduled task:
+
+```bash
+php artisan demo:cleanup-posts
+```
+
+This command runs daily via Laravel's task scheduler.
+
+### Implementation Details
+
+- Demo posts stored in separate `demo_posts` table
+- IP address tracked for rate limiting
+- Posts merged with regular posts in frontend display
+- `is_demo` flag added to identify demo posts in UI
+- Separate controller handles demo post logic
 
 ---
 

@@ -15,6 +15,7 @@ interface Post {
   author_name: string;
   author_type: 'artist' | 'user';
   created_at: string;
+  is_demo?: boolean;
 }
 
 interface Props {
@@ -24,9 +25,10 @@ interface Props {
 export default function Index({ posts }: Props) {
   const { flash } = usePage<PageProps>().props;
   
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: number, isDemo: boolean = false) => {
     if (confirm('Are you sure you want to delete this post?')) {
-      router.delete(`/posts/${id}`);
+      const url = isDemo ? `/demo/posts/${id}` : `/posts/${id}`;
+      router.delete(url);
     }
   };
 
@@ -46,11 +48,11 @@ export default function Index({ posts }: Props) {
                 Discover inspiring tales from artists and creators around the world
               </p>
               <Link
-                href="/posts/create"
-                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-gray-700 to-slate-700 text-white font-semibold rounded-xl hover:from-gray-600 hover:to-slate-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                href="/demo/posts/create"
+                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-xl hover:from-blue-500 hover:to-cyan-500 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
               >
                 <span className="mr-2">✨</span>
-                Share Your Story
+                Create a Post
               </Link>
             </div>
           </div>
@@ -82,6 +84,14 @@ export default function Index({ posts }: Props) {
               <article key={post.id} className="group bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-700 hover:border-gray-600">
                 {/* Post Header */}
                 <div className="relative p-6 pb-4">
+                  {/* Demo Badge */}
+                  {post.is_demo && (
+                    <div className="absolute top-4 right-4 px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded-full shadow-lg flex items-center gap-1">
+                      <span>🎯</span>
+                      DEMO
+                    </div>
+                  )}
+                  
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <h2 className="text-xl font-bold text-gray-200 mb-2 group-hover:text-gray-100 transition-colors duration-300 line-clamp-2">
@@ -143,7 +153,7 @@ export default function Index({ posts }: Props) {
                         </svg>
                       </Link>
                       <button
-                        onClick={() => handleDelete(post.id)}
+                        onClick={() => handleDelete(post.id, post.is_demo)}
                         className="p-2 text-gray-500 hover:text-red-400 hover:bg-red-900/30 rounded-lg transition-all duration-200"
                         title="Delete post"
                       >
@@ -169,10 +179,10 @@ export default function Index({ posts }: Props) {
               <h3 className="text-xl font-semibold text-gray-200 mb-2">No stories yet</h3>
               <p className="text-gray-400 mb-6">Be the first to share your creative journey</p>
               <Link
-                href="/posts/create"
-                className="inline-flex items-center px-6 py-3 bg-gray-700 text-white font-medium rounded-lg hover:bg-gray-600 transition-colors"
+                href="/demo/posts/create"
+                className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
               >
-                Create First Story
+                Create First Post
               </Link>
             </div>
           )}

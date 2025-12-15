@@ -12,7 +12,15 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::resource('posts', \App\Http\Controllers\PostController::class);
+// Posts routes (view only - no auth required)
+Route::get('/posts', [\App\Http\Controllers\PostController::class, 'index'])->name('posts.index');
+Route::get('/posts/{post}', [\App\Http\Controllers\PostController::class, 'show'])->name('posts.show');
+
+// Demo posts routes (create/edit/delete without auth)
+Route::get('/demo/posts/create', [\App\Http\Controllers\DemoPostController::class, 'create'])->name('demo.posts.create');
+Route::post('/demo/posts', [\App\Http\Controllers\DemoPostController::class, 'store'])->name('demo.posts.store');
+Route::delete('/demo/posts/{demoPost}', [\App\Http\Controllers\DemoPostController::class, 'destroy'])->name('demo.posts.destroy');
+
 Route::resource('artists', \App\Http\Controllers\ArtistController::class)->only(['index', 'show']);
 
 Route::get('/sponsored', function () {
