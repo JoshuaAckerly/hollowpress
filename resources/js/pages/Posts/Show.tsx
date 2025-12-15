@@ -15,9 +15,26 @@ interface Props {
 }
 
 export default function Show({ post }: Props) {
+  const excerpt = post.content.substring(0, 155) + (post.content.length > 155 ? '...' : '');
+  
   return (
     <MainLayout>
-      <Head title={post.title} />
+      <Head title={post.title}>
+        <meta name="description" content={excerpt} />
+        <meta name="keywords" content={`${post.author_type} blog, creative writing, ${post.author_name}`} />
+        <meta name="author" content={post.author_name} />
+        
+        <meta property="og:title" content={post.title} />
+        <meta property="og:description" content={excerpt} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={`https://hollowpress.graveyardjokes.com/posts/${post.id}`} />
+        <meta property="article:author" content={post.author_name} />
+        <meta property="article:published_time" content={post.created_at} />
+        
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={post.title} />
+        <meta name="twitter:description" content={excerpt} />
+      </Head>
       
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
         {/* Navigation */}

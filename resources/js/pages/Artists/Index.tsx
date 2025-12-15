@@ -31,7 +31,19 @@ interface Props {
 export default function Index({ artists }: Props) {
   return (
     <MainLayout>
-      <Head title="Artists" />
+      <Head title="Featured Artists">
+        <meta name="description" content="Discover talented independent artists and musicians on Hollow Press. Explore their music, albums, and upcoming events." />
+        <meta name="keywords" content="independent artists, musicians, music artists, artist showcase, indie music" />
+        
+        <meta property="og:title" content="Featured Artists - Hollow Press" />
+        <meta property="og:description" content="Discover talented independent artists and musicians" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://hollowpress.graveyardjokes.com/artists" />
+        
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Featured Artists" />
+        <meta name="twitter:description" content="Discover talented independent artists" />
+      </Head>
       
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900">
         <div className="container py-16">

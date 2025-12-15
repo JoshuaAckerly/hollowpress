@@ -28,7 +28,19 @@ export default function Contact() {
 
   return (
     <MainLayout>
-      <Head title="Contact Us" />
+      <Head title="Contact Us">
+        <meta name="description" content="Get in touch with Hollow Press. Have questions, ideas, or want to collaborate? We'd love to hear from you. Reach out to our artist community team." />
+        <meta name="keywords" content="contact hollow press, artist collaboration, get in touch, support" />
+        
+        <meta property="og:title" content="Contact Hollow Press" />
+        <meta property="og:description" content="Get in touch with Hollow Press. We'd love to hear from you." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://hollowpress.graveyardjokes.com/contact" />
+        
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Contact Hollow Press" />
+        <meta name="twitter:description" content="Get in touch - we'd love to hear from you" />
+      </Head>
       
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
         {/* Hero Section */}

@@ -26,7 +26,19 @@ export default function Index({ caseStudies }: Props) {
 
   return (
     <MainLayout>
-      <Head title="Case Studies" />
+      <Head title="Case Studies">
+        <meta name="description" content="Explore our portfolio of successful projects and creative collaborations. View detailed case studies showcasing our work with artists and creative professionals." />
+        <meta name="keywords" content="case studies, portfolio, creative projects, artist collaborations, project showcase" />
+        
+        <meta property="og:title" content="Case Studies - Hollow Press" />
+        <meta property="og:description" content="Explore our portfolio of successful projects and creative collaborations" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://hollowpress.graveyardjokes.com/case-studies" />
+        
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Case Studies" />
+        <meta name="twitter:description" content="Explore our portfolio of successful projects" />
+      </Head>
       
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
         {/* Hero Section */}

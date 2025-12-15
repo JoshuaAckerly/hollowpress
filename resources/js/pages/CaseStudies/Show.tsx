@@ -25,9 +25,26 @@ interface Props {
 }
 
 export default function Show({ caseStudy }: Props) {
+  const description = caseStudy.description || `${caseStudy.title} - A case study by Hollow Press`;
+  const image = caseStudy.featured_image || '';
+  
   return (
     <MainLayout>
-      <Head title={caseStudy.title} />
+      <Head title={caseStudy.title}>
+        <meta name="description" content={description} />
+        <meta name="keywords" content={`case study, ${caseStudy.project_type || 'project'}, ${caseStudy.client_name || ''}`} />
+        
+        <meta property="og:title" content={caseStudy.title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={`https://hollowpress.graveyardjokes.com/case-studies/${caseStudy.slug}`} />
+        {image && <meta property="og:image" content={image} />}
+        
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={caseStudy.title} />
+        <meta name="twitter:description" content={description} />
+        {image && <meta name="twitter:image" content={image} />}
+      </Head>
       
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
         {/* Navigation */}

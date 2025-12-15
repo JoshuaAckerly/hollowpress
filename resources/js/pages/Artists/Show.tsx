@@ -33,9 +33,23 @@ interface Props {
 }
 
 export default function Show({ artist }: Props) {
+  const description = `${artist.bio} - ${artist.genre} artist. Explore albums and upcoming events.`;
+  
   return (
     <MainLayout>
-      <Head title={artist.name} />
+      <Head title={artist.name}>
+        <meta name="description" content={description} />
+        <meta name="keywords" content={`${artist.name}, ${artist.genre}, artist, musician, albums, events`} />
+        
+        <meta property="og:title" content={artist.name} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="profile" />
+        <meta property="og:url" content={`https://hollowpress.graveyardjokes.com/artists/${artist.id}`} />
+        
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={artist.name} />
+        <meta name="twitter:description" content={description} />
+      </Head>
       
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900">
         <div className="container py-16">

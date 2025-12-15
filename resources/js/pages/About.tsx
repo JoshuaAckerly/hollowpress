@@ -6,7 +6,19 @@ const cdn = import.meta.env.VITE_ASSET_URL;
 export default function About() {
   return (
     <MainLayout>
-      <Head title="About Hollow Press" />
+      <Head title="About Hollow Press">
+        <meta name="description" content="Learn about Hollow Press - a platform where unconventional art thrives. We're a sanctuary for artists who find beauty in the shadows and celebrate authentic creative expression." />
+        <meta name="keywords" content="about hollow press, artist platform, creative community, unconventional art, artist sanctuary" />
+        
+        <meta property="og:title" content="About Hollow Press" />
+        <meta property="og:description" content="A sanctuary for artists who find beauty in the unconventional. Learn about our mission to celebrate authentic creative expression." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://hollowpress.graveyardjokes.com/about" />
+        
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="About Hollow Press" />
+        <meta name="twitter:description" content="A sanctuary for artists who find beauty in the unconventional" />
+      </Head>
       
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
         {/* Hero Section */}

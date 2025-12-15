@@ -23,6 +23,16 @@
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
+        {{-- Default SEO Meta Tags --}}
+        <meta name="description" content="Hollow Press - A sanctuary for artists who find beauty in the unconventional. Discover unique stories, music, and creative expressions from independent artists.">
+        <meta name="keywords" content="artist blog, creative platform, independent artists, music blog, art showcase, creative writing">
+        <meta name="author" content="Hollow Press">
+        
+        {{-- Open Graph Defaults --}}
+        <meta property="og:site_name" content="Hollow Press">
+        <meta property="og:locale" content="en_US">
+        
+        {{-- Favicon --}}
         <link rel="icon" href="/favicon.ico" sizes="any">
 
         <link rel="preconnect" href="https://fonts.bunny.net">

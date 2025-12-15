@@ -34,7 +34,19 @@ export default function Index({ posts }: Props) {
 
   return (
     <MainLayout>
-      <Head title="Creative Stories" />
+      <Head title="Creative Stories">
+        <meta name="description" content="Explore creative stories and blog posts from independent artists and creators. Discover unique perspectives, artistic journeys, and unconventional narratives." />
+        <meta name="keywords" content="creative stories, artist blogs, creative writing, artist posts, independent creators" />
+        
+        <meta property="og:title" content="Creative Stories - Hollow Press" />
+        <meta property="og:description" content="Explore creative stories from independent artists and creators" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://hollowpress.graveyardjokes.com/posts" />
+        
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Creative Stories" />
+        <meta name="twitter:description" content="Explore creative stories from independent artists" />
+      </Head>
       
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
         {/* Hero Section */}

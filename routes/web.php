@@ -40,6 +40,9 @@ Route::post('/contact', [\App\Http\Controllers\ContactController::class, 'store'
 Route::get('/case-studies', [\App\Http\Controllers\CaseStudyController::class, 'index'])->name('case-studies.index');
 Route::get('/case-studies/{slug}', [\App\Http\Controllers\CaseStudyController::class, 'show'])->name('case-studies.show');
 
+// Dynamic XML Sitemap
+Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+
 Route::redirect('/login', '/', 301);
 Route::redirect('/register', '/', 301);
 Route::redirect('/forgot-password', '/', 301);

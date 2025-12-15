@@ -33,9 +33,23 @@ interface Props {
 }
 
 export default function Sponsored({ artist }: Props) {
+  const description = artist ? `Discover ${artist.name} - ${artist.bio}` : 'Featured sponsored artist on Hollow Press';
+  
   return (
     <MainLayout>
-      <Head title="Sponsored Artist" />
+      <Head title={artist ? `${artist.name} - Sponsored Artist` : 'Sponsored Artist'}>
+        <meta name="description" content={description} />
+        <meta name="keywords" content="sponsored artist, featured artist, music artist, indie artist" />
+        
+        <meta property="og:title" content={artist ? `${artist.name} - Sponsored Artist` : 'Sponsored Artist'} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="profile" />
+        <meta property="og:url" content="https://hollowpress.graveyardjokes.com/sponsored" />
+        
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={artist ? artist.name : 'Sponsored Artist'} />
+        <meta name="twitter:description" content={description} />
+      </Head>
       
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900">
         <div className="container py-16">

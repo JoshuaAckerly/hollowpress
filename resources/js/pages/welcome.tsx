@@ -1,4 +1,5 @@
 import Main from '@/layouts/main';
+import { Head } from '@inertiajs/react';
 import React from 'react';
 const cdn = import.meta.env.VITE_ASSET_URL;
 
@@ -99,6 +100,24 @@ const Welcome: React.FC<Props> = ({ posts = [], artists = [] }) => {
     
     return (
         <Main>
+            <Head>
+                <title>Hollow Press - Artist Blogging & Creative Showcase Platform</title>
+                <meta name="description" content="A sanctuary for artists who find beauty in the unconventional. Discover unique stories, music, art, and creative expressions from independent artists and creators." />
+                <meta name="keywords" content="artist blog, creative platform, independent artists, music blog, art showcase, creative writing, artist community" />
+                
+                {/* Open Graph */}
+                <meta property="og:title" content="Hollow Press - Artist Blogging & Creative Showcase Platform" />
+                <meta property="og:description" content="A sanctuary for artists who find beauty in the unconventional. Discover unique stories, music, art, and creative expressions." />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://hollowpress.graveyardjokes.com" />
+                <meta property="og:image" content={`${cdn}/images/HollowPressLandingPageImage.webp`} />
+                
+                {/* Twitter Card */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content="Hollow Press - Artist Blogging Platform" />
+                <meta name="twitter:description" content="A sanctuary for artists who find beauty in the unconventional" />
+                <meta name="twitter:image" content={`${cdn}/images/HollowPressLandingPageImage.webp`} />
+            </Head>
             {/* Hero section with background image */}
             <section
                 className="relative z-0 bg-cover bg-center"
