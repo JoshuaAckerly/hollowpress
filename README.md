@@ -14,10 +14,10 @@ A modern Laravel + React starter kit built with Inertia.js, TypeScript, and Tail
 ## Quick Start
 
 ### Prerequisites
-- PHP 8.2 or higher
+- PHP 8.2 or higher (with extensions: xml, dom, mysql)
 - Composer
 - Node.js 18+ and npm
-- SQLite (default) or MySQL/PostgreSQL
+- MySQL 8.0 or higher
 
 ### Installation
 
@@ -36,6 +36,26 @@ A modern Laravel + React starter kit built with Inertia.js, TypeScript, and Tail
    ```
 
 3. **Database setup**
+   
+   Create MySQL database and user:
+   ```bash
+   sudo mysql -e "CREATE DATABASE IF NOT EXISTS hollowpress;"
+   sudo mysql -e "CREATE USER IF NOT EXISTS 'hollowpress'@'localhost' IDENTIFIED BY 'password';"
+   sudo mysql -e "GRANT ALL PRIVILEGES ON hollowpress.* TO 'hollowpress'@'localhost';"
+   sudo mysql -e "FLUSH PRIVILEGES;"
+   ```
+   
+   Update your `.env` file with database credentials:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=hollowpress
+   DB_USERNAME=hollowpress
+   DB_PASSWORD=password
+   ```
+   
+   Run migrations:
    ```bash
    php artisan migrate
    ```
@@ -108,6 +128,48 @@ The application is ready for deployment on Laravel Forge. See [DEPLOYMENT.md](DE
 - Comprehensive test suite
 - Production deployment configuration
 - Database seeders with sample content
+
+## Troubleshooting
+
+### Common Issues
+
+**Composer not found**
+```bash
+sudo apt install composer
+```
+
+**PHP extensions missing**
+```bash
+sudo apt install php8.3-xml php8.3-mysql
+```
+
+**MySQL not installed**
+```bash
+sudo apt install mysql-server php8.3-mysql
+```
+
+**Server stopped working**
+- The development server requires `composer run dev` or `composer run dev:ssr` to be running
+- Exit code 130 means you pressed Ctrl+C - restart the server
+- Without the server running, the site won't load (Laravel apps need a running server)
+
+**SSR errors (red lines in terminal)**
+- Check that all components handle null/undefined data properly
+- Rebuild SSR after fixing: `npm run build:ssr`
+- SSR server runs on port 13720
+
+**Port already in use**
+```bash
+# Check what's using port 8000
+sudo lsof -i :8000
+# Kill the process if needed
+sudo kill -9 <PID>
+```
+
+**Database connection errors**
+- Ensure MySQL is running: `sudo systemctl status mysql`
+- Start MySQL: `sudo systemctl start mysql`
+- Verify `.env` database credentials match your MySQL setup
 
 ## License
 

@@ -29,7 +29,7 @@ interface Event {
 }
 
 interface Props {
-  artist: Artist;
+  artist: Artist | null;
 }
 
 export default function Sponsored({ artist }: Props) {
@@ -60,8 +60,24 @@ export default function Sponsored({ artist }: Props) {
             </div>
           </div>
 
-          {/* Artist Header */}
-          <div className="bg-gray-800 rounded-2xl p-8 mb-8 border border-gray-700 relative overflow-hidden">
+          {!artist ? (
+            <div className="bg-gray-800 rounded-2xl p-12 border border-gray-700 text-center">
+              <div className="text-6xl mb-4">🎵</div>
+              <h2 className="text-3xl font-bold text-white mb-4">No Sponsored Artist Yet</h2>
+              <p className="text-gray-300 text-lg mb-6">
+                We're currently looking for amazing artists to sponsor. Check back soon!
+              </p>
+              <Link
+                href="/artists"
+                className="inline-block px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-black font-semibold rounded-lg hover:from-yellow-600 hover:to-orange-600 transition-all duration-300"
+              >
+                Explore All Artists
+              </Link>
+            </div>
+          ) : (
+            <>
+              {/* Artist Header */}
+              <div className="bg-gray-800 rounded-2xl p-8 mb-8 border border-gray-700 relative overflow-hidden">
             {/* Decorative elements */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-yellow-500/20 to-transparent rounded-bl-full"></div>
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-orange-500/20 to-transparent rounded-tr-full"></div>
@@ -182,6 +198,8 @@ export default function Sponsored({ artist }: Props) {
               </div>
             </div>
           </div>
+            </>
+          )}
         </div>
       </div>
     </MainLayout>
