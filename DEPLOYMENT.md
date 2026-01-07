@@ -1,83 +1,88 @@
 # HollowPress Deployment Guide
 
-## Laravel Forge Setup
+## 🧪 Test Server Deployment
 
-### 1. Server Requirements
-- PHP 8.2+
+For deploying to the polyrepo test server, see the main [TEST_DEPLOYMENT.md](../TEST_DEPLOYMENT.md) guide.
+
+### Quick Deploy to Test Server
+
+```bash
+# On test server
+cd /var/www/hollowpress
+./deploy-test.sh
+```
+
+### Server Requirements
+- PHP 8.3+
 - MySQL 8.0+
-- Node.js 18+
-- Composer
+- Node.js 22+
+- Nginx
+- Redis
+- Supervisor
 
-### 2. Environment Variables
+### Environment Variables
+
 Copy `.env.example` to `.env` and update:
 
 ```bash
 APP_NAME=HollowPress
-APP_ENV=production
-APP_DEBUG=false
-APP_URL=https://your-domain.com
+APP_ENV=staging
+APP_DEBUG=true
+APP_URL=https://test-hollowpress.yourdomain.com
 
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=forge
-DB_USERNAME=forge
-DB_PASSWORD=your_db_password
+DB_DATABASE=hollowpress
+DB_USERNAME=hollowpress
+DB_PASSWORD=test123password
 
-MAIL_FROM_ADDRESS=noreply@your-domain.com
+INERTIA_SSR_ENABLED=true
+INERTIA_SSR_URL=http://127.0.0.1:13720
+INERTIA_SSR_PORT=13720
+
+MAIL_FROM_ADDRESS=noreply@test-hollowpress.yourdomain.com
 ```
 
-### 3. Forge Configuration
+## 📝 Manual Deployment Steps
 
-#### Site Setup
-1. Create new site in Forge
-2. Set repository: `https://github.com/JoshuaAckerly/hollowpress.git`
-3. Set branch: `main`
-4. Set web directory: `/public`
+1. **Push code to GitHub**
+   ```bash
+   git add .
+   git commit -m "Update"
+   git push origin main
+   ```
 
-#### Database Setup
-1. Create MySQL database in Forge
-2. Update `.env` with database credentials
+2. **SSH to test server and deploy**
+   ```bash
+   ssh user@YOUR_VM_IP
+   cd /var/www/hollowpress
+   ./deploy-test.sh
+   ```
 
-#### Deployment Script
-Use the provided `deploy.sh` or add to Forge:
+## 🔧 Troubleshooting
 
+### Check Logs
 ```bash
-cd /home/forge/your-domain.com
-git pull origin main
-composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
-npm ci && npm run build
-php artisan migrate --force
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-php artisan queue:restart
-sudo service php8.2-fpm reload
+tail -f storage/logs/laravel.log
+tail -f storage/logs/ssr.log
 ```
 
-### 4. Initial Database Setup
-
-After first deployment, run:
+### Verify SSR Server
 ```bash
-php artisan db:seed --class=ProductionSeeder
+lsof -i :13720  # Should show node process
 ```
 
-### 5. SSL Certificate
-Enable SSL certificate in Forge for HTTPS.
+### Clear Caches
+```bash
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan cache:clear
+```
 
-### 6. Queue Workers (Optional)
-If using queues, set up queue workers in Forge.
-
-## Manual Deployment Steps
-
-1. Push code to repository
-2. Deploy via Forge dashboard
-3. Verify site is working
-4. Check logs for any errors
-
-## Troubleshooting
-
-- Check Forge logs for deployment errors
-- Verify file permissions
-- Ensure all environment variables are set
-- Check database connection
+### Fix Permissions
+```bash
+sudo chown -R www-data:www-data storage bootstrap/cache
+sudo chmod -R 775 storage bootstrap/cache
+```
