@@ -96,7 +96,6 @@ const defaultPosts: Post[] = [
 
 const Welcome: React.FC<Props> = ({ posts = [], artists = [] }) => {
     const displayPosts = posts.length > 0 ? posts.slice(0, 3) : defaultPosts;
-    const displayArtists = artists.length > 0 ? artists.slice(0, 3) : products;
     
     return (
         <Main>

@@ -1,8 +1,6 @@
 import { Head } from '@inertiajs/react';
 import MainLayout from '@/layouts/main';
 
-const cdn = import.meta.env.VITE_ASSET_URL;
-
 export default function About() {
   return (
     <MainLayout>

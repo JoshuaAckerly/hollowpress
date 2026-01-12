@@ -92,7 +92,7 @@ export default function Index({ posts }: Props) {
 
           {/* Posts Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts.map((post, index) => (
+            {posts.map((post, _index) => (
               <article key={post.id} className="group bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-700 hover:border-gray-600">
                 {/* Post Header */}
                 <div className="relative p-6 pb-4">
