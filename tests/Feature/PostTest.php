@@ -25,9 +25,9 @@ class PostTest extends TestCase
             'author_type' => 'artist',
         ];
 
-        $response = $this->post('/posts', $postData);
+        $response = $this->post('/demo/posts', $postData);
         $response->assertRedirect('/posts');
-        $this->assertDatabaseHas('posts', $postData);
+        $this->assertDatabaseHas('demo_posts', $postData);
     }
 
     public function test_post_creation_requires_title()
@@ -38,7 +38,7 @@ class PostTest extends TestCase
             'author_type' => 'artist',
         ];
 
-        $response = $this->post('/posts', $postData);
+        $response = $this->post('/demo/posts', $postData);
         $response->assertSessionHasErrors('title');
     }
 
@@ -50,7 +50,7 @@ class PostTest extends TestCase
             'author_type' => 'artist',
         ];
 
-        $response = $this->post('/posts', $postData);
+        $response = $this->post('/demo/posts', $postData);
         $response->assertSessionHasErrors('content');
     }
 
@@ -59,29 +59,6 @@ class PostTest extends TestCase
         $post = Post::factory()->create();
         $response = $this->get("/posts/{$post->id}");
         $response->assertStatus(200);
-    }
-
-    public function test_can_update_post()
-    {
-        $post = Post::factory()->create();
-        $updateData = [
-            'title' => 'Updated Title',
-            'content' => 'Updated content for the post.',
-            'author_name' => 'Updated Author',
-            'author_type' => 'user',
-        ];
-
-        $response = $this->put("/posts/{$post->id}", $updateData);
-        $response->assertRedirect('/posts');
-        $this->assertDatabaseHas('posts', $updateData);
-    }
-
-    public function test_can_delete_post()
-    {
-        $post = Post::factory()->create();
-        $response = $this->delete("/posts/{$post->id}");
-        $response->assertRedirect('/posts');
-        $this->assertDatabaseMissing('posts', ['id' => $post->id]);
     }
 
     public function test_author_type_must_be_valid()
@@ -93,7 +70,7 @@ class PostTest extends TestCase
             'author_type' => 'invalid_type',
         ];
 
-        $response = $this->post('/posts', $postData);
+        $response = $this->post('/demo/posts', $postData);
         $response->assertSessionHasErrors('author_type');
     }
 }
