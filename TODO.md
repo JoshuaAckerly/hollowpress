@@ -52,6 +52,7 @@
 - [ ] Component documentation
 - [ ] Contributing guidelines
 - [ ] Code style guide
+- [x] Update documentation to reflect Linux backend setup
 
 ## Security
 - [ ] Security headers
