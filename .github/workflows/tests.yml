@@ -57,3 +57,8 @@ jobs:
 
       - name: Tests
         run: ./vendor/bin/phpunit
+        env:
+          DB_CONNECTION: mysql
+          DB_DATABASE: hollowpress_test
+          DB_USERNAME: root
+          DB_PASSWORD: ""
