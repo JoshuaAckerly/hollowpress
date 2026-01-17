@@ -108,13 +108,13 @@ This runs Laravel server, queue worker, and Vite dev server concurrently.
 - 📚 Complete blog system with CRUD operations
 - 🎭 Artist profiles with albums and events
 - 🌙 Dark theme implementation
-- 🚀 Laravel Forge deployment ready
+- 🚀 Hypervisor deployment ready
 
 ## Deployment
 
-The application is ready for deployment on Laravel Forge. See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.
+The application is ready for deployment using Hypervisor. See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.
 
-### Quick Deploy to Forge:
+### Quick Deploy:
 1. Create site with repository: `https://github.com/JoshuaAckerly/hollowpress.git`
 2. Set environment variables from `.env.example`
 3. Deploy and run: `php artisan db:seed --class=ProductionSeeder`
