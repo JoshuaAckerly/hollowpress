@@ -1,5 +1,7 @@
+
 import React from 'react';
 import ApplicationLogo from '@/components/ApplicationLogo';
+import { getLoginUrl } from '../env';
 
 const Header: React.FC = () => {
     return (
@@ -14,7 +16,7 @@ const Header: React.FC = () => {
                         <li><a className="hover:underline" href="/sponsored">Sponsored Artist</a></li>
                         <li><a className="hover:underline" href="/posts">Blogs</a></li>
                         <li><a className="hover:underline" href="/contact">Contact</a></li>
-                        <li><a className="hover:underline" href="http://localhost:8007/login">Login</a></li>
+                        <li><a className="hover:underline" href={getLoginUrl('hollowpress')}>Login</a></li>
                     </ul>
                 </nav>
             </div>

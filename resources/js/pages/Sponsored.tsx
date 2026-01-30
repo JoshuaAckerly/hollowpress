@@ -1,5 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 import MainLayout from '@/layouts/main';
+import { getProjectUrl } from '../env';
 
 interface Artist {
   id: number;
@@ -44,7 +45,7 @@ export default function Sponsored({ artist }: Props) {
         <meta property="og:title" content={artist ? `${artist.name} - Sponsored Artist` : 'Sponsored Artist'} />
         <meta property="og:description" content={description} />
         <meta property="og:type" content="profile" />
-        <meta property="og:url" content="https://hollowpress.graveyardjokes.com/sponsored" />
+        <meta property="og:url" content={getProjectUrl('hollowpress') + '/sponsored'} />
         
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content={artist ? artist.name : 'Sponsored Artist'} />

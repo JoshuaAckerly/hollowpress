@@ -1,6 +1,7 @@
 import Main from '@/layouts/main';
 import { Head } from '@inertiajs/react';
 import React from 'react';
+import { getProjectUrl } from '../env';
 const cdn = import.meta.env.VITE_ASSET_URL;
 
 interface Product {
@@ -8,6 +9,7 @@ interface Product {
     id: number;
     name: string;
     description: string;
+    link?: string;
 }
 
 interface Post {
@@ -50,6 +52,7 @@ const products: Product[] = [
         id: 1,
         name: 'Lorem ipsum',
         description: 'A deep dive into the world of velvet textures.',
+        link: getProjectUrl('hollowpress'),
     },
     {
         img: `${cdn}/images/
@@ -108,7 +111,7 @@ const Welcome: React.FC<Props> = ({ posts = [], artists = [] }) => {
                 <meta property="og:title" content="Hollow Press - Artist Blogging & Creative Showcase Platform" />
                 <meta property="og:description" content="A sanctuary for artists who find beauty in the unconventional. Discover unique stories, music, art, and creative expressions." />
                 <meta property="og:type" content="website" />
-                <meta property="og:url" content="https://hollowpress.graveyardjokes.com" />
+                <meta property="og:url" content={getProjectUrl('hollowpress')} />
                 <meta property="og:image" content={`${cdn}/images/HollowPressLandingPageImage.webp`} />
                 
                 {/* Twitter Card */}

@@ -1,5 +1,6 @@
 import { Head } from '@inertiajs/react';
 import MainLayout from '@/layouts/main';
+import { getProjectUrl } from '../env';
 
 export default function About() {
   return (
@@ -7,12 +8,11 @@ export default function About() {
       <Head title="About Hollow Press">
         <meta name="description" content="Learn about Hollow Press - a platform where unconventional art thrives. We're a sanctuary for artists who find beauty in the shadows and celebrate authentic creative expression." />
         <meta name="keywords" content="about hollow press, artist platform, creative community, unconventional art, artist sanctuary" />
-        
+        <link rel="canonical" href={getProjectUrl('hollowpress') + '/about'} />
         <meta property="og:title" content="About Hollow Press" />
         <meta property="og:description" content="A sanctuary for artists who find beauty in the unconventional. Learn about our mission to celebrate authentic creative expression." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://hollowpress.graveyardjokes.com/about" />
-        
+        <meta property="og:url" content={getProjectUrl('hollowpress') + '/about'} />
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="About Hollow Press" />
         <meta name="twitter:description" content="A sanctuary for artists who find beauty in the unconventional" />
