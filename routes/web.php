@@ -1,13 +1,3 @@
-// Redirect /login and related auth routes to auth-system login page
-Route::get('/login', function () {
-    return redirect()->away('http://domain.test/login');
-});
-Route::get('/register', function () {
-    return redirect()->away('http://domain.test/register');
-});
-Route::get('/forgot-password', function () {
-    return redirect()->away('http://domain.test/forgot-password');
-});
 <?php
 
 use Illuminate\Support\Facades\Route;
