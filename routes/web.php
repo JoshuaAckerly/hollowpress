@@ -15,6 +15,9 @@ Route::get('/', function () {
 // Posts routes (view only - no auth required)
 Route::get('/posts', [\App\Http\Controllers\PostController::class, 'index'])->name('posts.index');
 Route::get('/posts/{post}', [\App\Http\Controllers\PostController::class, 'show'])->name('posts.show');
+Route::get('/posts/{post}/edit', function ($post) {
+    return redirect()->route('posts.show', ['post' => $post], 301);
+});
 
 // Demo posts routes (create/edit/delete without auth)
 Route::get('/demo/posts/create', [\App\Http\Controllers\DemoPostController::class, 'create'])->name('demo.posts.create');
