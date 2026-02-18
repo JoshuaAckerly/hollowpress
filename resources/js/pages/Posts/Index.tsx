@@ -1,5 +1,6 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import MainLayout from '@/layouts/main';
+import React, { useState } from 'react';
 
 interface PageProps {
   flash: {
@@ -19,11 +20,27 @@ interface Post {
 }
 
 interface Props {
-  posts: Post[];
+  posts: {
+    data: Post[];
+    links: {
+      url: string | null;
+      label: string;
+      active: boolean;
+    }[];
+  };
+  filters?: {
+    q?: string;
+  };
 }
 
-export default function Index({ posts }: Props) {
+export default function Index({ posts, filters }: Props) {
   const { flash } = usePage<PageProps>().props;
+  const [query, setQuery] = useState(filters?.q ?? '');
+
+  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    router.get('/posts', { q: query || undefined }, { preserveState: true, preserveScroll: true, replace: true });
+  };
   
   const handleDelete = (id: number, isDemo: boolean = false) => {
     if (confirm('Are you sure you want to delete this post?')) {
@@ -71,6 +88,25 @@ export default function Index({ posts }: Props) {
         </div>
 
         <div className="max-w-7xl mx-auto px-6 py-12">
+          <div className="mb-8 card">
+            <form onSubmit={handleSearch} className="flex flex-col gap-3 sm:flex-row">
+              <input
+                type="search"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search posts by title, author, or content"
+                className="flex-1 rounded-lg border border-gray-600 bg-gray-900 px-4 py-3 text-gray-100 placeholder:text-gray-500"
+              />
+              <button type="submit" className="btn btn-primary">Search</button>
+              {filters?.q && (
+                <Link href="/posts" className="btn btn-outline">Clear</Link>
+              )}
+            </form>
+            {filters?.q && (
+              <p className="muted mt-3">Results are ranked by relevance, then recency.</p>
+            )}
+          </div>
+
           {/* Flash Messages */}
           {flash?.success && (
             <div className="mb-8 p-4 bg-green-900/50 border-l-4 border-green-500 text-green-300 rounded-r-lg shadow-sm">
@@ -92,7 +128,7 @@ export default function Index({ posts }: Props) {
 
           {/* Posts Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts.map((post, _index) => (
+            {posts.data.map((post, _index) => (
               <article key={post.id} className="group bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-700 hover:border-gray-600">
                 {/* Post Header */}
                 <div className="relative p-6 pb-4">
@@ -181,7 +217,7 @@ export default function Index({ posts }: Props) {
           </div>
 
           {/* Empty State */}
-          {posts.length === 0 && (
+          {posts.data.length === 0 && (
             <div className="text-center py-16">
               <div className="w-24 h-24 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-6">
                 <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -196,6 +232,38 @@ export default function Index({ posts }: Props) {
               >
                 Create First Post
               </Link>
+            </div>
+          )}
+
+          {posts.links.length > 3 && (
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-2">
+              {posts.links.map((link, index) => {
+                const key = `${link.label}-${index}`;
+
+                if (!link.url) {
+                  return (
+                    <span
+                      key={key}
+                      className="rounded-md border border-gray-700 px-3 py-2 text-sm text-gray-500"
+                      dangerouslySetInnerHTML={{ __html: link.label }}
+                    />
+                  );
+                }
+
+                return (
+                  <Link
+                    key={key}
+                    href={link.url}
+                    preserveScroll
+                    className={`rounded-md border px-3 py-2 text-sm transition ${
+                      link.active
+                        ? 'border-gray-300 bg-gray-100 text-gray-900'
+                        : 'border-gray-700 text-gray-300 hover:border-gray-500 hover:text-gray-100'
+                    }`}
+                    dangerouslySetInnerHTML={{ __html: link.label }}
+                  />
+                );
+              })}
             </div>
           )}
         </div>
