@@ -147,8 +147,9 @@ const Dashboard: React.FC<Props> = ({ stats, recentPosts, recentCaseStudies }) =
 
                     <div className="card">
                         <h2 className="heading">Quick actions</h2>
-                        <div className="mt-4 flex flex-wrap gap-3">
+                        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                             <a className="btn btn-primary" href="/demo/posts/create">Create demo post</a>
+                            <a className="btn btn-outline" href="/posts">View all posts</a>
                             <a className="btn btn-outline" href="/artists">Browse artists</a>
                             <a className="btn btn-outline" href="/case-studies">Review case studies</a>
                         </div>
