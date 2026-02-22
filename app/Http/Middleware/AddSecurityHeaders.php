@@ -26,7 +26,7 @@ class AddSecurityHeaders
 
         $response->headers->set(
             'Content-Security-Policy',
-            "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https: http: ws: wss:; frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self';"
+            "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.bunny.net; img-src 'self' data: https:; font-src 'self' data: https: https://fonts.bunny.net; connect-src 'self' https: http: ws: wss:; frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self';"
         );
 
         return $response;
