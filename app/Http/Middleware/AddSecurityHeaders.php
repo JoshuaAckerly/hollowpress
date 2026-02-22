@@ -24,10 +24,29 @@ class AddSecurityHeaders
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
         }
 
-        $response->headers->set(
-            'Content-Security-Policy',
-            "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.bunny.net; img-src 'self' data: https:; font-src 'self' data: https: https://fonts.bunny.net; connect-src 'self' https: http: ws: wss:; frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self';"
-        );
+        $csp = "default-src 'self'";
+        if (app()->environment('local')) {
+            $csp .= " http:";
+        }
+        $csp .= "; script-src 'self' 'unsafe-inline'";
+        if (app()->environment('local')) {
+            $csp .= " http:";
+        }
+        $csp .= "; style-src 'self' 'unsafe-inline'";
+        if (app()->environment('local')) {
+            $csp .= " http:";
+        }
+        $csp .= " https://fonts.bunny.net; img-src 'self' data: https:";
+        if (app()->environment('local')) {
+            $csp .= " http:";
+        }
+        $csp .= "; font-src 'self' data: https:";
+        if (app()->environment('local')) {
+            $csp .= " http:";
+        }
+        $csp .= " https://fonts.bunny.net; connect-src 'self' https: http: ws: wss:; frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self';";
+
+        $response->headers->set('Content-Security-Policy', $csp);
 
         return $response;
     }
