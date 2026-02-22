@@ -3,6 +3,7 @@ import MainLayout from '@/layouts/main';
 import React, { useState } from 'react';
 
 interface PageProps {
+  [key: string]: unknown;
   flash: {
     success?: string;
     error?: string;

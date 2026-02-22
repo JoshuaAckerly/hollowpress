@@ -2,6 +2,7 @@ import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import MainLayout from '@/layouts/main';
 
 interface PageProps {
+  [key: string]: unknown;
   flash: {
     success?: string;
     error?: string;

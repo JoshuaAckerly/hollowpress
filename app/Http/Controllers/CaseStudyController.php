@@ -32,17 +32,18 @@ class CaseStudyController extends Controller
             if ($search !== '') {
                 $normalizedSearch = mb_strtolower($search);
                 $likeSearch = "%{$normalizedSearch}%";
+                $prefixSearch = "{$normalizedSearch}%";
 
-                $caseStudyQuery->where(function ($query) use ($search) {
-                    $query->where('title', 'like', "%{$search}%")
-                        ->orWhere('description', 'like', "%{$search}%")
-                        ->orWhere('client_name', 'like', "%{$search}%")
-                        ->orWhere('project_type', 'like', "%{$search}%");
+                $caseStudyQuery->where(function ($query) use ($likeSearch) {
+                    $query->whereRaw('LOWER(title) like ?', [$likeSearch])
+                        ->orWhereRaw('LOWER(description) like ?', [$likeSearch])
+                        ->orWhereRaw('LOWER(client_name) like ?', [$likeSearch])
+                        ->orWhereRaw('LOWER(project_type) like ?', [$likeSearch]);
                 })->selectRaw(
                     "(\n                        CASE WHEN LOWER(title) = ? THEN 400 ELSE 0 END +\n                        CASE WHEN LOWER(title) LIKE ? THEN 250 ELSE 0 END +\n                        CASE WHEN LOWER(title) LIKE ? THEN 180 ELSE 0 END +\n                        CASE WHEN LOWER(client_name) = ? THEN 140 ELSE 0 END +\n                        CASE WHEN LOWER(client_name) LIKE ? THEN 90 ELSE 0 END +\n                        CASE WHEN LOWER(project_type) LIKE ? THEN 80 ELSE 0 END +\n                        CASE WHEN LOWER(description) LIKE ? THEN 60 ELSE 0 END\n                    ) as search_score",
                     [
                         $normalizedSearch,
-                        "{$normalizedSearch}%",
+                        $prefixSearch,
                         $likeSearch,
                         $normalizedSearch,
                         $likeSearch,
