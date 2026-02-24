@@ -119,6 +119,27 @@ The application is ready for deployment using Hypervisor. See [DEPLOYMENT.md](DE
 2. Set environment variables from `.env.example`
 3. Deploy and run: `php artisan db:seed --class=ProductionSeeder`
 
+## 📚 Documentation
+
+Additional documentation is available in the `docs/` directory:
+
+- [Search Relevance Matrix](docs/SEARCH_RELEVANCE_MATRIX.md) - Test queries and relevance validation
+- [API Documentation Outline](docs/API_DOCUMENTATION_OUTLINE.md)
+- [OG Images Guide](docs/OG-IMAGES.md)
+- [Production Promotion Checklist](docs/PRODUCTION-PROMOTION-CHECKLIST.md)
+- [SEO Deployment Checklist](docs/SEO-DEPLOYMENT-CHECKLIST.md)
+- [SEO Quick Reference](docs/SEO-QUICK_REFERENCE.md)
+
+### Search Monitoring
+
+Run the search relevance monitor to validate search functionality:
+
+```bash
+./search-monitor.sh
+```
+
+This script tests search relevance, performance, and edge cases against the defined test matrix.
+
 ## Current Status
 
 ✅ **Completed Features:**
