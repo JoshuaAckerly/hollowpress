@@ -1,6 +1,6 @@
 import { Head, Link, router } from '@inertiajs/react';
 import MainLayout from '@/layouts/main';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface CaseStudy {
   id: number;
@@ -28,18 +28,104 @@ interface Props {
   };
   filters?: {
     q?: string;
+    project_type?: string;
+    client_name?: string;
+    technology?: string;
+    date_from?: string;
+    date_to?: string;
+    sort?: string;
   };
+  filterOptions?: {
+    project_types: string[];
+    clients: string[];
+    technologies: string[];
+  };
+  searchQuery?: string;
 }
 
-export default function Index({ caseStudies, filters }: Props) {
+export default function Index({ caseStudies, filters, filterOptions, searchQuery }: Props) {
   const [query, setQuery] = useState(filters?.q ?? '');
+  const [showFilters, setShowFilters] = useState(false);
+  const [localFilters, setLocalFilters] = useState({
+    project_type: filters?.project_type ?? '',
+    client_name: filters?.client_name ?? '',
+    technology: filters?.technology ?? '',
+    date_from: filters?.date_from ?? '',
+    date_to: filters?.date_to ?? '',
+    sort: filters?.sort ?? 'relevance',
+  });
+
   const featuredStudies = caseStudies.data.filter(cs => cs.is_featured);
   const regularStudies = caseStudies.data.filter(cs => !cs.is_featured);
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    router.get('/case-studies', { q: query || undefined }, { preserveState: true, preserveScroll: true, replace: true });
+    applyFilters({ ...localFilters, q: query });
   };
+
+  const handleFilterChange = (key: string, value: string) => {
+    const newFilters = { ...localFilters, [key]: value };
+    setLocalFilters(newFilters);
+    applyFilters({ ...newFilters, q: query });
+  };
+
+  const applyFilters = (filterData: any) => {
+    const params: any = {};
+    if (filterData.q?.trim()) params.q = filterData.q.trim();
+    if (filterData.project_type) params.project_type = filterData.project_type;
+    if (filterData.client_name) params.client_name = filterData.client_name;
+    if (filterData.technology) params.technology = filterData.technology;
+    if (filterData.date_from) params.date_from = filterData.date_from;
+    if (filterData.date_to) params.date_to = filterData.date_to;
+    if (filterData.sort && filterData.sort !== 'relevance') params.sort = filterData.sort;
+
+    router.get('/case-studies', params, { preserveState: true, preserveScroll: true, replace: true });
+  };
+
+  const clearFilters = () => {
+    setQuery('');
+    setLocalFilters({
+      project_type: '',
+      client_name: '',
+      technology: '',
+      date_from: '',
+      date_to: '',
+      sort: 'relevance',
+    });
+    router.get('/case-studies', {}, { preserveState: true, preserveScroll: true, replace: true });
+  };
+
+  const highlightSearchTerms = (text: string, searchTerm: string) => {
+    if (!searchTerm || !text) return text;
+
+    const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    const parts = text.split(regex);
+
+    return parts.map((part, index) =>
+      regex.test(part) ? <mark key={index} className="bg-yellow-200 text-gray-900 px-1 rounded">{part}</mark> : part
+    );
+  };
+
+  const getSearchSnippet = (text: string, searchTerm: string, maxLength: number = 150) => {
+    if (!searchTerm || !text) return text;
+
+    const lowerText = text.toLowerCase();
+    const lowerSearch = searchTerm.toLowerCase();
+    const index = lowerText.indexOf(lowerSearch);
+
+    if (index === -1) return text.substring(0, maxLength) + (text.length > maxLength ? '...' : '');
+
+    const start = Math.max(0, index - 50);
+    const end = Math.min(text.length, index + searchTerm.length + 50);
+    let snippet = text.substring(start, end);
+
+    if (start > 0) snippet = '...' + snippet;
+    if (end < text.length) snippet = snippet + '...';
+
+    return snippet;
+  };
+
+  const hasActiveFilters = Object.values(localFilters).some(v => v) || query.trim();
 
   return (
     <MainLayout>
@@ -75,25 +161,189 @@ export default function Index({ caseStudies, filters }: Props) {
           </div>
         </div>
 
-        {/* Featured Case Studies */}
+        {/* Search and Filters Section */}
         <section className="py-10 bg-gradient-to-br from-gray-900 to-black">
           <div className="max-w-6xl mx-auto px-6">
             <div className="card">
-              <form onSubmit={handleSearch} className="flex flex-col gap-3 sm:flex-row">
-                <input
-                  type="search"
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Search case studies by title, client, type, or summary"
-                  className="flex-1 rounded-lg border border-gray-600 bg-gray-900 px-4 py-3 text-gray-100 placeholder:text-gray-500"
-                />
-                <button type="submit" className="btn btn-primary">Search</button>
-                {filters?.q && (
-                  <Link href="/case-studies" className="btn btn-outline">Clear</Link>
-                )}
+              {/* Search Bar */}
+              <form onSubmit={handleSearch} className="mb-6">
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <div className="flex-1 relative">
+                    <svg className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input
+                      type="search"
+                      value={query}
+                      onChange={(event) => setQuery(event.target.value)}
+                      placeholder='Search case studies... Try: "web design" OR mobile OR "e-commerce"'
+                      className="w-full rounded-lg border border-gray-600 bg-gray-900 px-12 py-3 text-gray-100 placeholder:text-gray-500"
+                    />
+                  </div>
+                  <button type="submit" className="btn btn-primary">
+                    <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    Search
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowFilters(!showFilters)}
+                    className="btn btn-outline"
+                  >
+                    <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                    </svg>
+                    Filters
+                    {showFilters ? 
+                      <svg className="h-4 w-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                      </svg> : 
+                      <svg className="h-4 w-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    }
+                  </button>
+                  {hasActiveFilters && (
+                    <button type="button" onClick={clearFilters} className="btn btn-secondary">
+                      <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                      Clear
+                    </button>
+                  )}
+                </div>
               </form>
+
+              {/* Advanced Search Help */}
+              <div className="mb-4 p-3 bg-gray-800 rounded-lg">
+                <p className="text-sm text-gray-300">
+                  <strong>Advanced Search:</strong> Use quotes for exact phrases ("web design"), OR for multiple terms (mobile OR responsive), or search across titles, descriptions, and content.
+                </p>
+              </div>
+
+              {/* Filters Panel */}
+              {showFilters && (
+                <div className="border-t border-gray-700 pt-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                    {/* Project Type Filter */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        <svg className="h-4 w-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                        </svg>
+                        Project Type
+                      </label>
+                      <select
+                        value={localFilters.project_type}
+                        onChange={(e) => handleFilterChange('project_type', e.target.value)}
+                        className="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-gray-100"
+                      >
+                        <option value="">All Types</option>
+                        {filterOptions?.project_types.map(type => (
+                          <option key={type} value={type}>{type}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Client Filter */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        <svg className="h-4 w-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        Client
+                      </label>
+                      <select
+                        value={localFilters.client_name}
+                        onChange={(e) => handleFilterChange('client_name', e.target.value)}
+                        className="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-gray-100"
+                      >
+                        <option value="">All Clients</option>
+                        {filterOptions?.clients.map(client => (
+                          <option key={client} value={client}>{client}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Technology Filter */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Technology
+                      </label>
+                      <select
+                        value={localFilters.technology}
+                        onChange={(e) => handleFilterChange('technology', e.target.value)}
+                        className="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-gray-100"
+                      >
+                        <option value="">All Technologies</option>
+                        {filterOptions?.technologies.map(tech => (
+                          <option key={tech} value={tech}>{tech}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Date Range */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        <svg className="h-4 w-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        From Date
+                      </label>
+                      <input
+                        type="date"
+                        value={localFilters.date_from}
+                        onChange={(e) => handleFilterChange('date_from', e.target.value)}
+                        className="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-gray-100"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        <svg className="h-4 w-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        To Date
+                      </label>
+                      <input
+                        type="date"
+                        value={localFilters.date_to}
+                        onChange={(e) => handleFilterChange('date_to', e.target.value)}
+                        className="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-gray-100"
+                      />
+                    </div>
+
+                    {/* Sort Options */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Sort By
+                      </label>
+                      <select
+                        value={localFilters.sort}
+                        onChange={(e) => handleFilterChange('sort', e.target.value)}
+                        className="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-gray-100"
+                      >
+                        <option value="relevance">Relevance</option>
+                        <option value="date">Date</option>
+                        <option value="title">Title</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Search Results Info */}
               {filters?.q && (
-                <p className="muted mt-3">Results are ranked by relevance, then recency.</p>
+                <div className="border-t border-gray-700 pt-4">
+                  <p className="text-gray-300">
+                    {caseStudies.data.length === 0 ? (
+                      <>No results found for "<strong>{filters.q}</strong>"</>
+                    ) : (
+                      <>Found <strong>{caseStudies.data.length}</strong> result{caseStudies.data.length !== 1 ? 's' : ''} for "<strong>{filters.q}</strong>"</>
+                    )}
+                  </p>
+                </div>
               )}
             </div>
           </div>
@@ -135,7 +385,7 @@ export default function Index({ caseStudies, filters }: Props) {
                             )}
                             
                             <p className="text-gray-300 leading-relaxed mb-6">
-                              {caseStudy.description}
+                              {searchQuery ? highlightSearchTerms(getSearchSnippet(caseStudy.description, searchQuery), searchQuery) : caseStudy.description}
                             </p>
                             
                             {caseStudy.technologies && caseStudy.technologies.length > 0 && (
@@ -207,7 +457,7 @@ export default function Index({ caseStudies, filters }: Props) {
                         )}
                         
                         <p className="text-gray-300 leading-relaxed mb-4 line-clamp-3">
-                          {caseStudy.description}
+                          {searchQuery ? highlightSearchTerms(getSearchSnippet(caseStudy.description, searchQuery), searchQuery) : caseStudy.description}
                         </p>
                         
                         {caseStudy.technologies && caseStudy.technologies.length > 0 && (
