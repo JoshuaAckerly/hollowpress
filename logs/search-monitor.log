@@ -1,0 +1,21 @@
+2026-02-26 18:32:00 - \033[0;34mStarting HollowPress Search Relevance Monitor\033[0m
+2026-02-26 18:32:00 - Base URL: http://hollowpress.graveyardjokes.local
+2026-02-26 18:32:00 - \033[0;34mTesting: Laravel Best Practices\033[0m
+2026-02-26 18:32:00 - Expected: 'Laravel Best Practices'
+2026-02-26 18:32:00 - \033[0;31m✗ No results found\033[0m
+2026-02-26 18:32:00 - \033[0;34mTesting: React Component\033[0m
+2026-02-26 18:32:00 - Expected: 'React Component Patterns'
+2026-02-26 18:32:00 - \033[0;31m✗ No results found\033[0m
+2026-02-26 18:32:00 - \033[0;34mTesting: framework\033[0m
+2026-02-26 18:32:00 - Expected: 'Laravel Best Practices'
+2026-02-26 18:32:00 - \033[0;31m✗ No results found\033[0m
+2026-02-26 18:32:00 - \033[0;34mTesting: Laravel\033[0m
+2026-02-26 18:32:00 - Expected: 'Laravel Best Practices'
+2026-02-26 18:32:00 - \033[0;31m✗ No results found\033[0m
+2026-02-26 18:32:00 - \033[0;34m=== Test Summary ===\033[0m
+2026-02-26 18:32:00 - Total tests: 4
+2026-02-26 18:32:00 - Passed: 0
+2026-02-26 18:32:00 - Failed: 4
+2026-02-26 18:32:00 - Success rate: 0%
+2026-02-26 18:32:00 - \033[0;31m✗ Overall: POOR - Search relevance needs improvement\033[0m
+2026-02-26 18:32:00 - Monitoring complete. See ./logs/search-monitor.log for details.
