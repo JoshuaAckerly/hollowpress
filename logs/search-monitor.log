@@ -19,3 +19,72 @@
 2026-02-26 18:32:00 - Success rate: 0%
 2026-02-26 18:32:00 - \033[0;31m✗ Overall: POOR - Search relevance needs improvement\033[0m
 2026-02-26 18:32:00 - Monitoring complete. See ./logs/search-monitor.log for details.
+2026-02-26 18:37:31 - \033[0;34mStarting HollowPress Search Relevance Monitor\033[0m
+2026-02-26 18:37:31 - Base URL: http://hollowpress.graveyardjokes.local
+2026-02-26 18:37:31 - \033[0;34mTesting: Laravel Best Practices\033[0m
+2026-02-26 18:37:31 - Expected: 'Laravel Best Practices'
+2026-02-26 18:37:31 - \033[0;31m✗ No results found\033[0m
+2026-02-26 18:37:31 - \033[0;34mTesting: React Component\033[0m
+2026-02-26 18:37:31 - Expected: 'React Component Patterns'
+2026-02-26 18:37:31 - \033[0;31m✗ No results found\033[0m
+2026-02-26 18:37:31 - \033[0;34mTesting: framework\033[0m
+2026-02-26 18:37:31 - Expected: 'Laravel Best Practices'
+2026-02-26 18:37:31 - \033[0;31m✗ No results found\033[0m
+2026-02-26 18:37:31 - \033[0;34mTesting: Laravel\033[0m
+2026-02-26 18:37:31 - Expected: 'Laravel Best Practices'
+2026-02-26 18:37:31 - \033[0;31m✗ No results found\033[0m
+2026-02-26 18:37:31 - \033[0;34m=== Test Summary ===\033[0m
+2026-02-26 18:37:31 - Total tests: 4
+2026-02-26 18:37:31 - Passed: 0
+2026-02-26 18:37:31 - Failed: 4
+2026-02-26 18:37:31 - Success rate: 0%
+2026-02-26 18:37:31 - \033[0;31m✗ Overall: POOR - Search relevance needs improvement\033[0m
+2026-02-26 18:37:31 - Monitoring complete. See ./logs/search-monitor.log for details.
+2026-02-26 18:38:08 - \033[0;34mStarting HollowPress Search Relevance Monitor\033[0m
+2026-02-26 18:38:08 - Base URL: http://hollowpress.graveyardjokes.local
+2026-02-26 18:38:08 - \033[0;34mTesting: Laravel Best Practices\033[0m
+2026-02-26 18:38:08 - Expected: 'Laravel Best Practices'
+2026-02-26 18:38:08 - \033[0;31m✗ No results found\033[0m
+2026-02-26 18:38:08 - \033[0;34mTesting: React Component\033[0m
+2026-02-26 18:38:08 - Expected: 'React Component Patterns'
+2026-02-26 18:38:08 - \033[0;31m✗ No results found\033[0m
+2026-02-26 18:38:08 - \033[0;34mTesting: framework\033[0m
+2026-02-26 18:38:08 - Expected: 'Laravel Best Practices'
+2026-02-26 18:38:08 - \033[0;31m✗ No results found\033[0m
+2026-02-26 18:38:08 - \033[0;34mTesting: Laravel\033[0m
+2026-02-26 18:38:08 - Expected: 'Laravel Best Practices'
+2026-02-26 18:38:08 - \033[0;31m✗ No results found\033[0m
+2026-02-26 18:38:08 - \033[0;34m=== Test Summary ===\033[0m
+2026-02-26 18:38:08 - Total tests: 4
+2026-02-26 18:38:08 - Passed: 0
+2026-02-26 18:38:08 - Failed: 4
+2026-02-26 18:38:08 - Success rate: 0%
+2026-02-26 18:38:08 - \033[0;31m✗ Overall: POOR - Search relevance needs improvement\033[0m
+2026-02-26 18:38:08 - Monitoring complete. See ./logs/search-monitor.log for details.
+2026-02-26 18:38:42 - \033[0;34mStarting HollowPress Search Relevance Monitor\033[0m
+2026-02-26 18:38:42 - Base URL: http://hollowpress.graveyardjokes.local
+2026-02-26 18:38:42 - \033[0;34mTesting: Laravel Best Practices\033[0m
+2026-02-26 18:38:42 - Expected: 'Laravel Best Practices'
+2026-02-26 18:38:42 - Results count: 1
+2026-02-26 18:38:42 - Actual top result: 'Laravel Best Practices'
+2026-02-26 18:38:42 - \033[0;32m✓ PASS - Correct result\033[0m
+2026-02-26 18:38:42 - \033[0;34mTesting: React Component\033[0m
+2026-02-26 18:38:42 - Expected: 'React Component Patterns'
+2026-02-26 18:38:42 - Results count: 1
+2026-02-26 18:38:42 - Actual top result: 'React Component Patterns'
+2026-02-26 18:38:42 - \033[0;32m✓ PASS - Correct result\033[0m
+2026-02-26 18:38:42 - \033[0;34mTesting: framework\033[0m
+2026-02-26 18:38:42 - Expected: 'Laravel Best Practices'
+2026-02-26 18:38:43 - \033[0;31m✗ No posts in results\033[0m
+2026-02-26 18:38:43 - \033[0;34mTesting: Laravel\033[0m
+2026-02-26 18:38:43 - Expected: 'Laravel Best Practices'
+2026-02-26 18:38:43 - Results count: 5
+2026-02-26 18:38:43 - Actual top result: 'Laravel Best Practices'
+2026-02-26 18:38:43 - \033[0;32m✓ PASS - Correct result\033[0m
+2026-02-26 18:38:43 - \033[0;34m=== Test Summary ===\033[0m
+2026-02-26 18:38:43 - Total tests: 4
+2026-02-26 18:38:43 - Passed: 3
+2026-02-26 18:38:43 - Failed: 1
+2026-02-26 18:38:43 - Success rate: 75%
+2026-02-26 18:38:43 - \033[0;31m✗ Overall: POOR - Search relevance needs improvement\033[0m
+2026-02-26 18:38:43 - Monitoring complete. See ./logs/search-monitor.log for details.
