@@ -31,16 +31,96 @@ interface Props {
   };
   filters?: {
     q?: string;
+    author?: string;
+    category?: string;
+    date_from?: string;
+    date_to?: string;
+  };
+  filterOptions?: {
+    categories: string[];
+    authors: string[];
   };
 }
 
-export default function Index({ posts, filters }: Props) {
+export default function Index({ posts, filters, filterOptions }: Props) {
   const { flash } = usePage<PageProps>().props;
   const [query, setQuery] = useState(filters?.q ?? '');
+  const [author, setAuthor] = useState(filters?.author ?? '');
+  const [category, setCategory] = useState(filters?.category ?? '');
+  const [dateFrom, setDateFrom] = useState(filters?.date_from ?? '');
+  const [dateTo, setDateTo] = useState(filters?.date_to ?? '');
+
+  const extractSearchTerms = (search: string): string[] => {
+    if (!search.trim()) return [];
+
+    const matches = search.match(/"[^"]+"|\S+/g) ?? [];
+
+    return matches
+      .map((term) => term.replace(/^"|"$/g, '').trim())
+      .filter((term) => term && term.toLowerCase() !== 'and' && term.toLowerCase() !== 'or');
+  };
+
+  const highlightSearchTerms = (text: string, searchTerm: string) => {
+    if (!searchTerm || !text) return text;
+
+    const terms = extractSearchTerms(searchTerm);
+    if (terms.length === 0) return text;
+
+    const escapedTerms = terms.map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    const regex = new RegExp(`(${escapedTerms.join('|')})`, 'gi');
+    const parts = text.split(regex);
+
+    return parts.map((part, index) =>
+      regex.test(part)
+        ? <mark key={index} className="bg-yellow-200 text-gray-900 px-1 rounded">{part}</mark>
+        : part
+    );
+  };
+
+  const getSearchSnippet = (text: string, searchTerm: string, maxLength: number = 140) => {
+    if (!searchTerm || !text) {
+      return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+    }
+
+    const terms = extractSearchTerms(searchTerm).map((term) => term.toLowerCase());
+    const lowerText = text.toLowerCase();
+    const firstMatch = terms
+      .map((term) => lowerText.indexOf(term))
+      .filter((index) => index >= 0)
+      .sort((a, b) => a - b)[0];
+
+    if (firstMatch === undefined) {
+      return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+    }
+
+    const start = Math.max(0, firstMatch - 45);
+    const end = Math.min(text.length, firstMatch + maxLength - 45);
+
+    let snippet = text.substring(start, end);
+    if (start > 0) snippet = `...${snippet}`;
+    if (end < text.length) snippet = `${snippet}...`;
+
+    return snippet;
+  };
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    router.get('/posts', { q: query || undefined }, { preserveState: true, preserveScroll: true, replace: true });
+    router.get('/posts', {
+      q: query || undefined,
+      author: author || undefined,
+      category: category || undefined,
+      date_from: dateFrom || undefined,
+      date_to: dateTo || undefined,
+    }, { preserveState: true, preserveScroll: true, replace: true });
+  };
+
+  const clearFilters = () => {
+    setQuery('');
+    setAuthor('');
+    setCategory('');
+    setDateFrom('');
+    setDateTo('');
+    router.get('/posts', {}, { preserveState: true, preserveScroll: true, replace: true });
   };
   
   const handleDelete = (id: number, isDemo: boolean = false) => {
@@ -95,16 +175,56 @@ export default function Index({ posts, filters }: Props) {
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search posts by title, author, or content"
+                placeholder='Search posts... Try: "neon city" OR vinyl'
                 className="flex-1 rounded-lg border border-gray-600 bg-gray-900 px-4 py-3 text-gray-100 placeholder:text-gray-500"
               />
               <button type="submit" className="btn btn-primary">Search</button>
-              {filters?.q && (
-                <Link href="/posts" className="btn btn-outline">Clear</Link>
+              {(filters?.q || filters?.author || filters?.category || filters?.date_from || filters?.date_to) && (
+                <button type="button" onClick={clearFilters} className="btn btn-outline">Clear</button>
               )}
             </form>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
+              <select
+                value={category}
+                onChange={(event) => setCategory(event.target.value)}
+                className="rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-gray-100"
+              >
+                <option value="">All Categories</option>
+                {filterOptions?.categories.map((item) => (
+                  <option key={item} value={item}>{item === 'artist' ? 'Artist' : 'Creator'}</option>
+                ))}
+              </select>
+
+              <select
+                value={author}
+                onChange={(event) => setAuthor(event.target.value)}
+                className="rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-gray-100"
+              >
+                <option value="">All Authors</option>
+                {filterOptions?.authors.map((item) => (
+                  <option key={item} value={item}>{item}</option>
+                ))}
+              </select>
+
+              <input
+                type="date"
+                value={dateFrom}
+                onChange={(event) => setDateFrom(event.target.value)}
+                className="rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-gray-100"
+              />
+
+              <input
+                type="date"
+                value={dateTo}
+                onChange={(event) => setDateTo(event.target.value)}
+                className="rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-gray-100"
+              />
+            </div>
+
+            <p className="muted mt-3">Advanced syntax: use quotes for exact phrases and `OR` for alternatives.</p>
             {filters?.q && (
-              <p className="muted mt-3">Results are ranked by relevance, then recency.</p>
+              <p className="muted mt-1">Results are ranked by relevance, then recency.</p>
             )}
           </div>
 
@@ -174,7 +294,9 @@ export default function Index({ posts, filters }: Props) {
                   </div>
                   
                   <p className="text-gray-400 leading-relaxed line-clamp-3 mb-4">
-                    {post.content.substring(0, 120)}...
+                    {filters?.q
+                      ? highlightSearchTerms(getSearchSnippet(post.content, filters.q), filters.q)
+                      : getSearchSnippet(post.content, '')}
                   </p>
                 </div>
 

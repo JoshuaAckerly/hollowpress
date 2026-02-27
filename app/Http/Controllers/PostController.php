@@ -12,10 +12,11 @@ class PostController extends Controller
     public function index(Request $request)
     {
         $search = trim((string) $request->query('q', ''));
+        $author = trim((string) $request->query('author', ''));
+        $category = trim((string) $request->query('category', ''));
+        $dateFrom = $request->query('date_from');
+        $dateTo = $request->query('date_to');
         $perPage = 9;
-        $normalizedSearch = mb_strtolower($search);
-        $likeSearch = "%{$normalizedSearch}%";
-        $prefixSearch = "{$normalizedSearch}%";
 
         $postsQuery = DB::table('posts')
             ->select('id', 'title', 'content', 'author_name', 'author_type', 'created_at')
@@ -25,38 +26,17 @@ class PostController extends Controller
             ->select('id', 'title', 'content', 'author_name', 'author_type', 'created_at')
             ->selectRaw('1 as is_demo');
 
+        $this->applyFacetFilters($postsQuery, $author, $category, $dateFrom, $dateTo);
+        $this->applyFacetFilters($demoPostsQuery, $author, $category, $dateFrom, $dateTo);
+
         if ($search !== '') {
-            $searchWhere = function ($query) use ($likeSearch) {
-                $query->whereRaw('LOWER(title) like ?', [$likeSearch])
-                    ->orWhereRaw('LOWER(content) like ?', [$likeSearch])
-                    ->orWhereRaw('LOWER(author_name) like ?', [$likeSearch]);
-            };
+            $columns = ['title', 'content', 'author_name'];
+            $this->applyAdvancedSearch($postsQuery, $search, $columns);
+            $this->applyAdvancedSearch($demoPostsQuery, $search, $columns);
 
-            $postsQuery->where($searchWhere)
-                ->selectRaw(
-                    "(\n                        CASE WHEN LOWER(title) = ? THEN 400 ELSE 0 END +\n                        CASE WHEN LOWER(title) LIKE ? THEN 250 ELSE 0 END +\n                        CASE WHEN LOWER(title) LIKE ? THEN 180 ELSE 0 END +\n                        CASE WHEN LOWER(author_name) = ? THEN 140 ELSE 0 END +\n                        CASE WHEN LOWER(author_name) LIKE ? THEN 90 ELSE 0 END +\n                        CASE WHEN LOWER(content) LIKE ? THEN 60 ELSE 0 END\n                    ) as search_score",
-                    [
-                        $normalizedSearch,
-                        $prefixSearch,
-                        $likeSearch,
-                        $normalizedSearch,
-                        $likeSearch,
-                        $likeSearch,
-                    ]
-                );
-
-            $demoPostsQuery->where($searchWhere)
-                ->selectRaw(
-                    "(\n                        CASE WHEN LOWER(title) = ? THEN 400 ELSE 0 END +\n                        CASE WHEN LOWER(title) LIKE ? THEN 250 ELSE 0 END +\n                        CASE WHEN LOWER(title) LIKE ? THEN 180 ELSE 0 END +\n                        CASE WHEN LOWER(author_name) = ? THEN 140 ELSE 0 END +\n                        CASE WHEN LOWER(author_name) LIKE ? THEN 90 ELSE 0 END +\n                        CASE WHEN LOWER(content) LIKE ? THEN 60 ELSE 0 END\n                    ) as search_score",
-                    [
-                        $normalizedSearch,
-                        $prefixSearch,
-                        $likeSearch,
-                        $normalizedSearch,
-                        $likeSearch,
-                        $likeSearch,
-                    ]
-                );
+            [$scoreSql, $scoreBindings] = $this->buildSearchScore($search, $columns);
+            $postsQuery->selectRaw("({$scoreSql}) as search_score", $scoreBindings);
+            $demoPostsQuery->selectRaw("({$scoreSql}) as search_score", $scoreBindings);
         } else {
             $postsQuery->selectRaw('0 as search_score');
             $demoPostsQuery->selectRaw('0 as search_score');
@@ -75,8 +55,165 @@ class PostController extends Controller
             'posts' => $paginatedPosts,
             'filters' => [
                 'q' => $search,
+                'author' => $author,
+                'category' => $category,
+                'date_from' => $dateFrom,
+                'date_to' => $dateTo,
+            ],
+            'filterOptions' => [
+                'categories' => ['artist', 'user'],
+                'authors' => $this->getAuthorFilterOptions(),
             ],
         ]);
+    }
+
+    private function applyFacetFilters($query, string $author, string $category, ?string $dateFrom, ?string $dateTo): void
+    {
+        if ($author !== '') {
+            $query->whereRaw('LOWER(author_name) like ?', ['%'.mb_strtolower($author).'%']);
+        }
+
+        if (in_array($category, ['artist', 'user'], true)) {
+            $query->where('author_type', $category);
+        }
+
+        if ($dateFrom) {
+            $query->whereDate('created_at', '>=', $dateFrom);
+        }
+
+        if ($dateTo) {
+            $query->whereDate('created_at', '<=', $dateTo);
+        }
+    }
+
+    private function applyAdvancedSearch($query, string $search, array $columns): void
+    {
+        $normalized = mb_strtolower(trim($search));
+
+        if (str_contains($normalized, ' or ')) {
+            $orParts = preg_split('/\s+or\s+/i', $normalized) ?: [];
+            $query->where(function ($orQuery) use ($orParts, $columns) {
+                foreach ($orParts as $part) {
+                    $terms = $this->extractSearchTerms($part);
+
+                    if ($terms === []) {
+                        continue;
+                    }
+
+                    $orQuery->orWhere(function ($andQuery) use ($terms, $columns) {
+                        foreach ($terms as $term) {
+                            $this->applyTermMatch($andQuery, $term, $columns, 'and');
+                        }
+                    });
+                }
+            });
+
+            return;
+        }
+
+        $terms = $this->extractSearchTerms($normalized);
+
+        $query->where(function ($andQuery) use ($terms, $columns) {
+            foreach ($terms as $term) {
+                $this->applyTermMatch($andQuery, $term, $columns, 'and');
+            }
+        });
+    }
+
+    private function applyTermMatch($query, string $term, array $columns, string $boolean = 'and'): void
+    {
+        $method = $boolean === 'or' ? 'orWhere' : 'where';
+        $query->{$method}(function ($termQuery) use ($term, $columns) {
+            $first = true;
+            foreach ($columns as $column) {
+                $like = "%{$term}%";
+
+                if ($first) {
+                    $termQuery->whereRaw("LOWER({$column}) like ?", [$like]);
+                    $first = false;
+                } else {
+                    $termQuery->orWhereRaw("LOWER({$column}) like ?", [$like]);
+                }
+            }
+        });
+    }
+
+    private function extractSearchTerms(string $search): array
+    {
+        preg_match_all('/"([^"]+)"|(\S+)/', $search, $matches, PREG_SET_ORDER);
+
+        $terms = [];
+        foreach ($matches as $match) {
+            $term = trim($match[1] !== '' ? $match[1] : $match[2]);
+
+            if ($term === '' || in_array($term, ['and', 'or'], true)) {
+                continue;
+            }
+
+            $terms[] = mb_strtolower($term);
+        }
+
+        return array_values(array_unique($terms));
+    }
+
+    private function buildSearchScore(string $search, array $columns): array
+    {
+        $terms = $this->extractSearchTerms($search);
+        $scoreParts = [];
+        $bindings = [];
+
+        foreach ($terms as $term) {
+            $exact = $term;
+            $prefix = "{$term}%";
+            $like = "%{$term}%";
+
+            if (in_array('title', $columns, true)) {
+                $scoreParts[] = 'CASE WHEN LOWER(title) = ? THEN 300 ELSE 0 END';
+                $bindings[] = $exact;
+                $scoreParts[] = 'CASE WHEN LOWER(title) LIKE ? THEN 180 ELSE 0 END';
+                $bindings[] = $prefix;
+                $scoreParts[] = 'CASE WHEN LOWER(title) LIKE ? THEN 120 ELSE 0 END';
+                $bindings[] = $like;
+            }
+
+            if (in_array('author_name', $columns, true)) {
+                $scoreParts[] = 'CASE WHEN LOWER(author_name) = ? THEN 90 ELSE 0 END';
+                $bindings[] = $exact;
+                $scoreParts[] = 'CASE WHEN LOWER(author_name) LIKE ? THEN 60 ELSE 0 END';
+                $bindings[] = $like;
+            }
+
+            if (in_array('content', $columns, true)) {
+                $scoreParts[] = 'CASE WHEN LOWER(content) LIKE ? THEN 40 ELSE 0 END';
+                $bindings[] = $like;
+            }
+        }
+
+        if ($scoreParts === []) {
+            return ['0', []];
+        }
+
+        return [implode(' + ', $scoreParts), $bindings];
+    }
+
+    private function getAuthorFilterOptions(): array
+    {
+        $postAuthors = DB::table('posts')
+            ->select('author_name')
+            ->whereNotNull('author_name')
+            ->pluck('author_name')
+            ->toArray();
+
+        $demoAuthors = DB::table('demo_posts')
+            ->select('author_name')
+            ->whereNotNull('author_name')
+            ->pluck('author_name')
+            ->toArray();
+
+        $authors = array_values(array_unique(array_filter(array_merge($postAuthors, $demoAuthors))));
+        sort($authors);
+
+        return $authors;
     }
 
     public function create()
