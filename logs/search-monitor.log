@@ -88,3 +88,30 @@
 2026-02-26 18:38:43 - Success rate: 75%
 2026-02-26 18:38:43 - \033[0;31m✗ Overall: POOR - Search relevance needs improvement\033[0m
 2026-02-26 18:38:43 - Monitoring complete. See ./logs/search-monitor.log for details.
+2026-02-26 18:39:45 - \033[0;34mStarting HollowPress Search Relevance Monitor\033[0m
+2026-02-26 18:39:45 - Base URL: http://hollowpress.graveyardjokes.local
+2026-02-26 18:39:45 - \033[0;34mTesting: Laravel Best Practices\033[0m
+2026-02-26 18:39:45 - Expected: 'Laravel Best Practices'
+2026-02-26 18:39:45 - Results count: 1
+2026-02-26 18:39:45 - Actual top result: 'Laravel Best Practices'
+2026-02-26 18:39:45 - \033[0;32m✓ PASS - Correct result\033[0m
+2026-02-26 18:39:45 - \033[0;34mTesting: React Component\033[0m
+2026-02-26 18:39:45 - Expected: 'React Component Patterns'
+2026-02-26 18:39:45 - Results count: 1
+2026-02-26 18:39:45 - Actual top result: 'React Component Patterns'
+2026-02-26 18:39:45 - \033[0;32m✓ PASS - Correct result\033[0m
+2026-02-26 18:39:45 - \033[0;34mTesting: framework\033[0m
+2026-02-26 18:39:45 - Expected: 'Laravel Best Practices'
+2026-02-26 18:39:45 - \033[0;31m✗ No posts in results\033[0m
+2026-02-26 18:39:45 - \033[0;34mTesting: Laravel\033[0m
+2026-02-26 18:39:45 - Expected: 'Laravel Best Practices'
+2026-02-26 18:39:45 - Results count: 5
+2026-02-26 18:39:45 - Actual top result: 'Laravel Best Practices'
+2026-02-26 18:39:45 - \033[0;32m✓ PASS - Correct result\033[0m
+2026-02-26 18:39:45 - \033[0;34m=== Test Summary ===\033[0m
+2026-02-26 18:39:45 - Total tests: 4
+2026-02-26 18:39:45 - Passed: 3
+2026-02-26 18:39:45 - Failed: 1
+2026-02-26 18:39:45 - Success rate: 75%
+2026-02-26 18:39:45 - \033[0;31m✗ Overall: POOR - Search relevance needs improvement\033[0m
+2026-02-26 18:39:45 - Monitoring complete. See ./logs/search-monitor.log for details.
