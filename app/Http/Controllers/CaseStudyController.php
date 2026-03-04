@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CaseStudy;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class CaseStudyController extends Controller
@@ -28,8 +29,6 @@ class CaseStudyController extends Controller
                 'project_type',
                 'project_date',
                 'technologies',
-                'featured_image',
-                'project_url',
                 'is_featured',
                 'created_at',
             ];
@@ -164,29 +163,31 @@ class CaseStudyController extends Controller
      */
     private function getFilterOptions()
     {
-        return [
-            'project_types' => CaseStudy::distinct('project_type')
-                ->whereNotNull('project_type')
-                ->pluck('project_type')
-                ->sort()
-                ->values()
-                ->toArray(),
-            'clients' => CaseStudy::distinct('client_name')
-                ->whereNotNull('client_name')
-                ->pluck('client_name')
-                ->sort()
-                ->values()
-                ->toArray(),
-            'technologies' => CaseStudy::select('technologies')
-                ->whereNotNull('technologies')
-                ->get()
-                ->pluck('technologies')
-                ->flatten()
-                ->unique()
-                ->sort()
-                ->values()
-                ->toArray(),
-        ];
+        return Cache::remember('case_studies.filter_options', now()->addMinutes(10), function () {
+            return [
+                'project_types' => CaseStudy::distinct('project_type')
+                    ->whereNotNull('project_type')
+                    ->pluck('project_type')
+                    ->sort()
+                    ->values()
+                    ->toArray(),
+                'clients' => CaseStudy::distinct('client_name')
+                    ->whereNotNull('client_name')
+                    ->pluck('client_name')
+                    ->sort()
+                    ->values()
+                    ->toArray(),
+                'technologies' => CaseStudy::select('technologies')
+                    ->whereNotNull('technologies')
+                    ->get()
+                    ->pluck('technologies')
+                    ->flatten()
+                    ->unique()
+                    ->sort()
+                    ->values()
+                    ->toArray(),
+            ];
+        });
     }
 
     public function show($slug)

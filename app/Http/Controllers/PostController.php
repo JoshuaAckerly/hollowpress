@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -19,11 +20,13 @@ class PostController extends Controller
         $perPage = 9;
 
         $postsQuery = DB::table('posts')
-            ->select('id', 'title', 'content', 'author_name', 'author_type', 'created_at')
+            ->select('id', 'title', 'author_name', 'author_type', 'created_at')
+            ->selectRaw('LEFT(content, 1200) as content')
             ->selectRaw('0 as is_demo');
 
         $demoPostsQuery = DB::table('demo_posts')
-            ->select('id', 'title', 'content', 'author_name', 'author_type', 'created_at')
+            ->select('id', 'title', 'author_name', 'author_type', 'created_at')
+            ->selectRaw('LEFT(content, 1200) as content')
             ->selectRaw('1 as is_demo');
 
         $this->applyFacetFilters($postsQuery, $author, $category, $dateFrom, $dateTo);
@@ -198,22 +201,26 @@ class PostController extends Controller
 
     private function getAuthorFilterOptions(): array
     {
-        $postAuthors = DB::table('posts')
-            ->select('author_name')
-            ->whereNotNull('author_name')
-            ->pluck('author_name')
-            ->toArray();
-
-        $demoAuthors = DB::table('demo_posts')
-            ->select('author_name')
-            ->whereNotNull('author_name')
-            ->pluck('author_name')
-            ->toArray();
-
-        $authors = array_values(array_unique(array_filter(array_merge($postAuthors, $demoAuthors))));
-        sort($authors);
-
-        return $authors;
+        return Cache::remember('posts.author_filter_options', now()->addMinutes(10), function () {
+            return DB::query()
+                ->fromSub(function ($query) {
+                    $query->from('posts')
+                        ->select('author_name')
+                        ->whereNotNull('author_name')
+                        ->union(
+                            DB::table('demo_posts')
+                                ->select('author_name')
+                                ->whereNotNull('author_name')
+                        );
+                }, 'author_pool')
+                ->select('author_name')
+                ->distinct()
+                ->orderBy('author_name')
+                ->pluck('author_name')
+                ->filter()
+                ->values()
+                ->all();
+        });
     }
 
     public function create()
@@ -233,8 +240,14 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
+        $comments = $post->comments()
+            ->approved()
+            ->latest()
+            ->get(['id', 'post_id', 'author_name', 'content', 'created_at']);
+
         return Inertia::render('Posts/Show', [
-            'post' => $post
+            'post' => $post,
+            'comments' => $comments,
         ]);
     }
 

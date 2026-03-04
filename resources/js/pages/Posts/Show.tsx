@@ -1,5 +1,13 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import MainLayout from '@/layouts/main';
+
+interface PageProps {
+  [key: string]: unknown;
+  flash: {
+    success?: string;
+    error?: string;
+  };
+}
 
 interface Post {
   id: number;
@@ -10,11 +18,34 @@ interface Post {
   created_at: string;
 }
 
-interface Props {
-  post: Post;
+interface Comment {
+  id: number;
+  author_name: string;
+  content: string;
+  created_at: string;
 }
 
-export default function Show({ post }: Props) {
+interface Props {
+  post: Post;
+  comments: Comment[];
+}
+
+export default function Show({ post, comments }: Props) {
+  const { flash } = usePage<PageProps>().props;
+  const { data, setData, post: submitComment, processing, errors, reset } = useForm({
+    author_name: '',
+    content: '',
+  });
+
+  const handleCommentSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    submitComment(`/posts/${post.id}/comments`, {
+      preserveScroll: true,
+      onSuccess: () => reset('content'),
+    });
+  };
+
   const excerpt = post.content.substring(0, 155) + (post.content.length > 155 ? '...' : '');
   
   return (
@@ -53,6 +84,24 @@ export default function Show({ post }: Props) {
         </div>
 
         <div className="max-w-4xl mx-auto px-6 py-12">
+          {flash?.success && (
+            <div className="mb-8 p-4 bg-green-900/50 border-l-4 border-green-500 text-green-300 rounded-r-lg shadow-sm">
+              <div className="flex items-center">
+                <span className="text-green-400 mr-2">✓</span>
+                {flash.success}
+              </div>
+            </div>
+          )}
+
+          {flash?.error && (
+            <div className="mb-8 p-4 bg-red-900/50 border-l-4 border-red-500 text-red-300 rounded-r-lg shadow-sm">
+              <div className="flex items-center">
+                <span className="text-red-400 mr-2">⚠</span>
+                {flash.error}
+              </div>
+            </div>
+          )}
+
           <article className="bg-gray-800 rounded-2xl shadow-xl border border-gray-700 overflow-hidden">
             {/* Article Header */}
             <div className="bg-gradient-to-r from-black to-gray-900 text-white p-8">
@@ -133,6 +182,78 @@ export default function Show({ post }: Props) {
               </div>
             </div>
           </article>
+
+          <div className="mt-8 grid grid-cols-1 gap-8">
+            <section className="bg-gray-800 rounded-2xl shadow-xl border border-gray-700 p-8">
+              <h2 className="text-2xl font-bold text-white mb-6">Leave a Comment</h2>
+
+              <form onSubmit={handleCommentSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-200 mb-2">Your Name</label>
+                  <input
+                    type="text"
+                    value={data.author_name}
+                    onChange={(event) => setData('author_name', event.target.value)}
+                    className="w-full rounded-lg border border-gray-600 bg-gray-900 px-4 py-3 text-gray-100 placeholder:text-gray-500"
+                    placeholder="Enter your name"
+                    required
+                  />
+                  {errors.author_name && (
+                    <p className="text-red-400 text-sm mt-2">{errors.author_name}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-200 mb-2">Comment</label>
+                  <textarea
+                    value={data.content}
+                    onChange={(event) => setData('content', event.target.value)}
+                    className="w-full rounded-lg border border-gray-600 bg-gray-900 px-4 py-3 text-gray-100 placeholder:text-gray-500 resize-none"
+                    placeholder="Share your thoughts on this story..."
+                    rows={4}
+                    required
+                  />
+                  {errors.content && (
+                    <p className="text-red-400 text-sm mt-2">{errors.content}</p>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={processing}
+                  className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-600 text-white font-semibold rounded-xl hover:from-gray-600 hover:to-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                >
+                  {processing ? 'Submitting...' : 'Submit Comment'}
+                </button>
+              </form>
+            </section>
+
+            <section className="bg-gray-800 rounded-2xl shadow-xl border border-gray-700 p-8">
+              <h2 className="text-2xl font-bold text-white mb-6">Comments ({comments.length})</h2>
+
+              {comments.length === 0 ? (
+                <p className="text-gray-400">No approved comments yet. Be the first to share your thoughts.</p>
+              ) : (
+                <div className="space-y-6">
+                  {comments.map((comment) => (
+                    <article key={comment.id} className="border border-gray-700 rounded-xl p-5 bg-gray-900/60">
+                      <div className="flex items-center justify-between mb-3">
+                        <p className="font-semibold text-gray-200">{comment.author_name}</p>
+                        <p className="text-xs text-gray-500">
+                          {new Date(comment.created_at).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                          })}
+                        </p>
+                      </div>
+                      <p className="text-gray-300 whitespace-pre-wrap leading-relaxed">{comment.content}</p>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </section>
+          </div>
 
           {/* Related Actions */}
           <div className="mt-8 text-center">

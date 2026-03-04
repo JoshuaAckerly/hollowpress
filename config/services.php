@@ -39,4 +39,8 @@ return [
         'tracking_id' => env('GOOGLE_ANALYTICS_TRACKING_ID'),
     ],
 
+    'dashboard' => [
+        'admin_token' => env('DASHBOARD_ADMIN_TOKEN'),
+    ],
+
 ];

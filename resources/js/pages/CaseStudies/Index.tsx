@@ -1,6 +1,6 @@
 import { Head, Link, router } from '@inertiajs/react';
 import MainLayout from '@/layouts/main';
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState } from 'react';
 
 interface CaseStudy {
   id: number;
@@ -55,8 +55,8 @@ export default function Index({ caseStudies, filters, filterOptions, searchQuery
     sort: filters?.sort ?? 'relevance',
   });
 
-  const featuredStudies = caseStudies.data.filter(cs => cs.is_featured);
-  const regularStudies = caseStudies.data.filter(cs => !cs.is_featured);
+  const featuredStudies = useMemo(() => caseStudies.data.filter(cs => cs.is_featured), [caseStudies.data]);
+  const regularStudies = useMemo(() => caseStudies.data.filter(cs => !cs.is_featured), [caseStudies.data]);
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -102,7 +102,7 @@ export default function Index({ caseStudies, filters, filterOptions, searchQuery
     const parts = text.split(regex);
 
     return parts.map((part, index) =>
-      regex.test(part) ? <mark key={index} className="bg-yellow-200 text-gray-900 px-1 rounded">{part}</mark> : part
+      index % 2 === 1 ? <mark key={index} className="bg-yellow-200 text-gray-900 px-1 rounded">{part}</mark> : part
     );
   };
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Comment;
 use App\Models\Post;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase;
@@ -9,6 +10,15 @@ use Illuminate\Foundation\Testing\TestCase;
 class PostTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected string $dashboardToken = 'test-dashboard-token';
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        config(['services.dashboard.admin_token' => $this->dashboardToken]);
+    }
 
     public function test_can_view_posts_index()
     {
@@ -72,5 +82,148 @@ class PostTest extends TestCase
 
         $response = $this->post('/demo/posts', $postData);
         $response->assertSessionHasErrors('author_type');
+    }
+
+    public function test_can_submit_comment_for_post()
+    {
+        $post = Post::factory()->create();
+
+        $commentData = [
+            'author_name' => 'Commenter Name',
+            'content' => 'This is a thoughtful test comment.',
+        ];
+
+        $response = $this->post("/posts/{$post->id}/comments", $commentData);
+
+        $response->assertRedirect("/posts/{$post->id}");
+
+        $this->assertDatabaseHas('comments', [
+            'post_id' => $post->id,
+            'author_name' => 'Commenter Name',
+            'content' => 'This is a thoughtful test comment.',
+            'is_approved' => false,
+        ]);
+    }
+
+    public function test_comment_submission_requires_content()
+    {
+        $post = Post::factory()->create();
+
+        $response = $this->post("/posts/{$post->id}/comments", [
+            'author_name' => 'Commenter Name',
+        ]);
+
+        $response->assertSessionHasErrors('content');
+    }
+
+    public function test_only_approved_comments_are_visible_on_post_page()
+    {
+        $post = Post::factory()->create();
+
+        Comment::create([
+            'post_id' => $post->id,
+            'author_name' => 'Approved User',
+            'content' => 'This comment is approved and should be visible.',
+            'is_approved' => true,
+        ]);
+
+        Comment::create([
+            'post_id' => $post->id,
+            'author_name' => 'Pending User',
+            'content' => 'This comment is pending and should be hidden.',
+            'is_approved' => false,
+        ]);
+
+        $response = $this->get("/posts/{$post->id}");
+
+        $response->assertSee('This comment is approved and should be visible.');
+        $response->assertDontSee('This comment is pending and should be hidden.');
+    }
+
+    public function test_comment_submission_is_rate_limited()
+    {
+        $post = Post::factory()->create();
+
+        for ($index = 0; $index < 10; $index++) {
+            $this->post("/posts/{$post->id}/comments", [
+                'author_name' => 'Rate Limit User',
+                'content' => "Rate limit comment number {$index}.",
+            ])->assertRedirect("/posts/{$post->id}");
+        }
+
+        $response = $this->post("/posts/{$post->id}/comments", [
+            'author_name' => 'Rate Limit User',
+            'content' => 'This attempt should be rate limited.',
+        ]);
+
+        $response->assertRedirect("/posts/{$post->id}");
+        $response->assertSessionHas('error');
+    }
+
+    public function test_can_approve_comment_from_dashboard()
+    {
+        $post = Post::factory()->create();
+
+        $comment = Comment::create([
+            'post_id' => $post->id,
+            'author_name' => 'Pending User',
+            'content' => 'Please approve this comment.',
+            'is_approved' => false,
+        ]);
+
+        $response = $this->patch("/dashboard/comments/{$comment->id}/approve", [
+            'dashboard_token' => $this->dashboardToken,
+        ]);
+
+        $response->assertRedirect('/dashboard');
+
+        $this->assertDatabaseHas('comments', [
+            'id' => $comment->id,
+            'is_approved' => true,
+        ]);
+    }
+
+    public function test_can_unapprove_comment_from_dashboard()
+    {
+        $post = Post::factory()->create();
+
+        $comment = Comment::create([
+            'post_id' => $post->id,
+            'author_name' => 'Approved User',
+            'content' => 'This should be unapproved.',
+            'is_approved' => true,
+        ]);
+
+        $response = $this->patch("/dashboard/comments/{$comment->id}/unapprove", [
+            'dashboard_token' => $this->dashboardToken,
+        ]);
+
+        $response->assertRedirect('/dashboard');
+
+        $this->assertDatabaseHas('comments', [
+            'id' => $comment->id,
+            'is_approved' => false,
+        ]);
+    }
+
+    public function test_dashboard_comment_moderation_requires_valid_token()
+    {
+        $post = Post::factory()->create();
+
+        $comment = Comment::create([
+            'post_id' => $post->id,
+            'author_name' => 'Pending User',
+            'content' => 'Token should be required.',
+            'is_approved' => false,
+        ]);
+
+        $response = $this->patch("/dashboard/comments/{$comment->id}/approve");
+
+        $response->assertStatus(403);
+
+        $this->assertDatabaseHas('comments', [
+            'id' => $comment->id,
+            'is_approved' => false,
+        ]);
     }
 }

@@ -2,8 +2,10 @@
 
 use App\Models\Artist;
 use App\Models\CaseStudy;
+use App\Models\Comment;
 use App\Models\DemoPost;
 use App\Models\Post;
+use App\Http\Middleware\EnsureDashboardAdminToken;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -24,6 +26,10 @@ Route::get('/dashboard', function () {
 
     $recentPosts = Post::latest()->take(5)->get(['id', 'title', 'author_name', 'created_at']);
     $recentCaseStudies = CaseStudy::latest()->take(5)->get(['id', 'title', 'slug', 'created_at']);
+    $recentComments = Comment::with('post:id,title')
+        ->latest()
+        ->take(8)
+        ->get(['id', 'post_id', 'author_name', 'content', 'is_approved', 'created_at']);
 
     return Inertia::render('Dashboard', [
         'stats' => [
@@ -34,12 +40,20 @@ Route::get('/dashboard', function () {
         ],
         'recentPosts' => $recentPosts,
         'recentCaseStudies' => $recentCaseStudies,
+        'recentComments' => $recentComments,
     ]);
 })->name('dashboard');
 
 // Posts routes (view only - no auth required)
 Route::get('/posts', [\App\Http\Controllers\PostController::class, 'index'])->name('posts.index');
 Route::get('/posts/{post}', [\App\Http\Controllers\PostController::class, 'show'])->name('posts.show');
+Route::post('/posts/{post}/comments', [\App\Http\Controllers\CommentController::class, 'store'])->name('posts.comments.store');
+Route::patch('/dashboard/comments/{comment}/approve', [\App\Http\Controllers\CommentController::class, 'approve'])
+    ->middleware(EnsureDashboardAdminToken::class)
+    ->name('dashboard.comments.approve');
+Route::patch('/dashboard/comments/{comment}/unapprove', [\App\Http\Controllers\CommentController::class, 'unapprove'])
+    ->middleware(EnsureDashboardAdminToken::class)
+    ->name('dashboard.comments.unapprove');
 Route::get('/posts/{post}/edit', function ($post) {
     return redirect()->route('posts.show', ['post' => $post], 301);
 });

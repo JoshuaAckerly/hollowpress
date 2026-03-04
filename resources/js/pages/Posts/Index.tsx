@@ -71,7 +71,7 @@ export default function Index({ posts, filters, filterOptions }: Props) {
     const parts = text.split(regex);
 
     return parts.map((part, index) =>
-      regex.test(part)
+      index % 2 === 1
         ? <mark key={index} className="bg-yellow-200 text-gray-900 px-1 rounded">{part}</mark>
         : part
     );
