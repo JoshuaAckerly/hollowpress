@@ -26,7 +26,10 @@ composer install --no-interaction --prefer-dist --no-progress --optimize-autoloa
 
 # Install/Update Node dependencies
 echo "📦 Installing Node dependencies..."
-npm ci --production=false
+if ! npm ci --production=false; then
+    echo "⚠️ npm ci failed, retrying with legacy peer deps..."
+    npm ci --production=false --legacy-peer-deps
+fi
 
 # Build frontend assets with SSR
 echo "🎨 Building frontend assets and SSR bundle..."
