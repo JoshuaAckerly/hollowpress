@@ -3,7 +3,7 @@
 # HollowPress Search Relevance Monitor - Inertia Compatible Version
 # Tests search functionality with Inertia.js responses
 
-BASE_URL="http://hollowpress.graveyardjokes.local"
+BASE_URL="https://hollowpress.com"
 LOG_FILE="./logs/search-monitor.log"
 
 # Colors
