@@ -21,12 +21,12 @@ class PostController extends Controller
 
         $postsQuery = DB::table('posts')
             ->select('id', 'title', 'author_name', 'author_type', 'created_at')
-            ->selectRaw('LEFT(content, 1200) as content')
+            ->selectRaw('LEFT(content, 800) as content')
             ->selectRaw('0 as is_demo');
 
         $demoPostsQuery = DB::table('demo_posts')
             ->select('id', 'title', 'author_name', 'author_type', 'created_at')
-            ->selectRaw('LEFT(content, 1200) as content')
+            ->selectRaw('LEFT(content, 800) as content')
             ->selectRaw('1 as is_demo');
 
         $this->applyFacetFilters($postsQuery, $author, $category, $dateFrom, $dateTo);

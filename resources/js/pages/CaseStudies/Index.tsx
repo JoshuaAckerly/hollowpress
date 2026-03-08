@@ -43,34 +43,71 @@ interface Props {
   searchQuery?: string;
 }
 
+interface LocalFilters {
+  project_type: string;
+  client_name: string;
+  technology: string;
+  date_from: string;
+  date_to: string;
+  sort: string;
+}
+
+interface FilterRequest extends LocalFilters {
+  q: string;
+}
+
+const DEFAULT_LOCAL_FILTERS: LocalFilters = {
+  project_type: '',
+  client_name: '',
+  technology: '',
+  date_from: '',
+  date_to: '',
+  sort: 'relevance',
+};
+
 export default function Index({ caseStudies, filters, filterOptions, searchQuery }: Props) {
   const [query, setQuery] = useState(filters?.q ?? '');
   const [showFilters, setShowFilters] = useState(false);
-  const [localFilters, setLocalFilters] = useState({
-    project_type: filters?.project_type ?? '',
-    client_name: filters?.client_name ?? '',
-    technology: filters?.technology ?? '',
-    date_from: filters?.date_from ?? '',
-    date_to: filters?.date_to ?? '',
-    sort: filters?.sort ?? 'relevance',
+  const [localFilters, setLocalFilters] = useState<LocalFilters>({
+    project_type: filters?.project_type ?? DEFAULT_LOCAL_FILTERS.project_type,
+    client_name: filters?.client_name ?? DEFAULT_LOCAL_FILTERS.client_name,
+    technology: filters?.technology ?? DEFAULT_LOCAL_FILTERS.technology,
+    date_from: filters?.date_from ?? DEFAULT_LOCAL_FILTERS.date_from,
+    date_to: filters?.date_to ?? DEFAULT_LOCAL_FILTERS.date_to,
+    sort: filters?.sort ?? DEFAULT_LOCAL_FILTERS.sort,
   });
 
-  const featuredStudies = useMemo(() => caseStudies.data.filter(cs => cs.is_featured), [caseStudies.data]);
-  const regularStudies = useMemo(() => caseStudies.data.filter(cs => !cs.is_featured), [caseStudies.data]);
+  const { featuredStudies, regularStudies } = useMemo(() => {
+    const featured: CaseStudy[] = [];
+    const regular: CaseStudy[] = [];
+
+    for (const caseStudy of caseStudies.data) {
+      if (caseStudy.is_featured) {
+        featured.push(caseStudy);
+      } else {
+        regular.push(caseStudy);
+      }
+    }
+
+    return {
+      featuredStudies: featured,
+      regularStudies: regular,
+    };
+  }, [caseStudies.data]);
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     applyFilters({ ...localFilters, q: query });
   };
 
-  const handleFilterChange = (key: string, value: string) => {
+  const handleFilterChange = (key: keyof LocalFilters, value: string) => {
     const newFilters = { ...localFilters, [key]: value };
     setLocalFilters(newFilters);
     applyFilters({ ...newFilters, q: query });
   };
 
-  const applyFilters = (filterData: any) => {
-    const params: any = {};
+  const applyFilters = (filterData: FilterRequest) => {
+    const params: Record<string, string> = {};
     if (filterData.q?.trim()) params.q = filterData.q.trim();
     if (filterData.project_type) params.project_type = filterData.project_type;
     if (filterData.client_name) params.client_name = filterData.client_name;
@@ -84,14 +121,7 @@ export default function Index({ caseStudies, filters, filterOptions, searchQuery
 
   const clearFilters = () => {
     setQuery('');
-    setLocalFilters({
-      project_type: '',
-      client_name: '',
-      technology: '',
-      date_from: '',
-      date_to: '',
-      sort: 'relevance',
-    });
+    setLocalFilters({ ...DEFAULT_LOCAL_FILTERS });
     router.get('/case-studies', {}, { preserveState: true, preserveScroll: true, replace: true });
   };
 
@@ -125,7 +155,14 @@ export default function Index({ caseStudies, filters, filterOptions, searchQuery
     return snippet;
   };
 
-  const hasActiveFilters = Object.values(localFilters).some(v => v) || query.trim();
+  const hasActiveFilters =
+    query.trim().length > 0 ||
+    localFilters.project_type !== '' ||
+    localFilters.client_name !== '' ||
+    localFilters.technology !== '' ||
+    localFilters.date_from !== '' ||
+    localFilters.date_to !== '' ||
+    localFilters.sort !== 'relevance';
 
   return (
     <MainLayout>

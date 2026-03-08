@@ -13,18 +13,17 @@ class CaseStudyController extends Controller
     {
         try {
             $search = trim((string) $request->query('q', ''));
-            $projectType = $request->query('project_type');
-            $clientName = $request->query('client_name');
-            $technology = $request->query('technology');
+            $projectType = trim((string) $request->query('project_type', ''));
+            $clientName = trim((string) $request->query('client_name', ''));
+            $technology = trim((string) $request->query('technology', ''));
             $dateFrom = $request->query('date_from');
             $dateTo = $request->query('date_to');
-            $sortBy = $request->query('sort', 'relevance');
+            $sortBy = trim((string) $request->query('sort', 'relevance'));
 
             $selectedColumns = [
                 'id',
                 'title',
                 'slug',
-                'description',
                 'client_name',
                 'project_type',
                 'project_date',
@@ -33,23 +32,30 @@ class CaseStudyController extends Controller
                 'created_at',
             ];
 
-            $caseStudyQuery = CaseStudy::query()->select($selectedColumns);
+            $caseStudyQuery = CaseStudy::query()
+                ->select($selectedColumns)
+                ->selectRaw('LEFT(description, 1200) as description');
 
             // Apply search query with advanced syntax support
             if ($search !== '') {
                 $this->applyAdvancedSearch($caseStudyQuery, $search);
+
+                [$scoreSql, $scoreBindings] = $this->buildSearchScore($search);
+                $caseStudyQuery->selectRaw("({$scoreSql}) as search_score", $scoreBindings);
+            } else {
+                $caseStudyQuery->selectRaw('0 as search_score');
             }
 
             // Apply filters
-            if ($projectType) {
+            if ($projectType !== '') {
                 $caseStudyQuery->where('project_type', $projectType);
             }
 
-            if ($clientName) {
+            if ($clientName !== '') {
                 $caseStudyQuery->where('client_name', 'like', "%{$clientName}%");
             }
 
-            if ($technology) {
+            if ($technology !== '') {
                 $caseStudyQuery->whereJsonContains('technologies', $technology);
             }
 
@@ -105,7 +111,6 @@ class CaseStudyController extends Controller
     {
         $normalizedSearch = mb_strtolower($search);
         $likeSearch = "%{$normalizedSearch}%";
-        $prefixSearch = "{$normalizedSearch}%";
 
         // Check for advanced syntax (quotes for exact phrases, OR/AND operators)
         if (preg_match('/"([^"]+)"/', $search, $matches)) {
@@ -120,7 +125,7 @@ class CaseStudyController extends Controller
             });
         } elseif (stripos($search, ' or ') !== false) {
             // OR search
-            $terms = array_map('trim', explode(' or ', $normalizedSearch));
+            $terms = preg_split('/\s+or\s+/i', $normalizedSearch, -1, PREG_SPLIT_NO_EMPTY) ?: [];
             $query->where(function ($subQuery) use ($terms) {
                 foreach ($terms as $term) {
                     $term = "%{$term}%";
@@ -140,22 +145,78 @@ class CaseStudyController extends Controller
                     ->orWhereRaw('LOWER(results) like ?', [$likeSearch])
                     ->orWhereRaw('LOWER(client_name) like ?', [$likeSearch])
                     ->orWhereRaw('LOWER(project_type) like ?', [$likeSearch]);
-            })->selectRaw(
-                "(\n                        CASE WHEN LOWER(title) = ? THEN 400 ELSE 0 END +\n                        CASE WHEN LOWER(title) LIKE ? THEN 250 ELSE 0 END +\n                        CASE WHEN LOWER(title) LIKE ? THEN 180 ELSE 0 END +\n                        CASE WHEN LOWER(client_name) = ? THEN 140 ELSE 0 END +\n                        CASE WHEN LOWER(client_name) LIKE ? THEN 90 ELSE 0 END +\n                        CASE WHEN LOWER(project_type) LIKE ? THEN 80 ELSE 0 END +\n                        CASE WHEN LOWER(description) LIKE ? THEN 60 ELSE 0 END +\n                        CASE WHEN LOWER(challenge) LIKE ? THEN 40 ELSE 0 END +\n                        CASE WHEN LOWER(solution) LIKE ? THEN 40 ELSE 0 END +\n                        CASE WHEN LOWER(results) LIKE ? THEN 40 ELSE 0 END\n                    ) as search_score",
-                [
-                    $normalizedSearch,
-                    $prefixSearch,
-                    $likeSearch,
-                    $normalizedSearch,
-                    $likeSearch,
-                    $likeSearch,
-                    $likeSearch,
-                    $likeSearch,
-                    $likeSearch,
-                    $likeSearch,
-                ]
-            );
+            });
         }
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function extractSearchTerms(string $search): array
+    {
+        preg_match_all('/"([^"]+)"|(\S+)/', $search, $matches, PREG_SET_ORDER);
+
+        $terms = [];
+        foreach ($matches as $match) {
+            $term = trim($match[1] !== '' ? $match[1] : $match[2]);
+
+            if ($term === '' || in_array(mb_strtolower($term), ['and', 'or'], true)) {
+                continue;
+            }
+
+            $terms[] = mb_strtolower($term);
+        }
+
+        return array_values(array_unique($terms));
+    }
+
+    /**
+     * @return array{0: string, 1: array<int, string>}
+     */
+    private function buildSearchScore(string $search): array
+    {
+        $terms = $this->extractSearchTerms($search);
+
+        if ($terms === []) {
+            return ['0', []];
+        }
+
+        $scoreParts = [];
+        $bindings = [];
+
+        foreach ($terms as $term) {
+            $exact = $term;
+            $prefix = "{$term}%";
+            $contains = "%{$term}%";
+
+            $scoreParts[] = 'CASE WHEN LOWER(title) = ? THEN 420 ELSE 0 END';
+            $bindings[] = $exact;
+            $scoreParts[] = 'CASE WHEN LOWER(title) LIKE ? THEN 260 ELSE 0 END';
+            $bindings[] = $prefix;
+            $scoreParts[] = 'CASE WHEN LOWER(title) LIKE ? THEN 180 ELSE 0 END';
+            $bindings[] = $contains;
+
+            $scoreParts[] = 'CASE WHEN LOWER(client_name) = ? THEN 140 ELSE 0 END';
+            $bindings[] = $exact;
+            $scoreParts[] = 'CASE WHEN LOWER(client_name) LIKE ? THEN 100 ELSE 0 END';
+            $bindings[] = $contains;
+
+            $scoreParts[] = 'CASE WHEN LOWER(project_type) = ? THEN 90 ELSE 0 END';
+            $bindings[] = $exact;
+            $scoreParts[] = 'CASE WHEN LOWER(project_type) LIKE ? THEN 80 ELSE 0 END';
+            $bindings[] = $contains;
+
+            $scoreParts[] = 'CASE WHEN LOWER(description) LIKE ? THEN 60 ELSE 0 END';
+            $bindings[] = $contains;
+            $scoreParts[] = 'CASE WHEN LOWER(challenge) LIKE ? THEN 40 ELSE 0 END';
+            $bindings[] = $contains;
+            $scoreParts[] = 'CASE WHEN LOWER(solution) LIKE ? THEN 40 ELSE 0 END';
+            $bindings[] = $contains;
+            $scoreParts[] = 'CASE WHEN LOWER(results) LIKE ? THEN 40 ELSE 0 END';
+            $bindings[] = $contains;
+        }
+
+        return [implode(' + ', $scoreParts), $bindings];
     }
 
     /**

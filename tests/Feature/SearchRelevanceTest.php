@@ -69,6 +69,30 @@ class SearchRelevanceTest extends TestCase
         $response->assertSee('q=Signal&amp;category=artist&amp;page=2', false);
     }
 
+    public function test_posts_search_pagination_keeps_full_filter_query_string(): void
+    {
+        Post::factory()->count(15)->create([
+            'title' => 'Signal Guide',
+            'content' => 'Signal content body',
+            'author_name' => 'SignalTeam',
+            'author_type' => 'artist',
+            'created_at' => now()->subDays(2),
+        ]);
+
+        $dateFrom = now()->subDays(10)->toDateString();
+        $dateTo = now()->toDateString();
+
+        $response = $this->get("/posts?q=Signal&author=SignalTeam&category=artist&date_from={$dateFrom}&date_to={$dateTo}");
+
+        $response->assertOk();
+        $response->assertSee('q=Signal', false);
+        $response->assertSee('author=SignalTeam', false);
+        $response->assertSee('category=artist', false);
+        $response->assertSee("date_from={$dateFrom}", false);
+        $response->assertSee("date_to={$dateTo}", false);
+        $response->assertSee('page=2', false);
+    }
+
     public function test_posts_search_supports_or_syntax(): void
     {
         Post::factory()->create([
@@ -127,6 +151,31 @@ class SearchRelevanceTest extends TestCase
         $response->assertDontSee('Out of Date Range');
     }
 
+    public function test_case_studies_search_supports_or_syntax(): void
+    {
+        CaseStudy::factory()->create([
+            'title' => 'Neon House Launch',
+            'slug' => 'neon-house-launch',
+            'description' => 'Neon campaign rollout details',
+            'client_name' => 'NeonClient',
+            'project_type' => 'Branding',
+        ]);
+
+        CaseStudy::factory()->create([
+            'title' => 'Analog Ritual Expansion',
+            'slug' => 'analog-ritual-expansion',
+            'description' => 'Analog growth plan for touring launch',
+            'client_name' => 'AnalogClient',
+            'project_type' => 'Web Development',
+        ]);
+
+        $response = $this->get('/case-studies?q=Neon OR Analog');
+
+        $response->assertOk();
+        $response->assertSee('Neon House Launch');
+        $response->assertSee('Analog Ritual Expansion');
+    }
+
     public function test_case_studies_search_pagination_keeps_query_string(): void
     {
         CaseStudy::factory()->count(15)->create([
@@ -140,5 +189,30 @@ class SearchRelevanceTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('q=Atlas&amp;page=2', false);
+    }
+
+    public function test_case_studies_search_pagination_keeps_full_filter_query_string(): void
+    {
+        CaseStudy::factory()->count(15)->create([
+            'title' => 'Atlas Build',
+            'description' => 'Atlas project delivery summary',
+            'client_name' => 'AtlasClient',
+            'project_type' => 'Branding',
+            'project_date' => now()->subDays(3)->toDateString(),
+        ]);
+
+        $dateFrom = now()->subDays(14)->toDateString();
+        $dateTo = now()->toDateString();
+
+        $response = $this->get("/case-studies?q=Atlas&project_type=Branding&client_name=AtlasClient&date_from={$dateFrom}&date_to={$dateTo}&sort=date");
+
+        $response->assertOk();
+        $response->assertSee('q=Atlas', false);
+        $response->assertSee('project_type=Branding', false);
+        $response->assertSee('client_name=AtlasClient', false);
+        $response->assertSee("date_from={$dateFrom}", false);
+        $response->assertSee("date_to={$dateTo}", false);
+        $response->assertSee('sort=date', false);
+        $response->assertSee('page=2', false);
     }
 }
