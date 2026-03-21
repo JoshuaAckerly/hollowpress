@@ -26,7 +26,7 @@ export default defineConfig(({ mode }) => {
         // default: local/development
         server = {
             port: 8082,
-            host: '10.0.1.30',
+            host: '0.0.0.0',
             origin: 'http://hollowpress.graveyardjokes.local:8082',
             cors: {
                 origin: 'http://hollowpress.graveyardjokes.local',
