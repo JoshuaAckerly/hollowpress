@@ -5,15 +5,20 @@
 HollowPress is a content management platform for music artists, posts, albums, and events. This documentation covers all available API endpoints and their usage.
 
 **Base URL:** `https://hollowpress.com`  
-**Version:** 1.0  
-**Last Updated:** November 22, 2025
+**Version:** 1.1  
+**Last Updated:** March 21, 2026
 
 ## Table of Contents
 
 - [Authentication](#authentication)
 - [Posts API](#posts-api)
+- [Comments API](#comments-api)
 - [Demo Posts](#demo-posts)
 - [Artists API](#artists-api)
+- [Case Studies API](#case-studies-api)
+- [Contact](#contact)
+- [Pages](#pages)
+- [Sitemap](#sitemap)
 - [Settings API](#settings-api)
 - [Data Models](#data-models)
 - [Error Handling](#error-handling)
@@ -23,110 +28,15 @@ HollowPress is a content management platform for music artists, posts, albums, a
 
 ## Authentication
 
-HollowPress uses Laravel Sanctum for API authentication and session-based authentication for web routes.
+HollowPress uses session-based authentication for web routes and a dashboard admin token for privileged dashboard actions.
 
-### Available Auth Endpoints
-
-#### Register User
-```http
-POST /register
-Content-Type: application/json
-
-{
-  "name": "string",
-  "email": "string",
-  "password": "string",
-  "password_confirmation": "string"
-}
-```
-
-**Response:** `201 Created`
-```json
-{
-  "user": {
-    "id": 1,
-    "name": "John Doe",
-    "email": "john@example.com",
-    "created_at": "2025-11-22T10:00:00.000000Z"
-  },
-  "token": "1|AbCdEfGhIjKlMnOpQrStUvWxYz"
-}
-```
-
-#### Login
-```http
-POST /login
-Content-Type: application/json
-
-{
-  "email": "string",
-  "password": "string",
-  "remember": "boolean"
-}
-```
-
-**Response:** `200 OK`
-```json
-{
-  "user": {
-    "id": 1,
-    "name": "John Doe",
-    "email": "john@example.com"
-  },
-  "token": "1|AbCdEfGhIjKlMnOpQrStUvWxYz"
-}
-```
-
-#### Logout
-```http
-POST /logout
-Authorization: Bearer {token}
-```
-
-**Response:** `204 No Content`
-
-#### Forgot Password
-```http
-POST /forgot-password
-Content-Type: application/json
-
-{
-  "email": "string"
-}
-```
-
-**Response:** `200 OK`
-```json
-{
-  "message": "Password reset link sent to your email."
-}
-```
-
-#### Reset Password
-```http
-POST /reset-password
-Content-Type: application/json
-
-{
-  "token": "string",
-  "email": "string",
-  "password": "string",
-  "password_confirmation": "string"
-}
-```
-
-**Response:** `200 OK`
-```json
-{
-  "message": "Password has been reset successfully."
-}
-```
+> **Note:** Traditional auth endpoints (`/login`, `/register`, `/forgot-password`, `/reset-password`) are currently **disabled** and redirect to the homepage (301). Authentication is managed through the settings routes for existing users.
 
 ---
 
 ## Posts API
 
-Manage blog posts and articles.
+View blog posts and articles.
 
 ### List All Posts
 
@@ -156,11 +66,11 @@ GET /posts
 ### Get Single Post
 
 ```http
-GET /posts/{id}
+GET /posts/{post}
 ```
 
 **Parameters:**
-- `id` (integer, required) - Post ID
+- `post` (integer, required) - Post ID
 
 **Response:** `200 OK`
 ```json
@@ -179,96 +89,53 @@ GET /posts/{id}
 }
 ```
 
-### Create Post
+### Edit Post (Redirect)
 
 ```http
-POST /posts
-Authorization: Bearer {token}
+GET /posts/{post}/edit
+```
+
+Redirects to `GET /posts/{post}` with a `301` status code.
+
+---
+
+## Comments API
+
+### Submit Comment
+
+Add a comment to a post.
+
+```http
+POST /posts/{post}/comments
 Content-Type: application/json
 
 {
-  "title": "string (required, max:255)",
-  "content": "string (required)",
-  "excerpt": "string (optional, max:500)",
-  "featured_image": "string (optional, url)",
-  "published_at": "datetime (optional)"
+  "author_name": "string (required)",
+  "content": "string (required)"
 }
 ```
 
-**Response:** `201 Created`
-```json
-{
-  "post": {
-    "id": 2,
-    "title": "New Post Title",
-    "slug": "new-post-title",
-    "content": "Post content...",
-    "created_at": "2025-11-22T10:00:00.000000Z"
-  },
-  "message": "Post created successfully!"
-}
-```
+**Response:** `302 Redirect` back to the post with success/error message
 
-### Update Post
+### Approve Comment (Dashboard Admin)
 
 ```http
-PUT /posts/{id}
-Authorization: Bearer {token}
-Content-Type: application/json
-
-{
-  "title": "string (optional, max:255)",
-  "content": "string (optional)",
-  "excerpt": "string (optional, max:500)",
-  "featured_image": "string (optional, url)",
-  "published_at": "datetime (optional)"
-}
+PATCH /dashboard/comments/{comment}/approve
 ```
 
-**Response:** `200 OK`
-```json
-{
-  "post": {
-    "id": 1,
-    "title": "Updated Post Title",
-    "content": "Updated content...",
-    "updated_at": "2025-11-22T11:00:00.000000Z"
-  },
-  "message": "Post updated successfully!"
-}
-```
+**Authentication**: Requires `EnsureDashboardAdminToken` middleware
 
-### Delete Post
+**Response:** `302 Redirect` back with success message
+
+### Unapprove Comment (Dashboard Admin)
 
 ```http
-DELETE /posts/{id}
-Authorization: Bearer {token}
+PATCH /dashboard/comments/{comment}/unapprove
 ```
 
-**Response:** `200 OK`
-```json
-{
-  "message": "Post deleted successfully!"
-}
-```
+**Authentication**: Requires `EnsureDashboardAdminToken` middleware
 
-### Create Post Form
-
-```http
-GET /posts/create
-Authorization: Bearer {token}
-```
-
-**Response:** `200 OK` - Returns Inertia page for post creation form
-
-### Edit Post Form
-
-```http
-GET /posts/{id}/edit
-Authorization: Bearer {token}
-```
-
-**Response:** `200 OK` - Returns Inertia page for post editing form
+**Response:** `302 Redirect` back with success message
 
 ---
 
@@ -428,6 +295,96 @@ GET /artists/{id}
   }
 }
 ```
+
+---
+
+## Case Studies API
+
+### List Case Studies
+
+```http
+GET /case-studies
+```
+
+**Response:** `200 OK` - Returns Inertia page with a list of all case studies
+
+### View Case Study
+
+```http
+GET /case-studies/{slug}
+```
+
+**Parameters:**
+- `slug` (string, required) - Case study URL slug
+
+**Response:** `200 OK` - Returns Inertia page with case study details
+
+---
+
+## Contact
+
+### Contact Page
+
+```http
+GET /contact
+```
+
+**Response:** `200 OK` - Returns Inertia page with contact form
+
+### Submit Contact Form
+
+```http
+POST /contact
+Content-Type: application/json
+
+{
+  "name": "string (required)",
+  "email": "string (required, valid email)",
+  "message": "string (required)"
+}
+```
+
+**Response:** `302 Redirect` back with success/error message
+
+---
+
+## Pages
+
+### About Page
+
+```http
+GET /about
+```
+
+**Response:** `200 OK` - Returns Inertia page
+
+### Sponsored Artist Page
+
+```http
+GET /sponsored
+```
+
+**Response:** `200 OK` - Returns Inertia page featuring the first artist with their albums and events
+
+### Dashboard
+
+```http
+GET /dashboard
+```
+
+**Response:** `200 OK` - Returns Inertia page with stats (published posts, drafts, artists, case studies count), recent posts, recent case studies, and recent comments
+
+---
+
+## Sitemap
+
+### XML Sitemap
+
+```http
+GET /sitemap.xml
+```
+
+**Response:** `200 OK` - Returns dynamically generated XML sitemap
 
 ---
 
@@ -790,12 +747,22 @@ For API support or to report issues:
 
 ## Changelog
 
+### Version 1.1 (March 21, 2026)
+- Removed non-existent auth endpoints (register, login, forgot/reset password — all redirect to homepage)
+- Removed non-existent post CRUD endpoints (create, update, delete — only read endpoints exist)
+- Added comments API (submit, approve, unapprove)
+- Added case studies API (list, view)
+- Added contact page and form submission
+- Added pages section (about, sponsored, dashboard)
+- Added sitemap endpoint
+- Updated authentication section to reflect current session-based auth model
+
 ### Version 1.0 (November 22, 2025)
 - Initial API documentation
-- Posts CRUD endpoints
+- Posts read endpoints
+- Demo posts endpoints
 - Artists read-only endpoints
 - User settings and profile management
-- Authentication with Laravel Sanctum
 
 ---
 
