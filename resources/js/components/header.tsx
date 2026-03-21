@@ -1,6 +1,7 @@
 
 import React from 'react';
 import ApplicationLogo from '@/components/ApplicationLogo';
+import MobileMenu from '@/components/MobileMenu';
 import { getLoginUrl } from '../env';
 
 const Header: React.FC = () => {
@@ -8,7 +9,9 @@ const Header: React.FC = () => {
         <header className="bg-[var(--background)] border-b border-border">
             <div className="container flex items-center justify-between py-4">
                 <ApplicationLogo />
-                <nav aria-label="Main navigation">
+
+                {/* Desktop nav */}
+                <nav aria-label="Main navigation" className="hidden md:block">
                     <ul className="flex space-x-6 text-sm">
                         <li><a className="hover:underline" href="/">Home</a></li>
                         <li><a className="hover:underline" href="/dashboard">Dashboard</a></li>
@@ -20,6 +23,11 @@ const Header: React.FC = () => {
                         <li><a className="hover:underline" href={getLoginUrl('hollowpress')}>Login</a></li>
                     </ul>
                 </nav>
+
+                {/* Mobile nav */}
+                <div className="md:hidden">
+                    <MobileMenu />
+                </div>
             </div>
         </header>
     );
