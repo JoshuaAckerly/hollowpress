@@ -43,4 +43,8 @@ return [
         'admin_token' => env('DASHBOARD_ADMIN_TOKEN'),
     ],
 
+    'auth_system' => [
+        'url' => env('AUTH_SYSTEM_URL', 'http://auth-system.local/api'),
+    ],
+
 ];
