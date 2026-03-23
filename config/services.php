@@ -39,6 +39,10 @@ return [
         'tracking_id' => env('GOOGLE_ANALYTICS_TRACKING_ID'),
     ],
 
+    'google_adsense' => [
+        'client_id' => env('GOOGLE_ADSENSE_CLIENT_ID'),
+    ],
+
     'dashboard' => [
         'admin_token' => env('DASHBOARD_ADMIN_TOKEN'),
     ],
