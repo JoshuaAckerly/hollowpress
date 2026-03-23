@@ -248,6 +248,7 @@ class PostController extends Controller
         return Inertia::render('Posts/Show', [
             'post' => $post,
             'comments' => $comments,
+            'relatedPosts' => $post->related(3),
         ]);
     }
 

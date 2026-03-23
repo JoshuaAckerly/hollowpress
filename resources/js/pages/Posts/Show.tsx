@@ -1,5 +1,6 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import MainLayout from '@/layouts/main';
+import RelatedPosts from '@/components/RelatedPosts';
 
 interface PageProps {
   [key: string]: unknown;
@@ -25,12 +26,21 @@ interface Comment {
   created_at: string;
 }
 
+interface RelatedPost {
+  id: number;
+  title: string;
+  author_name: string;
+  author_type: 'artist' | 'user';
+  created_at: string;
+}
+
 interface Props {
   post: Post;
   comments: Comment[];
+  relatedPosts: RelatedPost[];
 }
 
-export default function Show({ post, comments }: Props) {
+export default function Show({ post, comments, relatedPosts }: Props) {
   const { flash } = usePage<PageProps>().props;
   const { data, setData, post: submitComment, processing, errors, reset } = useForm({
     author_name: '',
@@ -184,6 +194,8 @@ export default function Show({ post, comments }: Props) {
           </article>
 
           <div className="mt-8 grid grid-cols-1 gap-8">
+            <RelatedPosts posts={relatedPosts} />
+
             <section className="bg-gray-800 rounded-2xl shadow-xl border border-gray-700 p-8">
               <h2 className="text-2xl font-bold text-white mb-6">Leave a Comment</h2>
 
