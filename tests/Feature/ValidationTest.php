@@ -23,7 +23,7 @@ class ValidationTest extends TestCase
     public function test_post_title_cannot_exceed_255_characters()
     {
         $longTitle = str_repeat('a', 256);
-        
+
         $response = $this->post('/demo/posts', [
             'title' => $longTitle,
             'content' => 'Test content',

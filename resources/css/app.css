@@ -162,7 +162,7 @@
         color: var(--color-card-foreground);
         border-radius: var(--radius-lg);
         padding: 1.25rem;
-        box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+        box-shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
         border: 1px solid color-mix(in oklab, var(--color-border) 60%, transparent);
     }
 
@@ -179,7 +179,10 @@
         border-radius: 0.6rem;
         font-weight: 600;
         cursor: pointer;
-        transition: transform .12s ease, box-shadow .12s ease, background-color .12s ease;
+        transition:
+            transform 0.12s ease,
+            box-shadow 0.12s ease,
+            background-color 0.12s ease;
         border: 1px solid transparent;
         text-decoration: none;
     }
@@ -187,7 +190,7 @@
     .btn-primary {
         background: linear-gradient(180deg, color-mix(in oklab, var(--color-primary) 88%, white), var(--color-primary));
         color: var(--color-primary-foreground);
-        box-shadow: 0 6px 18px rgba(59,130,246,0.12);
+        box-shadow: 0 6px 18px rgba(59, 130, 246, 0.12);
     }
 
     .btn-outline {
@@ -196,7 +199,9 @@
         border: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
     }
 
-    .btn:active { transform: translateY(1px) scale(.998); }
+    .btn:active {
+        transform: translateY(1px) scale(0.998);
+    }
 
     .heading {
         font-size: 1.125rem;

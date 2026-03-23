@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\MessageProxyController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/messages', [MessageProxyController::class, 'index']);
 Route::patch('/messages/read-all', [MessageProxyController::class, 'markAllRead']);

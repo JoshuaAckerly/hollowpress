@@ -1,20 +1,21 @@
 <?php
 
+use App\Http\Middleware\EnsureDashboardAdminToken;
 use App\Models\Artist;
 use App\Models\CaseStudy;
 use App\Models\Comment;
 use App\Models\DemoPost;
 use App\Models\Post;
-use App\Http\Middleware\EnsureDashboardAdminToken;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
     $posts = Post::latest()->take(3)->get();
     $artists = Artist::with(['albums', 'events'])->take(3)->get();
+
     return Inertia::render('welcome', [
         'posts' => $posts,
-        'artists' => $artists
+        'artists' => $artists,
     ]);
 })->name('home');
 
@@ -67,8 +68,9 @@ Route::resource('artists', \App\Http\Controllers\ArtistController::class)->only(
 
 Route::get('/sponsored', function () {
     $sponsoredArtist = \App\Models\Artist::with(['albums', 'events'])->first();
+
     return Inertia::render('Sponsored', [
-        'artist' => $sponsoredArtist
+        'artist' => $sponsoredArtist,
     ]);
 })->name('sponsored');
 

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('author_type', ['artist', 'user']);
             $table->string('ip_address')->nullable();
             $table->timestamps();
-            
+
             // Index for cleanup queries
             $table->index('created_at');
         });

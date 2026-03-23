@@ -13,7 +13,7 @@ class CaseStudyFactory extends Factory
     public function definition(): array
     {
         $title = $this->faker->sentence(4);
-        
+
         return [
             'title' => $title,
             'slug' => Str::slug($title),

@@ -27,15 +27,17 @@ class CleanupDemoPosts extends Command
     public function handle()
     {
         $count = DemoPost::expired()->count();
-        
+
         if ($count === 0) {
             $this->info('No expired demo posts to clean up.');
+
             return 0;
         }
 
         DemoPost::expired()->delete();
-        
+
         $this->info("Successfully deleted {$count} expired demo post(s).");
+
         return 0;
     }
 }

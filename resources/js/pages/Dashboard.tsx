@@ -80,17 +80,9 @@ const Dashboard: React.FC<Props> = ({ stats, recentPosts, recentCaseStudies, rec
                         <p className="muted">Core publishing overview and quick navigation.</p>
                     </div>
 
-                    {flash?.success && (
-                        <div className="rounded border border-green-700 bg-green-900/30 p-3 text-green-200">
-                            {flash.success}
-                        </div>
-                    )}
+                    {flash?.success && <div className="rounded border border-green-700 bg-green-900/30 p-3 text-green-200">{flash.success}</div>}
 
-                    {flash?.error && (
-                        <div className="rounded border border-red-700 bg-red-900/30 p-3 text-red-200">
-                            {flash.error}
-                        </div>
-                    )}
+                    {flash?.error && <div className="rounded border border-red-700 bg-red-900/30 p-3 text-red-200">{flash.error}</div>}
 
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                         <div className="card">
@@ -137,14 +129,20 @@ const Dashboard: React.FC<Props> = ({ stats, recentPosts, recentCaseStudies, rec
                         <div className="card space-y-4">
                             <div className="flex items-center justify-between">
                                 <h2 className="heading m-0">Recent posts</h2>
-                                <a className="btn btn-outline" href="/posts">View all</a>
+                                <a className="btn btn-outline" href="/posts">
+                                    View all
+                                </a>
                             </div>
                             {recentPosts.length > 0 ? (
                                 <ul className="space-y-3">
                                     {recentPosts.map((post) => (
                                         <li key={post.id} className="rounded border border-border p-3">
-                                            <a className="font-semibold hover:underline" href={`/posts/${post.id}`}>{post.title}</a>
-                                            <p className="muted mt-1">By {post.author_name} • {formatDate(post.created_at)}</p>
+                                            <a className="font-semibold hover:underline" href={`/posts/${post.id}`}>
+                                                {post.title}
+                                            </a>
+                                            <p className="muted mt-1">
+                                                By {post.author_name} • {formatDate(post.created_at)}
+                                            </p>
                                         </li>
                                     ))}
                                 </ul>
@@ -152,7 +150,9 @@ const Dashboard: React.FC<Props> = ({ stats, recentPosts, recentCaseStudies, rec
                                 <div className="rounded border border-dashed border-border p-4">
                                     <p className="font-semibold">No posts yet</p>
                                     <p className="muted mt-1">Create a demo post to start populating the feed.</p>
-                                    <a className="btn btn-primary mt-3" href="/demo/posts/create">Create demo post</a>
+                                    <a className="btn btn-primary mt-3" href="/demo/posts/create">
+                                        Create demo post
+                                    </a>
                                 </div>
                             )}
                         </div>
@@ -160,13 +160,17 @@ const Dashboard: React.FC<Props> = ({ stats, recentPosts, recentCaseStudies, rec
                         <div className="card space-y-4">
                             <div className="flex items-center justify-between">
                                 <h2 className="heading m-0">Recent case studies</h2>
-                                <a className="btn btn-outline" href="/case-studies">View all</a>
+                                <a className="btn btn-outline" href="/case-studies">
+                                    View all
+                                </a>
                             </div>
                             {recentCaseStudies.length > 0 ? (
                                 <ul className="space-y-3">
                                     {recentCaseStudies.map((caseStudy) => (
                                         <li key={caseStudy.id} className="rounded border border-border p-3">
-                                            <a className="font-semibold hover:underline" href={`/case-studies/${caseStudy.slug}`}>{caseStudy.title}</a>
+                                            <a className="font-semibold hover:underline" href={`/case-studies/${caseStudy.slug}`}>
+                                                {caseStudy.title}
+                                            </a>
                                             <p className="muted mt-1">Updated {formatDate(caseStudy.created_at)}</p>
                                         </li>
                                     ))}
@@ -175,7 +179,9 @@ const Dashboard: React.FC<Props> = ({ stats, recentPosts, recentCaseStudies, rec
                                 <div className="rounded border border-dashed border-border p-4">
                                     <p className="font-semibold">No case studies yet</p>
                                     <p className="muted mt-1">Add at least one case study entry to strengthen your portfolio section.</p>
-                                    <a className="btn btn-outline mt-3" href="/case-studies">Open case studies</a>
+                                    <a className="btn btn-outline mt-3" href="/case-studies">
+                                        Open case studies
+                                    </a>
                                 </div>
                             )}
                         </div>
@@ -188,7 +194,9 @@ const Dashboard: React.FC<Props> = ({ stats, recentPosts, recentCaseStudies, rec
                         </div>
 
                         <div className="rounded border border-border p-3">
-                            <label htmlFor="dashboardToken" className="block text-sm font-semibold">Moderation token</label>
+                            <label htmlFor="dashboardToken" className="block text-sm font-semibold">
+                                Moderation token
+                            </label>
                             <input
                                 id="dashboardToken"
                                 type="password"
@@ -215,9 +223,7 @@ const Dashboard: React.FC<Props> = ({ stats, recentPosts, recentCaseStudies, rec
                                                     • {formatDate(comment.created_at)}
                                                 </p>
                                                 <p className="mt-2 text-sm text-foreground/90">
-                                                    {comment.content.length > 140
-                                                        ? `${comment.content.slice(0, 140)}...`
-                                                        : comment.content}
+                                                    {comment.content.length > 140 ? `${comment.content.slice(0, 140)}...` : comment.content}
                                                 </p>
                                             </div>
 
@@ -271,10 +277,18 @@ const Dashboard: React.FC<Props> = ({ stats, recentPosts, recentCaseStudies, rec
                     <div className="card">
                         <h2 className="heading">Quick actions</h2>
                         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                            <a className="btn btn-primary" href="/demo/posts/create">Create demo post</a>
-                            <a className="btn btn-outline" href="/posts">View all posts</a>
-                            <a className="btn btn-outline" href="/artists">Browse artists</a>
-                            <a className="btn btn-outline" href="/case-studies">Review case studies</a>
+                            <a className="btn btn-primary" href="/demo/posts/create">
+                                Create demo post
+                            </a>
+                            <a className="btn btn-outline" href="/posts">
+                                View all posts
+                            </a>
+                            <a className="btn btn-outline" href="/artists">
+                                Browse artists
+                            </a>
+                            <a className="btn btn-outline" href="/case-studies">
+                                Review case studies
+                            </a>
                         </div>
                     </div>
                 </div>

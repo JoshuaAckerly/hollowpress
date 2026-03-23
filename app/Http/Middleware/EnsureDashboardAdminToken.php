@@ -20,7 +20,7 @@ class EnsureDashboardAdminToken
             ?? $request->input('dashboard_token', '')
         );
 
-        if ($expectedToken === '' || $providedToken === '' || !hash_equals($expectedToken, $providedToken)) {
+        if ($expectedToken === '' || $providedToken === '' || ! hash_equals($expectedToken, $providedToken)) {
             abort(403, 'Forbidden. Valid dashboard token required.');
         }
 

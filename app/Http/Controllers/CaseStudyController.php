@@ -255,8 +255,9 @@ class CaseStudyController extends Controller
     {
         try {
             $caseStudy = CaseStudy::where('slug', $slug)->firstOrFail();
+
             return Inertia::render('CaseStudies/Show', [
-                'caseStudy' => $caseStudy
+                'caseStudy' => $caseStudy,
             ]);
         } catch (\Exception $e) {
             return redirect()->route('case-studies.index')->with('error', 'Case study not found.');

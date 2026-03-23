@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Artist;
 use App\Models\Album;
+use App\Models\Artist;
 use App\Models\Event;
 use Illuminate\Database\Seeder;
 

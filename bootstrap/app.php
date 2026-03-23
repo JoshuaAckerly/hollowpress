@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\AddSecurityHeaders;
+use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -30,13 +30,15 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($request->expectsJson()) {
                 return response()->json(['message' => 'Resource not found'], 404);
             }
+
             return redirect()->route('home')->with('error', 'The requested resource was not found.');
         });
-        
+
         $exceptions->render(function (\Illuminate\Validation\ValidationException $e, $request) {
             if ($request->expectsJson()) {
                 return response()->json(['errors' => $e->errors()], 422);
             }
+
             return redirect()->back()->withErrors($e->errors())->withInput();
         });
     })->create();

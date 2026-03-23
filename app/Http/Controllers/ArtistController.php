@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Artist;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ArtistController extends Controller
@@ -12,8 +11,9 @@ class ArtistController extends Controller
     {
         try {
             $artists = Artist::with(['albums', 'events'])->get();
+
             return Inertia::render('Artists/Index', [
-                'artists' => $artists
+                'artists' => $artists,
             ]);
         } catch (\Exception $e) {
             return redirect()->route('home')->with('error', 'Unable to load artists. Please try again.');
@@ -24,7 +24,7 @@ class ArtistController extends Controller
     {
         try {
             return Inertia::render('Artists/Show', [
-                'artist' => $artist->load(['albums', 'events'])
+                'artist' => $artist->load(['albums', 'events']),
             ]);
         } catch (\Exception $e) {
             return redirect()->route('artists.index')->with('error', 'Artist not found.');

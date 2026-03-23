@@ -12,9 +12,9 @@ class PostModelTest extends TestCase
 
     public function test_post_has_fillable_attributes()
     {
-        $post = new Post();
+        $post = new Post;
         $fillable = ['title', 'content', 'author_name', 'author_type'];
-        
+
         $this->assertEquals($fillable, $post->getFillable());
     }
 
@@ -37,7 +37,7 @@ class PostModelTest extends TestCase
     public function test_post_has_timestamps()
     {
         $post = Post::factory()->create();
-        
+
         $this->assertNotNull($post->created_at);
         $this->assertNotNull($post->updated_at);
     }
@@ -46,7 +46,7 @@ class PostModelTest extends TestCase
     {
         $post = Post::factory()->create([
             'title' => 'Specific Title',
-            'author_type' => 'user'
+            'author_type' => 'user',
         ]);
 
         $this->assertEquals('Specific Title', $post->title);

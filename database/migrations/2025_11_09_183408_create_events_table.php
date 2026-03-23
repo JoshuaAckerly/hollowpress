@@ -13,7 +13,7 @@ return new class extends Migration
     {
         // Drop the table if it exists to avoid conflicts
         Schema::dropIfExists('events');
-        
+
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->foreignId('artist_id')->constrained()->onDelete('cascade');

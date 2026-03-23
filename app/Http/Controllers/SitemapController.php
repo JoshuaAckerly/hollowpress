@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
 use App\Models\Artist;
 use App\Models\CaseStudy;
+use App\Models\Post;
 use Illuminate\Http\Response;
 
 class SitemapController extends Controller
@@ -12,7 +12,7 @@ class SitemapController extends Controller
     public function index(): Response
     {
         $baseUrl = config('app.url', 'https://hollowpress.graveyardjokes.com');
-        
+
         // Static pages with their priorities and change frequencies
         $staticPages = [
             ['loc' => '/', 'priority' => '1.0', 'changefreq' => 'daily'],
@@ -27,22 +27,22 @@ class SitemapController extends Controller
 
         // Get all posts
         $posts = Post::select('id', 'updated_at')->get();
-        
+
         // Get all artists
         $artists = Artist::select('id', 'updated_at')->get();
-        
+
         // Get all case studies
         $caseStudies = CaseStudy::select('slug', 'updated_at')->get();
 
         // Generate XML
-        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
+        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
 
         // Add static pages
         foreach ($staticPages as $page) {
             $xml .= "  <url>\n";
             $xml .= "    <loc>{$baseUrl}{$page['loc']}</loc>\n";
-            $xml .= "    <lastmod>" . now()->toDateString() . "</lastmod>\n";
+            $xml .= '    <lastmod>'.now()->toDateString()."</lastmod>\n";
             $xml .= "    <changefreq>{$page['changefreq']}</changefreq>\n";
             $xml .= "    <priority>{$page['priority']}</priority>\n";
             $xml .= "  </url>\n";
