@@ -64,4 +64,3 @@ class Post extends Model
         return $query->latest()->limit($limit)->get();
     }
 }
-

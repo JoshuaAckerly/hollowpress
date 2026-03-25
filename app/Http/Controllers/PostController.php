@@ -232,6 +232,7 @@ class PostController extends Controller
     {
         try {
             Post::create($request->validated());
+
             return redirect()->route('posts.index')->with('success', 'Post created successfully!');
         } catch (\Exception $e) {
             return redirect()->back()->withInput()->with('error', 'Failed to create post. Please try again.');
@@ -255,7 +256,7 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         return Inertia::render('Posts/Edit', [
-            'post' => $post
+            'post' => $post,
         ]);
     }
 
@@ -263,6 +264,7 @@ class PostController extends Controller
     {
         try {
             $post->update($request->validated());
+
             return redirect()->route('posts.index')->with('success', 'Post updated successfully!');
         } catch (\Exception $e) {
             return redirect()->back()->withInput()->with('error', 'Failed to update post. Please try again.');
@@ -273,10 +275,10 @@ class PostController extends Controller
     {
         try {
             $post->delete();
+
             return redirect()->route('posts.index')->with('success', 'Post deleted successfully!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Failed to delete post. Please try again.');
         }
     }
-
 }

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\DemoPost;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Inertia\Inertia;
 
@@ -17,13 +16,14 @@ class DemoPostController extends Controller
     public function store(\App\Http\Requests\StorePostRequest $request)
     {
         // Rate limiting: 5 demo posts per IP per hour
-        $key = 'demo-post:' . $request->ip();
-        
+        $key = 'demo-post:'.$request->ip();
+
         if (RateLimiter::tooManyAttempts($key, 5)) {
             $seconds = RateLimiter::availableIn($key);
+
             return redirect()->back()
                 ->withInput()
-                ->with('error', "Too many demo posts created. Please try again in " . ceil($seconds / 60) . " minutes.");
+                ->with('error', 'Too many demo posts created. Please try again in '.ceil($seconds / 60).' minutes.');
         }
 
         try {
@@ -47,6 +47,7 @@ class DemoPostController extends Controller
     {
         try {
             $demoPost->delete();
+
             return redirect()->route('posts.index')->with('success', 'Demo post deleted successfully!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Failed to delete demo post. Please try again.');

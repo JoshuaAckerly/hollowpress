@@ -1,8 +1,8 @@
 import React from 'react';
 
 const Footer: React.FC = () => (
-    <footer className="py-6 bg-[var(--background)] border-t border-border">
-        <div className="container text-center muted">
+    <footer className="border-t border-border bg-[var(--background)] py-6">
+        <div className="muted container text-center">
             <p>&copy; {new Date().getFullYear()} Hollow Press. All rights reserved.</p>
         </div>
     </footer>

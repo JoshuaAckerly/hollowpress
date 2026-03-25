@@ -26,23 +26,23 @@ class AddSecurityHeaders
 
         $csp = "default-src 'self'";
         if (app()->environment('local')) {
-            $csp .= " http:";
+            $csp .= ' http:';
         }
         $csp .= "; script-src 'self' 'unsafe-inline'";
         if (app()->environment('local')) {
-            $csp .= " http:";
+            $csp .= ' http:';
         }
         $csp .= "; style-src 'self' 'unsafe-inline'";
         if (app()->environment('local')) {
-            $csp .= " http:";
+            $csp .= ' http:';
         }
         $csp .= " https://fonts.bunny.net; img-src 'self' data: https:";
         if (app()->environment('local')) {
-            $csp .= " http:";
+            $csp .= ' http:';
         }
         $csp .= "; font-src 'self' data: https:";
         if (app()->environment('local')) {
-            $csp .= " http:";
+            $csp .= ' http:';
         }
         $csp .= " https://fonts.bunny.net; connect-src 'self' https: http: ws: wss:; frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self';";
 
