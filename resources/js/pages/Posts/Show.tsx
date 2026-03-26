@@ -1,8 +1,8 @@
 import RelatedPosts from '@/components/RelatedPosts';
 import MainLayout from '@/layouts/main';
+import type HCaptchaType from '@hcaptcha/react-hcaptcha';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { lazy, Suspense, useRef } from 'react';
-import type HCaptchaType from '@hcaptcha/react-hcaptcha';
 
 const HCaptcha = lazy(() => import('@hcaptcha/react-hcaptcha'));
 
@@ -274,9 +274,7 @@ export default function Show({ post, comments, relatedPosts }: Props) {
                                             theme="dark"
                                         />
                                     </Suspense>
-                                    {errors.hcaptcha_token && (
-                                        <p className="mt-2 text-sm text-red-400">{errors.hcaptcha_token}</p>
-                                    )}
+                                    {errors.hcaptcha_token && <p className="mt-2 text-sm text-red-400">{errors.hcaptcha_token}</p>}
                                 </div>
 
                                 <button

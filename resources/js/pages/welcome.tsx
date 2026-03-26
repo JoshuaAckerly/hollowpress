@@ -198,109 +198,109 @@ const Welcome: React.FC<Props> = ({ posts = [], artists = [] }) => {
                             </a>
                         </div>
                     ) : (
-                    <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-                        {displayPosts.map((post, index) => (
-                            <div
-                                key={post.id}
-                                className="group relative overflow-hidden rounded-2xl border border-gray-700 bg-gray-800 shadow-xl transition-all duration-500 hover:border-gray-600 hover:shadow-2xl"
-                            >
-                                {/* Decorative corner elements */}
-                                <div className="absolute top-0 left-0 h-20 w-20 rounded-br-full bg-gradient-to-br from-gray-600/30 to-transparent"></div>
-                                <div className="absolute right-0 bottom-0 h-16 w-16 rounded-tl-full bg-gradient-to-tl from-slate-600/30 to-transparent"></div>
+                        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+                            {displayPosts.map((post, index) => (
+                                <div
+                                    key={post.id}
+                                    className="group relative overflow-hidden rounded-2xl border border-gray-700 bg-gray-800 shadow-xl transition-all duration-500 hover:border-gray-600 hover:shadow-2xl"
+                                >
+                                    {/* Decorative corner elements */}
+                                    <div className="absolute top-0 left-0 h-20 w-20 rounded-br-full bg-gradient-to-br from-gray-600/30 to-transparent"></div>
+                                    <div className="absolute right-0 bottom-0 h-16 w-16 rounded-tl-full bg-gradient-to-tl from-slate-600/30 to-transparent"></div>
 
-                                {/* Floating particles */}
-                                <div className="absolute top-4 left-4 h-2 w-2 animate-pulse rounded-full bg-gray-400"></div>
-                                <div className="absolute top-8 left-8 h-1 w-1 animate-ping rounded-full bg-slate-400"></div>
-                                <div className="absolute bottom-8 left-6 h-1.5 w-1.5 animate-bounce rounded-full bg-gray-500"></div>
+                                    {/* Floating particles */}
+                                    <div className="absolute top-4 left-4 h-2 w-2 animate-pulse rounded-full bg-gray-400"></div>
+                                    <div className="absolute top-8 left-8 h-1 w-1 animate-ping rounded-full bg-slate-400"></div>
+                                    <div className="absolute bottom-8 left-6 h-1.5 w-1.5 animate-bounce rounded-full bg-gray-500"></div>
 
-                                <div className="relative overflow-hidden">
-                                    <img
-                                        src={blogImages[index % blogImages.length]}
-                                        alt={post.title}
-                                        className="h-52 w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                    />
+                                    <div className="relative overflow-hidden">
+                                        <img
+                                            src={blogImages[index % blogImages.length]}
+                                            alt={post.title}
+                                            className="h-52 w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                        />
 
-                                    {/* Image overlay gradient */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                                        {/* Image overlay gradient */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
 
-                                    {/* Author type badge */}
-                                    <div className="absolute top-4 right-4">
-                                        <span
-                                            className={`rounded-full border border-white/20 px-4 py-2 text-xs font-bold shadow-lg backdrop-blur-sm ${
-                                                post.author_type === 'artist'
-                                                    ? 'bg-gradient-to-r from-gray-700/90 to-slate-700/90 text-white'
-                                                    : 'bg-gradient-to-r from-slate-600/90 to-gray-600/90 text-white'
-                                            }`}
-                                        >
-                                            {post.author_type === 'artist' ? '✨ Artist' : '💫 Creator'}
-                                        </span>
-                                    </div>
-
-                                    {/* Reading time estimate */}
-                                    <div className="absolute bottom-4 left-4">
-                                        <span className="rounded-full bg-black/50 px-3 py-1 text-xs text-white backdrop-blur-sm">
-                                            📖 {Math.ceil(post.content.length / 200)} min read
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div className="relative p-6">
-                                    {/* Decorative line */}
-                                    <div className="absolute top-0 right-6 left-6 h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
-
-                                    <h4 className="mt-2 mb-4 line-clamp-2 text-xl font-bold text-white transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-gray-300 group-hover:to-slate-300 group-hover:bg-clip-text group-hover:text-transparent">
-                                        {post.title}
-                                    </h4>
-
-                                    <div className="mb-4 flex items-center text-sm">
-                                        <div
-                                            className={`mr-3 flex h-10 w-10 items-center justify-center rounded-full font-bold text-white shadow-md ${
-                                                post.author_type === 'artist'
-                                                    ? 'bg-gradient-to-br from-gray-600 to-slate-600'
-                                                    : 'bg-gradient-to-br from-slate-700 to-gray-700'
-                                            }`}
-                                        >
-                                            {post.author_name.charAt(0)}
+                                        {/* Author type badge */}
+                                        <div className="absolute top-4 right-4">
+                                            <span
+                                                className={`rounded-full border border-white/20 px-4 py-2 text-xs font-bold shadow-lg backdrop-blur-sm ${
+                                                    post.author_type === 'artist'
+                                                        ? 'bg-gradient-to-r from-gray-700/90 to-slate-700/90 text-white'
+                                                        : 'bg-gradient-to-r from-slate-600/90 to-gray-600/90 text-white'
+                                                }`}
+                                            >
+                                                {post.author_type === 'artist' ? '✨ Artist' : '💫 Creator'}
+                                            </span>
                                         </div>
-                                        <div>
-                                            <p className="font-semibold text-gray-200">{post.author_name}</p>
-                                            <p className="flex items-center text-xs text-gray-400">
-                                                📅 {new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                                                <span className="mx-2">•</span>
-                                                ❤️ {Math.floor(Math.random() * 50) + 10} likes
-                                            </p>
+
+                                        {/* Reading time estimate */}
+                                        <div className="absolute bottom-4 left-4">
+                                            <span className="rounded-full bg-black/50 px-3 py-1 text-xs text-white backdrop-blur-sm">
+                                                📖 {Math.ceil(post.content.length / 200)} min read
+                                            </span>
                                         </div>
                                     </div>
 
-                                    <p className="mb-6 line-clamp-3 leading-relaxed text-gray-300">{post.content.substring(0, 130)}...</p>
+                                    <div className="relative p-6">
+                                        {/* Decorative line */}
+                                        <div className="absolute top-0 right-6 left-6 h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
 
-                                    {/* Tags */}
-                                    <div className="mb-4 flex flex-wrap gap-2">
-                                        <span className="rounded-full bg-gray-700 px-2 py-1 text-xs text-gray-300">#creative</span>
-                                        <span className="rounded-full bg-slate-700 px-2 py-1 text-xs text-slate-300">#inspiration</span>
-                                        {post.author_type === 'artist' && (
-                                            <span className="rounded-full bg-gray-600 px-2 py-1 text-xs text-gray-300">#art</span>
-                                        )}
-                                    </div>
+                                        <h4 className="mt-2 mb-4 line-clamp-2 text-xl font-bold text-white transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-gray-300 group-hover:to-slate-300 group-hover:bg-clip-text group-hover:text-transparent">
+                                            {post.title}
+                                        </h4>
 
-                                    <a
-                                        href={`/posts/${post.id}`}
-                                        className="group inline-flex transform items-center rounded-lg bg-gradient-to-r from-gray-700 to-slate-700 px-4 py-2 font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:from-gray-600 hover:to-slate-600 hover:shadow-lg"
-                                    >
-                                        ✨ Read Story
-                                        <svg
-                                            className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
+                                        <div className="mb-4 flex items-center text-sm">
+                                            <div
+                                                className={`mr-3 flex h-10 w-10 items-center justify-center rounded-full font-bold text-white shadow-md ${
+                                                    post.author_type === 'artist'
+                                                        ? 'bg-gradient-to-br from-gray-600 to-slate-600'
+                                                        : 'bg-gradient-to-br from-slate-700 to-gray-700'
+                                                }`}
+                                            >
+                                                {post.author_name.charAt(0)}
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold text-gray-200">{post.author_name}</p>
+                                                <p className="flex items-center text-xs text-gray-400">
+                                                    📅 {new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                                    <span className="mx-2">•</span>
+                                                    ❤️ {Math.floor(Math.random() * 50) + 10} likes
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <p className="mb-6 line-clamp-3 leading-relaxed text-gray-300">{post.content.substring(0, 130)}...</p>
+
+                                        {/* Tags */}
+                                        <div className="mb-4 flex flex-wrap gap-2">
+                                            <span className="rounded-full bg-gray-700 px-2 py-1 text-xs text-gray-300">#creative</span>
+                                            <span className="rounded-full bg-slate-700 px-2 py-1 text-xs text-slate-300">#inspiration</span>
+                                            {post.author_type === 'artist' && (
+                                                <span className="rounded-full bg-gray-600 px-2 py-1 text-xs text-gray-300">#art</span>
+                                            )}
+                                        </div>
+
+                                        <a
+                                            href={`/posts/${post.id}`}
+                                            className="group inline-flex transform items-center rounded-lg bg-gradient-to-r from-gray-700 to-slate-700 px-4 py-2 font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:from-gray-600 hover:to-slate-600 hover:shadow-lg"
                                         >
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                        </svg>
-                                    </a>
+                                            ✨ Read Story
+                                            <svg
+                                                className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
                     )}
 
                     <div className="relative mt-16 text-center">

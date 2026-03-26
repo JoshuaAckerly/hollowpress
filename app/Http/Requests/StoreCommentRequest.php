@@ -31,7 +31,7 @@ class StoreCommentRequest extends FormRequest
             }
 
             $response = Http::asForm()->post('https://hcaptcha.com/siteverify', [
-                'secret'   => config('services.hcaptcha.secret'),
+                'secret' => config('services.hcaptcha.secret'),
                 'response' => $token,
                 'remoteip' => $this->ip(),
             ]);
@@ -45,11 +45,11 @@ class StoreCommentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'author_name.required'   => 'Your name is required.',
-            'author_name.max'        => 'Your name may not be greater than 255 characters.',
-            'content.required'       => 'Please write a comment before submitting.',
-            'content.min'            => 'Comments must be at least 3 characters.',
-            'content.max'            => 'Comments may not be greater than 2000 characters.',
+            'author_name.required' => 'Your name is required.',
+            'author_name.max' => 'Your name may not be greater than 255 characters.',
+            'content.required' => 'Please write a comment before submitting.',
+            'content.min' => 'Comments must be at least 3 characters.',
+            'content.max' => 'Comments may not be greater than 2000 characters.',
             'hcaptcha_token.required' => 'Please complete the CAPTCHA before submitting.',
         ];
     }
