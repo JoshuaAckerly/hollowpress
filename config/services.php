@@ -56,4 +56,9 @@ return [
         'track_token' => env('AUTHSYSTEM_TRACK_TOKEN'),
     ],
 
+    'hcaptcha' => [
+        'sitekey' => env('HCAPTCHA_SITEKEY'),
+        'secret' => env('HCAPTCHA_SECRET'),
+    ],
+
 ];

@@ -29,11 +29,6 @@ const Header: React.FC = () => {
                             </a>
                         </li>
                         <li>
-                            <a className="hover:underline" href="/case-studies">
-                                Case Studies
-                            </a>
-                        </li>
-                        <li>
                             <a className="hover:underline" href="/sponsored">
                                 Sponsored Artist
                             </a>

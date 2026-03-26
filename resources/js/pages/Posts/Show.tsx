@@ -1,6 +1,10 @@
 import RelatedPosts from '@/components/RelatedPosts';
 import MainLayout from '@/layouts/main';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { lazy, Suspense, useRef } from 'react';
+import type HCaptchaType from '@hcaptcha/react-hcaptcha';
+
+const HCaptcha = lazy(() => import('@hcaptcha/react-hcaptcha'));
 
 interface PageProps {
     [key: string]: unknown;
@@ -42,6 +46,7 @@ interface Props {
 
 export default function Show({ post, comments, relatedPosts }: Props) {
     const { flash } = usePage<PageProps>().props;
+    const captchaRef = useRef<HCaptchaType>(null);
     const {
         data,
         setData,
@@ -52,6 +57,7 @@ export default function Show({ post, comments, relatedPosts }: Props) {
     } = useForm({
         author_name: '',
         content: '',
+        hcaptcha_token: '',
     });
 
     const handleCommentSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -59,7 +65,15 @@ export default function Show({ post, comments, relatedPosts }: Props) {
 
         submitComment(`/posts/${post.id}/comments`, {
             preserveScroll: true,
-            onSuccess: () => reset('content'),
+            onSuccess: () => {
+                reset('content');
+                setData('hcaptcha_token', '');
+                captchaRef.current?.resetCaptcha();
+            },
+            onError: () => {
+                setData('hcaptcha_token', '');
+                captchaRef.current?.resetCaptcha();
+            },
         });
     };
 
@@ -250,9 +264,24 @@ export default function Show({ post, comments, relatedPosts }: Props) {
                                     {errors.content && <p className="mt-2 text-sm text-red-400">{errors.content}</p>}
                                 </div>
 
+                                <div>
+                                    <Suspense fallback={<div className="h-16" />}>
+                                        <HCaptcha
+                                            sitekey={import.meta.env.VITE_HCAPTCHA_SITEKEY}
+                                            onVerify={(token) => setData('hcaptcha_token', token)}
+                                            onExpire={() => setData('hcaptcha_token', '')}
+                                            ref={captchaRef}
+                                            theme="dark"
+                                        />
+                                    </Suspense>
+                                    {errors.hcaptcha_token && (
+                                        <p className="mt-2 text-sm text-red-400">{errors.hcaptcha_token}</p>
+                                    )}
+                                </div>
+
                                 <button
                                     type="submit"
-                                    disabled={processing}
+                                    disabled={processing || !data.hcaptcha_token}
                                     className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-gray-700 to-gray-600 px-6 py-3 font-semibold text-white transition-all duration-300 hover:from-gray-600 hover:to-gray-500 disabled:cursor-not-allowed disabled:opacity-50"
                                 >
                                     {processing ? 'Submitting...' : 'Submit Comment'}

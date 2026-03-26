@@ -4,14 +4,6 @@ import React from 'react';
 import { getProjectUrl } from '../env';
 const cdn = import.meta.env.VITE_ASSET_URL;
 
-interface Product {
-    img: string;
-    id: number;
-    name: string;
-    description: string;
-    link?: string;
-}
-
 interface Post {
     id: number;
     title: string;
@@ -46,62 +38,14 @@ interface Props {
     artists?: Artist[];
 }
 
-const products: Product[] = [
-    {
-        img: `${cdn}/images/Abstractillustrationofalabyrinthmaze.Creativedigitalartbackground.Texturedwithsubtlelightnoiseanddust.Canbeusedasamusicalbumcoverdesign..webp`,
-        id: 1,
-        name: 'Lorem ipsum',
-        description: 'A deep dive into the world of velvet textures.',
-        link: getProjectUrl('hollowpress'),
-    },
-    {
-        img: `${cdn}/images/
-Mandreamsofahousebytheseaatsunsetsurrealartforalbumcoverposterorbookillustration.webp`,
-        id: 2,
-        name: 'Lorem ipsum',
-        description: 'Exploring the ethereal sounds of synth music.',
-    },
-    { img: `${cdn}/images/AdobeStock_565842769.webp`, id: 3, name: 'Lorem ipsum', description: 'A journey through the phases of the moon.' },
-];
-
 const blogImages = [
     `${cdn}/images/AdobeStock_1423234483.webp`,
     `${cdn}/images/eviltranscendencealbumcoversleekdigitalrenderforthealbumbeyondrealitiesstyle.generativeAI copy.webp`,
     `${cdn}/images/VintageoldblurreddustedabstractbackgroundWornmusicAlbumCoverwithRingwearSquareimage.EasytoaddasOverlayorScreenFilter.IdealperfectForposterflyerormusicalbumcoverdesign.webp`,
 ];
 
-const defaultPosts: Post[] = [
-    {
-        id: 999,
-        title: 'Lorem Ipsum Dolor Sit',
-        content:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
-        author_name: 'John Doe',
-        author_type: 'artist',
-        created_at: new Date().toISOString(),
-    },
-    {
-        id: 998,
-        title: 'Consectetur Adipiscing Elit',
-        content:
-            'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt.',
-        author_name: 'Jane Smith',
-        author_type: 'user',
-        created_at: new Date().toISOString(),
-    },
-    {
-        id: 997,
-        title: 'Sed Do Eiusmod Tempor',
-        content:
-            'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati.',
-        author_name: 'Mike Johnson',
-        author_type: 'artist',
-        created_at: new Date().toISOString(),
-    },
-];
-
 const Welcome: React.FC<Props> = ({ posts = [], artists = [] }) => {
-    const displayPosts = posts.length > 0 ? posts.slice(0, 3) : defaultPosts;
+    const displayPosts = posts.slice(0, 3);
 
     return (
         <Main>
@@ -208,30 +152,23 @@ const Welcome: React.FC<Props> = ({ posts = [], artists = [] }) => {
                         </a>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                        {artists && artists.length > 0
-                            ? artists.map((artist, index) => (
-                                  <a key={artist.id} href={`/artists/${artist.id}`} className="card text-center transition-shadow hover:shadow-lg">
-                                      <img
-                                          src={products[index % products.length].img}
-                                          alt={artist.name}
-                                          className="h-48 w-full rounded object-cover"
-                                      />
-                                      <h4 className="mt-4 text-xl font-bold">{artist.name}</h4>
-                                      <p className="muted mt-2">{artist.bio.substring(0, 100)}...</p>
-                                      <div className="mt-2 text-sm text-gray-600">
-                                          <span className="rounded bg-gray-100 px-2 py-1">{artist.genre}</span>
-                                      </div>
-                                  </a>
-                              ))
-                            : products.map((product) => (
-                                  <div key={product.id} className="card text-center">
-                                      <img src={product.img} alt={product.name} className="h-48 w-full rounded object-cover" />
-                                      <h4 className="mt-4 text-xl font-bold">{product.name}</h4>
-                                      <p className="muted mt-2">{product.description}</p>
-                                  </div>
-                              ))}
-                    </div>
+                    {artists && artists.length > 0 ? (
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                            {artists.map((artist) => (
+                                <a key={artist.id} href={`/artists/${artist.id}`} className="card text-center transition-shadow hover:shadow-lg">
+                                    <h4 className="mt-4 text-xl font-bold">{artist.name}</h4>
+                                    <p className="muted mt-2">{artist.bio.substring(0, 100)}...</p>
+                                    <div className="mt-2 text-sm text-gray-600">
+                                        <span className="rounded bg-gray-100 px-2 py-1">{artist.genre}</span>
+                                    </div>
+                                </a>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="py-12 text-center">
+                            <p className="muted">No featured artists yet. Check back soon.</p>
+                        </div>
+                    )}
                 </div>
             </section>
 
@@ -243,10 +180,24 @@ const Welcome: React.FC<Props> = ({ posts = [], artists = [] }) => {
                 <div className="absolute right-1/3 bottom-40 h-16 w-16 rounded-full bg-slate-700/25 blur-lg"></div>
                 <div className="container">
                     <div className="mb-12 text-center">
-                        <h4 className="heading mb-4 text-3xl font-bold text-white">Lorem Ipsum Blog</h4>
-                        <p className="mx-auto max-w-2xl text-gray-300">Lorem ipsum dolor sit amet consectetur adipiscing elit</p>
+                        <h4 className="heading mb-4 text-3xl font-bold text-white">Latest Stories</h4>
+                        <p className="mx-auto max-w-2xl text-gray-300">Fresh writing from artists and creators in the Hollow Press community</p>
                     </div>
 
+                    {displayPosts.length === 0 ? (
+                        <div className="py-16 text-center">
+                            <p className="mb-2 text-5xl">✍️</p>
+                            <h5 className="mb-3 text-xl font-semibold text-white">No stories yet</h5>
+                            <p className="mb-8 text-gray-400">Be the first to share your work with the community.</p>
+                            <a
+                                href="/posts/create"
+                                className="inline-flex items-center rounded-xl bg-gradient-to-r from-gray-700 to-slate-700 px-6 py-3 font-semibold text-white transition-all duration-300 hover:from-gray-600 hover:to-slate-600"
+                            >
+                                <span className="mr-2">✨</span>
+                                Share Your Story
+                            </a>
+                        </div>
+                    ) : (
                     <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
                         {displayPosts.map((post, index) => (
                             <div
@@ -350,6 +301,7 @@ const Welcome: React.FC<Props> = ({ posts = [], artists = [] }) => {
                             </div>
                         ))}
                     </div>
+                    )}
 
                     <div className="relative mt-16 text-center">
                         {/* Decorative elements around button */}

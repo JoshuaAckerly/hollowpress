@@ -50,11 +50,6 @@ const MobileMenu: React.FC = () => {
                                 </a>
                             </li>
                             <li>
-                                <a className="text-gray-900 hover:underline dark:text-white" href="/case-studies" onClick={() => setIsOpen(false)}>
-                                    Case Studies
-                                </a>
-                            </li>
-                            <li>
                                 <a className="text-gray-900 hover:underline dark:text-white" href="/sponsored" onClick={() => setIsOpen(false)}>
                                     Sponsored Artist
                                 </a>
