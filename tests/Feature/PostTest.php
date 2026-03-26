@@ -4,13 +4,12 @@ namespace Tests\Feature;
 
 use App\Models\Comment;
 use App\Models\Post;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class PostTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected string $dashboardToken = 'test-dashboard-token';
 
     protected function setUp(): void
@@ -18,6 +17,15 @@ class PostTest extends TestCase
         parent::setUp();
 
         config(['services.dashboard.admin_token' => $this->dashboardToken]);
+    }
+
+    protected function tearDown(): void
+    {
+        DB::table('comments')->delete();
+        DB::table('posts')->delete();
+        DB::table('demo_posts')->delete();
+
+        parent::tearDown();
     }
 
     public function test_can_view_posts_index()
@@ -86,11 +94,16 @@ class PostTest extends TestCase
 
     public function test_can_submit_comment_for_post()
     {
+        Http::fake([
+            'https://hcaptcha.com/siteverify' => Http::response(['success' => true], 200),
+        ]);
+
         $post = Post::factory()->create();
 
         $commentData = [
             'author_name' => 'Commenter Name',
             'content' => 'This is a thoughtful test comment.',
+            'hcaptcha_token' => 'test-hcaptcha-token',
         ];
 
         $response = $this->post("/posts/{$post->id}/comments", $commentData);
@@ -140,20 +153,47 @@ class PostTest extends TestCase
         $response->assertDontSee('This comment is pending and should be hidden.');
     }
 
+    public function test_captcha_verification_must_succeed()
+    {
+        Http::fake([
+            'https://hcaptcha.com/siteverify' => Http::response(['success' => false], 200),
+        ]);
+
+        $post = Post::factory()->create();
+
+        $response = $this->post("/posts/{$post->id}/comments", [
+            'author_name' => 'Commenter Name',
+            'content' => 'This comment has a bad captcha.',
+            'hcaptcha_token' => 'invalid-token',
+        ]);
+
+        $response->assertSessionHasErrors('hcaptcha_token');
+        $this->assertDatabaseMissing('comments', [
+            'post_id' => $post->id,
+            'content' => 'This comment has a bad captcha.',
+        ]);
+    }
+
     public function test_comment_submission_is_rate_limited()
     {
+        Http::fake([
+            'https://hcaptcha.com/siteverify' => Http::response(['success' => true], 200),
+        ]);
+
         $post = Post::factory()->create();
 
         for ($index = 0; $index < 10; $index++) {
             $this->post("/posts/{$post->id}/comments", [
                 'author_name' => 'Rate Limit User',
                 'content' => "Rate limit comment number {$index}.",
+                'hcaptcha_token' => 'test-hcaptcha-token',
             ])->assertRedirect("/posts/{$post->id}");
         }
 
         $response = $this->post("/posts/{$post->id}/comments", [
             'author_name' => 'Rate Limit User',
             'content' => 'This attempt should be rate limited.',
+            'hcaptcha_token' => 'test-hcaptcha-token',
         ]);
 
         $response->assertRedirect("/posts/{$post->id}");
