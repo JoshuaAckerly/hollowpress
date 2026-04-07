@@ -1,5 +1,6 @@
 import RelatedPosts from '@/components/RelatedPosts';
 import MainLayout from '@/layouts/main';
+import { trackFormSubmission } from '@/hooks/use-google-analytics';
 import type HCaptchaType from '@hcaptcha/react-hcaptcha';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { lazy, Suspense, useRef } from 'react';
@@ -62,6 +63,11 @@ export default function Show({ post, comments, relatedPosts }: Props) {
 
     const handleCommentSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
+        // Track comment form submission
+        trackFormSubmission('comment_form', {
+            post_id: post.id.toString(),
+        });
 
         submitComment(`/posts/${post.id}/comments`, {
             preserveScroll: true,
