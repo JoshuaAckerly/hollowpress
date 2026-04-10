@@ -1,5 +1,5 @@
-import MainLayout from '@/layouts/main';
 import { trackFormSubmission } from '@/hooks/use-google-analytics';
+import MainLayout from '@/layouts/main';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
 
@@ -22,12 +22,12 @@ export default function Contact() {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        
+
         // Track contact form submission
         trackFormSubmission('contact_form', {
             subject: data.subject || 'general',
         });
-        
+
         post('/contact', {
             onSuccess: () => reset(),
         });

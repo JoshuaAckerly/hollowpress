@@ -1,7 +1,7 @@
 import Breadcrumb from '@/components/Breadcrumb';
 import RelatedPosts from '@/components/RelatedPosts';
-import MainLayout from '@/layouts/main';
 import { trackFormSubmission } from '@/hooks/use-google-analytics';
+import MainLayout from '@/layouts/main';
 import type HCaptchaType from '@hcaptcha/react-hcaptcha';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { lazy, Suspense, useRef } from 'react';
@@ -109,13 +109,7 @@ export default function Show({ post, comments, relatedPosts }: Props) {
                 {/* Breadcrumbs */}
                 <div className="border-b border-gray-700 bg-gray-900">
                     <div className="mx-auto max-w-4xl px-6 py-4">
-                        <Breadcrumb
-                            items={[
-                                { label: 'Home', href: '/' },
-                                { label: 'Stories', href: '/posts' },
-                                { label: post.title },
-                            ]}
-                        />
+                        <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Stories', href: '/posts' }, { label: post.title }]} />
                     </div>
                 </div>
 

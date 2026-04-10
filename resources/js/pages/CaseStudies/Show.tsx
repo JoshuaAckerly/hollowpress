@@ -52,11 +52,7 @@ export default function Show({ caseStudy }: Props) {
                 <div className="border-b border-gray-700 bg-gray-900">
                     <div className="mx-auto max-w-6xl px-6 py-4">
                         <Breadcrumb
-                            items={[
-                                { label: 'Home', href: '/' },
-                                { label: 'Case Studies', href: '/case-studies' },
-                                { label: caseStudy.title },
-                            ]}
+                            items={[{ label: 'Home', href: '/' }, { label: 'Case Studies', href: '/case-studies' }, { label: caseStudy.title }]}
                         />
                     </div>
                 </div>

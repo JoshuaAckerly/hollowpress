@@ -20,22 +20,16 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ items, className }) => {
                     return (
                         <li key={index} className="flex items-center gap-1">
                             {index > 0 && (
-                                <span className="select-none text-gray-600" aria-hidden="true">
+                                <span className="text-gray-600 select-none" aria-hidden="true">
                                     /
                                 </span>
                             )}
                             {isLast || !item.href ? (
-                                <span
-                                    className="text-gray-200"
-                                    aria-current={isLast ? 'page' : undefined}
-                                >
+                                <span className="text-gray-200" aria-current={isLast ? 'page' : undefined}>
                                     {item.label}
                                 </span>
                             ) : (
-                                <Link
-                                    href={item.href}
-                                    className="transition-colors hover:text-gray-200"
-                                >
+                                <Link href={item.href} className="transition-colors hover:text-gray-200">
                                     {item.label}
                                 </Link>
                             )}
