@@ -1,6 +1,6 @@
 import MainLayout from '@/layouts/main';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface PageProps {
     [key: string]: unknown;
@@ -49,6 +49,35 @@ export default function Index({ posts, filters, filterOptions }: Props) {
     const [category, setCategory] = useState(filters?.category ?? '');
     const [dateFrom, setDateFrom] = useState(filters?.date_from ?? '');
     const [dateTo, setDateTo] = useState(filters?.date_to ?? '');
+    const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const search = (q: string, auth: string, cat: string, from: string, to: string) => {
+        router.get(
+            '/posts',
+            {
+                q: q || undefined,
+                author: auth || undefined,
+                category: cat || undefined,
+                date_from: from || undefined,
+                date_to: to || undefined,
+            },
+            { preserveState: true, preserveScroll: true, replace: true },
+        );
+    };
+
+    const handleQueryChange = (value: string) => {
+        setQuery(value);
+        if (debounceRef.current) clearTimeout(debounceRef.current);
+        debounceRef.current = setTimeout(() => {
+            search(value, author, category, dateFrom, dateTo);
+        }, 450);
+    };
+
+    useEffect(() => {
+        return () => {
+            if (debounceRef.current) clearTimeout(debounceRef.current);
+        };
+    }, []);
 
     const extractSearchTerms = (search: string): string[] => {
         if (!search.trim()) return [];
@@ -109,20 +138,12 @@ export default function Index({ posts, filters, filterOptions }: Props) {
 
     const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        router.get(
-            '/posts',
-            {
-                q: query || undefined,
-                author: author || undefined,
-                category: category || undefined,
-                date_from: dateFrom || undefined,
-                date_to: dateTo || undefined,
-            },
-            { preserveState: true, preserveScroll: true, replace: true },
-        );
+        if (debounceRef.current) clearTimeout(debounceRef.current);
+        search(query, author, category, dateFrom, dateTo);
     };
 
     const clearFilters = () => {
+        if (debounceRef.current) clearTimeout(debounceRef.current);
         setQuery('');
         setAuthor('');
         setCategory('');
@@ -185,9 +206,10 @@ export default function Index({ posts, filters, filterOptions }: Props) {
                             <input
                                 type="search"
                                 value={query}
-                                onChange={(event) => setQuery(event.target.value)}
+                                onChange={(event) => handleQueryChange(event.target.value)}
                                 placeholder='Search posts... Try: "neon city" OR vinyl'
                                 className="flex-1 rounded-lg border border-gray-600 bg-gray-900 px-4 py-3 text-gray-100 placeholder:text-gray-500"
+                                aria-label="Search posts"
                             />
                             <button type="submit" className="btn btn-primary">
                                 Search

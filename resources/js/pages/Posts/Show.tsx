@@ -1,3 +1,4 @@
+import Breadcrumb from '@/components/Breadcrumb';
 import RelatedPosts from '@/components/RelatedPosts';
 import MainLayout from '@/layouts/main';
 import { trackFormSubmission } from '@/hooks/use-google-analytics';
@@ -105,20 +106,16 @@ export default function Show({ post, comments, relatedPosts }: Props) {
             </Head>
 
             <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
-                {/* Navigation */}
+                {/* Breadcrumbs */}
                 <div className="border-b border-gray-700 bg-gray-900">
                     <div className="mx-auto max-w-4xl px-6 py-4">
-                        <Link href="/posts" className="group inline-flex items-center text-gray-400 transition-colors hover:text-gray-200">
-                            <svg
-                                className="mr-2 h-5 w-5 transition-transform group-hover:-translate-x-1"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                            </svg>
-                            Back to Stories
-                        </Link>
+                        <Breadcrumb
+                            items={[
+                                { label: 'Home', href: '/' },
+                                { label: 'Stories', href: '/posts' },
+                                { label: post.title },
+                            ]}
+                        />
                     </div>
                 </div>
 
