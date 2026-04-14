@@ -24,24 +24,26 @@ class AddSecurityHeaders
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
         }
 
+        $isNonProd = app()->environment('local', 'testing') || env('VITE_SERVER_ENV') !== 'production';
+
         $csp = "default-src 'self'";
-        if (app()->environment('local')) {
+        if ($isNonProd) {
             $csp .= ' http:';
         }
         $csp .= "; script-src 'self' 'unsafe-inline'";
-        if (app()->environment('local')) {
+        if ($isNonProd) {
             $csp .= ' http:';
         }
         $csp .= "; style-src 'self' 'unsafe-inline'";
-        if (app()->environment('local')) {
+        if ($isNonProd) {
             $csp .= ' http:';
         }
         $csp .= " https://fonts.bunny.net; img-src 'self' data: https:";
-        if (app()->environment('local')) {
+        if ($isNonProd) {
             $csp .= ' http:';
         }
         $csp .= "; font-src 'self' data: https:";
-        if (app()->environment('local')) {
+        if ($isNonProd) {
             $csp .= ' http:';
         }
         $csp .= " https://fonts.bunny.net; connect-src 'self' https: http: ws: wss:; frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self';";
