@@ -51,10 +51,7 @@ export default function NewsletterForm({ className }: NewsletterFormProps) {
             <p className="mb-6 text-gray-400">Get new posts and updates delivered to your inbox. No spam.</p>
 
             {status === 'success' ? (
-                <div
-                    role="status"
-                    className="rounded-lg border border-green-500/30 bg-green-500/10 px-4 py-3 text-sm text-green-300"
-                >
+                <div role="status" className="rounded-lg border border-green-500/30 bg-green-500/10 px-4 py-3 text-sm text-green-300">
                     {message}
                 </div>
             ) : (
@@ -71,7 +68,7 @@ export default function NewsletterForm({ className }: NewsletterFormProps) {
                             placeholder="you@example.com"
                             required
                             disabled={status === 'loading'}
-                            className="flex-1 rounded-lg border border-gray-600 bg-gray-900 px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 disabled:opacity-60"
+                            className="flex-1 rounded-lg border border-gray-600 bg-gray-900 px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 focus:outline-none disabled:opacity-60"
                         />
                         <button
                             type="submit"
