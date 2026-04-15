@@ -81,6 +81,9 @@ Route::get('/about', function () {
 Route::get('/contact', [\App\Http\Controllers\ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [\App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');
 
+Route::post('/newsletter/subscribe', [\App\Http\Controllers\NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
+Route::get('/newsletter/unsubscribe/{token}', [\App\Http\Controllers\NewsletterController::class, 'unsubscribe'])->name('newsletter.unsubscribe');
+
 Route::get('/case-studies', [\App\Http\Controllers\CaseStudyController::class, 'index'])->name('case-studies.index');
 Route::get('/case-studies/{slug}', [\App\Http\Controllers\CaseStudyController::class, 'show'])->name('case-studies.show');
 
