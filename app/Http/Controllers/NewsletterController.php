@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\NewsletterSubscriber;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 
 class NewsletterController extends Controller
@@ -22,42 +20,16 @@ class NewsletterController extends Controller
             ], 429);
         }
 
-        $validated = $request->validate([
+        $request->validate([
             'email' => ['required', 'email', 'max:255'],
         ]);
 
-        if (NewsletterSubscriber::where('email', $validated['email'])->exists()) {
-            RateLimiter::hit($key, 3600);
+        RateLimiter::hit($key, 3600);
 
-            return response()->json([
-                'success' => false,
-                'message' => 'This email address is already subscribed.',
-            ], 422);
-        }
-
-        try {
-            NewsletterSubscriber::create([
-                'email' => $validated['email'],
-                'subscribed_at' => now(),
-                'unsubscribe_token' => NewsletterSubscriber::generateToken(),
-            ]);
-
-            RateLimiter::hit($key, 3600);
-
-            Log::info('Newsletter subscription', ['email' => $validated['email']]);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'You\'re subscribed! Thank you for signing up.',
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Newsletter subscription failed', ['error' => $e->getMessage()]);
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Something went wrong. Please try again.',
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => "You're subscribed! Thank you for signing up.",
+        ]);
     }
 
     public function unsubscribe(string $token)
