@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NewsletterSubscriber;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 
 class NewsletterController extends Controller
@@ -24,7 +26,20 @@ class NewsletterController extends Controller
             'email' => ['required', 'email', 'max:255'],
         ]);
 
+        if (NewsletterSubscriber::where('email', $request->email)->exists()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'This email is already subscribed.',
+            ], 422);
+        }
+
         RateLimiter::hit($key, 3600);
+
+        NewsletterSubscriber::create([
+            'email' => $request->email,
+            'subscribed_at' => now(),
+            'unsubscribe_token' => NewsletterSubscriber::generateToken(),
+        ]);
 
         return response()->json([
             'success' => true,
