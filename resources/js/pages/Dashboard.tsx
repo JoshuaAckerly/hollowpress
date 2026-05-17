@@ -15,6 +15,7 @@ interface DashboardStats {
     draftPostsCount: number;
     artistsCount: number;
     caseStudiesCount: number;
+    projectsCount: number;
 }
 
 interface RecentPost {
@@ -28,6 +29,14 @@ interface RecentCaseStudy {
     id: number;
     title: string;
     slug: string;
+    created_at: string;
+}
+
+interface RecentProject {
+    id: number;
+    title: string;
+    slug: string;
+    status: string;
     created_at: string;
 }
 
@@ -48,6 +57,7 @@ interface Props {
     stats: DashboardStats;
     recentPosts: RecentPost[];
     recentCaseStudies: RecentCaseStudy[];
+    recentProjects: RecentProject[];
     recentComments: RecentComment[];
 }
 
@@ -60,11 +70,12 @@ const formatDate = (value: string): string => {
     return date.toLocaleDateString();
 };
 
-const Dashboard: React.FC<Props> = ({ stats, recentPosts, recentCaseStudies, recentComments }) => {
+const Dashboard: React.FC<Props> = ({ stats, recentPosts, recentCaseStudies, recentProjects, recentComments }) => {
     const { flash } = usePage<PageProps>().props;
     const [dashboardToken, setDashboardToken] = useState('');
     const hasAnyPosts = stats.publishedPostsCount + stats.draftPostsCount > 0;
     const hasAnyCaseStudies = stats.caseStudiesCount > 0;
+    const hasAnyProjects = stats.projectsCount > 0;
 
     return (
         <Main>
@@ -101,6 +112,10 @@ const Dashboard: React.FC<Props> = ({ stats, recentPosts, recentCaseStudies, rec
                             <p className="muted">Case studies</p>
                             <p className="mt-2 text-3xl font-bold">{stats.caseStudiesCount}</p>
                         </div>
+                        <div className="card">
+                            <p className="muted">Projects</p>
+                            <p className="mt-2 text-3xl font-bold">{stats.projectsCount}</p>
+                        </div>
                     </div>
 
                     <div className="card">
@@ -122,10 +137,48 @@ const Dashboard: React.FC<Props> = ({ stats, recentPosts, recentCaseStudies, rec
                                         : 'No case studies yet — seed at least one to support trust and conversion.'}
                                 </p>
                             </div>
+                            <div className="rounded border border-border p-3">
+                                <p className="font-semibold">Projects</p>
+                                <p className="muted mt-1">
+                                    {hasAnyProjects
+                                        ? `${stats.projectsCount} project${stats.projectsCount !== 1 ? 's' : ''} in the archive.`
+                                        : 'No projects yet — add one to the archive.'}
+                                </p>
+                            </div>
                         </div>
                     </div>
 
                     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                        <div className="card space-y-4">
+                            <div className="flex items-center justify-between">
+                                <h2 className="heading m-0">Recent projects</h2>
+                                <a className="btn btn-outline" href="/projects">
+                                    View all
+                                </a>
+                            </div>
+                            {recentProjects.length > 0 ? (
+                                <ul className="space-y-3">
+                                    {recentProjects.map((project) => (
+                                        <li key={project.id} className="rounded border border-border p-3">
+                                            <a className="font-semibold hover:underline" href={`/projects/${project.slug}`}>
+                                                {project.title}
+                                            </a>
+                                            <p className="muted mt-1">
+                                                <span className="capitalize">{project.status}</span> • {formatDate(project.created_at)}
+                                            </p>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <div className="rounded border border-dashed border-border p-4">
+                                    <p className="font-semibold">No projects yet</p>
+                                    <p className="muted mt-1">Add your first project to the archive.</p>
+                                    <a className="btn btn-outline mt-3" href="/projects">
+                                        Open projects
+                                    </a>
+                                </div>
+                            )}
+                        </div>
                         <div className="card space-y-4">
                             <div className="flex items-center justify-between">
                                 <h2 className="heading m-0">Recent posts</h2>

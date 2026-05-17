@@ -4,6 +4,7 @@ use App\Http\Middleware\EnsureDashboardAdminToken;
 use App\Models\Artist;
 use App\Models\CaseStudy;
 use App\Models\Comment;
+use App\Models\Project;
 use App\Models\DemoPost;
 use App\Models\Post;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,9 @@ Route::get('/dashboard', function () {
     $draftPostsCount = DemoPost::count();
     $artistsCount = Artist::count();
     $caseStudiesCount = CaseStudy::count();
+    $projectsCount = Project::count();
+
+    $recentProjects = Project::latest()->take(5)->get(['id', 'title', 'slug', 'status', 'created_at']);
 
     $recentPosts = Post::latest()->take(5)->get(['id', 'title', 'author_name', 'created_at']);
     $recentCaseStudies = CaseStudy::latest()->take(5)->get(['id', 'title', 'slug', 'created_at']);
@@ -38,9 +42,11 @@ Route::get('/dashboard', function () {
             'draftPostsCount' => $draftPostsCount,
             'artistsCount' => $artistsCount,
             'caseStudiesCount' => $caseStudiesCount,
+            'projectsCount' => $projectsCount,
         ],
         'recentPosts' => $recentPosts,
         'recentCaseStudies' => $recentCaseStudies,
+        'recentProjects' => $recentProjects,
         'recentComments' => $recentComments,
     ]);
 })->name('dashboard');
@@ -86,6 +92,9 @@ Route::get('/newsletter/unsubscribe/{token}', [\App\Http\Controllers\NewsletterC
 
 Route::get('/case-studies', [\App\Http\Controllers\CaseStudyController::class, 'index'])->name('case-studies.index');
 Route::get('/case-studies/{slug}', [\App\Http\Controllers\CaseStudyController::class, 'show'])->name('case-studies.show');
+
+Route::get('/projects', [\App\Http\Controllers\ProjectController::class, 'index'])->name('projects.index');
+Route::get('/projects/{slug}', [\App\Http\Controllers\ProjectController::class, 'show'])->name('projects.show');
 
 // Dynamic XML Sitemap
 Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');

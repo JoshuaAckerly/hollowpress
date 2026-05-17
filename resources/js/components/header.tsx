@@ -39,6 +39,11 @@ const Header: React.FC = () => {
                             </a>
                         </li>
                         <li>
+                            <a className="hover:underline" href="/projects">
+                                Projects
+                            </a>
+                        </li>
+                        <li>
                             <a className="hover:underline" href="/contact">
                                 Contact
                             </a>

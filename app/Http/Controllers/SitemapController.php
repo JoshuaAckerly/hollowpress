@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Artist;
 use App\Models\CaseStudy;
 use App\Models\Post;
+use App\Models\Project;
 use Illuminate\Http\Response;
 
 class SitemapController extends Controller
@@ -21,6 +22,7 @@ class SitemapController extends Controller
             ['loc' => '/posts', 'priority' => '0.9', 'changefreq' => 'daily'],
             ['loc' => '/artists', 'priority' => '0.8', 'changefreq' => 'weekly'],
             ['loc' => '/case-studies', 'priority' => '0.8', 'changefreq' => 'weekly'],
+            ['loc' => '/projects', 'priority' => '0.8', 'changefreq' => 'weekly'],
             ['loc' => '/sponsored', 'priority' => '0.6', 'changefreq' => 'weekly'],
             ['loc' => '/demo/posts/create', 'priority' => '0.5', 'changefreq' => 'monthly'],
         ];
@@ -33,6 +35,9 @@ class SitemapController extends Controller
 
         // Get all case studies
         $caseStudies = CaseStudy::select('slug', 'updated_at')->get();
+
+        // Get all projects
+        $projects = Project::select('slug', 'updated_at')->get();
 
         // Generate XML
         $xml = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
@@ -73,6 +78,16 @@ class SitemapController extends Controller
             $xml .= "  <url>\n";
             $xml .= "    <loc>{$baseUrl}/case-studies/{$caseStudy->slug}</loc>\n";
             $xml .= "    <lastmod>{$caseStudy->updated_at->toDateString()}</lastmod>\n";
+            $xml .= "    <changefreq>monthly</changefreq>\n";
+            $xml .= "    <priority>0.7</priority>\n";
+            $xml .= "  </url>\n";
+        }
+
+        // Add dynamic project pages
+        foreach ($projects as $project) {
+            $xml .= "  <url>\n";
+            $xml .= "    <loc>{$baseUrl}/projects/{$project->slug}</loc>\n";
+            $xml .= "    <lastmod>{$project->updated_at->toDateString()}</lastmod>\n";
             $xml .= "    <changefreq>monthly</changefreq>\n";
             $xml .= "    <priority>0.7</priority>\n";
             $xml .= "  </url>\n";
