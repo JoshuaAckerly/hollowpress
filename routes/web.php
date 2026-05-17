@@ -4,9 +4,9 @@ use App\Http\Middleware\EnsureDashboardAdminToken;
 use App\Models\Artist;
 use App\Models\CaseStudy;
 use App\Models\Comment;
-use App\Models\Project;
 use App\Models\DemoPost;
 use App\Models\Post;
+use App\Models\Project;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 

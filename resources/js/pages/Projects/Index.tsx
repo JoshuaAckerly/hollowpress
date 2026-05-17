@@ -98,9 +98,7 @@ export default function Index({ projects, filters, filterOptions }: Props) {
                 {/* Hero */}
                 <div className="relative overflow-hidden bg-gradient-to-r from-black via-gray-900 to-black text-white">
                     <div className="relative mx-auto max-w-6xl px-6 py-20 text-center">
-                        <h1 className="mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-6xl font-bold text-transparent">
-                            Projects
-                        </h1>
+                        <h1 className="mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-6xl font-bold text-transparent">Projects</h1>
                         <p className="mx-auto max-w-2xl text-lg text-gray-300">
                             Creative work, ongoing ventures, and completed endeavors from Hollow Press.
                         </p>
@@ -120,7 +118,7 @@ export default function Index({ projects, filters, filterOptions }: Props) {
                             />
                             <button
                                 type="submit"
-                                className="rounded-lg bg-white px-5 py-2 font-semibold text-gray-900 hover:bg-gray-200 transition-colors"
+                                className="rounded-lg bg-white px-5 py-2 font-semibold text-gray-900 transition-colors hover:bg-gray-200"
                             >
                                 Search
                             </button>
@@ -128,7 +126,7 @@ export default function Index({ projects, filters, filterOptions }: Props) {
                                 <button
                                     type="button"
                                     onClick={clearFilters}
-                                    className="rounded-lg border border-gray-600 px-4 py-2 text-gray-300 hover:border-gray-400 hover:text-white transition-colors"
+                                    className="rounded-lg border border-gray-600 px-4 py-2 text-gray-300 transition-colors hover:border-gray-400 hover:text-white"
                                 >
                                     Clear
                                 </button>
@@ -197,9 +195,7 @@ export default function Index({ projects, filters, filterOptions }: Props) {
                     {/* All / remaining projects */}
                     {regularProjects.length > 0 ? (
                         <section>
-                            {featuredProjects.length > 0 && (
-                                <h2 className="mb-6 text-2xl font-bold text-white">All Projects</h2>
-                            )}
+                            {featuredProjects.length > 0 && <h2 className="mb-6 text-2xl font-bold text-white">All Projects</h2>}
                             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                                 {regularProjects.map((project) => (
                                     <ProjectCard key={project.id} project={project} />
@@ -274,15 +270,11 @@ function ProjectCard({ project, featured = false }: { project: Project; featured
                                 ⭐ Featured
                             </span>
                         )}
-                        <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${statusInfo.className}`}>
-                            {statusInfo.label}
-                        </span>
+                        <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${statusInfo.className}`}>{statusInfo.label}</span>
                         {project.year && <span className="text-xs text-gray-400">{project.year}</span>}
                     </div>
 
-                    <h3 className="mb-2 text-lg font-bold text-white group-hover:text-gray-200 transition-colors">
-                        {project.title}
-                    </h3>
+                    <h3 className="mb-2 text-lg font-bold text-white transition-colors group-hover:text-gray-200">{project.title}</h3>
 
                     <p className="mb-4 line-clamp-3 text-sm text-gray-400">{project.summary}</p>
 
@@ -294,9 +286,7 @@ function ProjectCard({ project, featured = false }: { project: Project; featured
                                     {t}
                                 </span>
                             ))}
-                            {project.tags.length > 4 && (
-                                <span className="text-xs text-gray-500">+{project.tags.length - 4} more</span>
-                            )}
+                            {project.tags.length > 4 && <span className="text-xs text-gray-500">+{project.tags.length - 4} more</span>}
                         </div>
                     )}
                 </div>

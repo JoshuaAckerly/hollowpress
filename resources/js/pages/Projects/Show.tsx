@@ -1,7 +1,6 @@
 import Breadcrumb from '@/components/Breadcrumb';
 import MainLayout from '@/layouts/main';
 import { Head, Link } from '@inertiajs/react';
-import React from 'react';
 
 interface Project {
     id: number;
@@ -54,13 +53,7 @@ export default function Show({ project }: Props) {
                 {/* Breadcrumb */}
                 <div className="border-b border-gray-700 bg-gray-900">
                     <div className="mx-auto max-w-4xl px-6 py-4">
-                        <Breadcrumb
-                            items={[
-                                { label: 'Home', href: '/' },
-                                { label: 'Projects', href: '/projects' },
-                                { label: project.title },
-                            ]}
-                        />
+                        <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Projects', href: '/projects' }, { label: project.title }]} />
                     </div>
                 </div>
 
@@ -73,14 +66,8 @@ export default function Show({ project }: Props) {
                                     ⭐ FEATURED
                                 </span>
                             )}
-                            <span className={`rounded-full px-3 py-1 text-xs font-semibold ${statusInfo.className}`}>
-                                {statusInfo.label}
-                            </span>
-                            {project.year && (
-                                <span className="rounded-full bg-gray-800 px-3 py-1 text-xs text-gray-300">
-                                    {project.year}
-                                </span>
-                            )}
+                            <span className={`rounded-full px-3 py-1 text-xs font-semibold ${statusInfo.className}`}>{statusInfo.label}</span>
+                            {project.year && <span className="rounded-full bg-gray-800 px-3 py-1 text-xs text-gray-300">{project.year}</span>}
                         </div>
 
                         <h1 className="mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-5xl font-bold text-transparent">
@@ -94,11 +81,16 @@ export default function Show({ project }: Props) {
                                 href={project.project_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="mt-6 inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 font-semibold text-gray-900 hover:bg-gray-200 transition-colors"
+                                className="mt-6 inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 font-semibold text-gray-900 transition-colors hover:bg-gray-200"
                             >
                                 View Project
                                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                                    />
                                 </svg>
                             </a>
                         )}
@@ -109,11 +101,7 @@ export default function Show({ project }: Props) {
                 {project.cover_image && (
                     <div className="mx-auto max-w-4xl px-6 pt-8">
                         <div className="overflow-hidden rounded-xl border border-gray-700">
-                            <img
-                                src={project.cover_image}
-                                alt={project.title}
-                                className="w-full object-cover"
-                            />
+                            <img src={project.cover_image} alt={project.title} className="w-full object-cover" />
                         </div>
                     </div>
                 )}
@@ -143,14 +131,14 @@ export default function Show({ project }: Props) {
                         <aside className="space-y-6">
                             {/* Status */}
                             <div className="rounded-xl border border-gray-700 bg-gray-800/50 p-6">
-                                <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-400">
-                                    Details
-                                </h3>
+                                <h3 className="mb-4 text-sm font-semibold tracking-wide text-gray-400 uppercase">Details</h3>
                                 <dl className="space-y-3 text-sm">
                                     <div>
                                         <dt className="text-gray-500">Status</dt>
                                         <dd>
-                                            <span className={`mt-1 inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${statusInfo.className}`}>
+                                            <span
+                                                className={`mt-1 inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${statusInfo.className}`}
+                                            >
                                                 {statusInfo.label}
                                             </span>
                                         </dd>
@@ -182,15 +170,13 @@ export default function Show({ project }: Props) {
                             {/* Tags */}
                             {project.tags && project.tags.length > 0 && (
                                 <div className="rounded-xl border border-gray-700 bg-gray-800/50 p-6">
-                                    <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-400">
-                                        Tags
-                                    </h3>
+                                    <h3 className="mb-4 text-sm font-semibold tracking-wide text-gray-400 uppercase">Tags</h3>
                                     <div className="flex flex-wrap gap-2">
                                         {project.tags.map((t) => (
                                             <Link
                                                 key={t}
                                                 href={`/projects?tag=${encodeURIComponent(t)}`}
-                                                className="rounded-full bg-gray-700 px-3 py-1 text-xs text-gray-300 hover:bg-gray-600 hover:text-white transition-colors"
+                                                className="rounded-full bg-gray-700 px-3 py-1 text-xs text-gray-300 transition-colors hover:bg-gray-600 hover:text-white"
                                             >
                                                 {t}
                                             </Link>
@@ -203,7 +189,7 @@ export default function Show({ project }: Props) {
 
                     {/* Back link */}
                     <div className="mt-12 border-t border-gray-700 pt-8">
-                        <Link href="/projects" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+                        <Link href="/projects" className="inline-flex items-center gap-2 text-gray-400 transition-colors hover:text-white">
                             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                             </svg>
