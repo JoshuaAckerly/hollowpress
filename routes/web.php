@@ -108,6 +108,9 @@ Route::get('/projects/{slug}', [ProjectController::class, 'show'])->name('projec
 // Dynamic XML Sitemap
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
+// RSS Feed
+Route::get('/feed.rss', [\App\Http\Controllers\RssController::class, 'feed'])->name('rss.feed');
+
 Route::redirect('/login', '/', 301);
 Route::redirect('/register', '/', 301);
 Route::redirect('/forgot-password', '/', 301);
