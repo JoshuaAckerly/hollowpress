@@ -35,8 +35,8 @@ class RssFeedTest extends TestCase
     public function test_rss_feed_contains_channel_and_items_when_posts_exist(): void
     {
         Post::factory()->create([
-            'title'       => 'Test RSS Post',
-            'content'     => 'Test content for the RSS feed.',
+            'title' => 'Test RSS Post',
+            'content' => 'Test content for the RSS feed.',
             'author_name' => 'Test Author',
             'author_type' => 'artist',
         ]);

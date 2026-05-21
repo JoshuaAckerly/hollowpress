@@ -8,6 +8,7 @@ use App\Http\Controllers\DemoPostController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\RssController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Middleware\EnsureDashboardAdminToken;
 use App\Models\Artist;
@@ -109,7 +110,7 @@ Route::get('/projects/{slug}', [ProjectController::class, 'show'])->name('projec
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // RSS Feed
-Route::get('/feed.rss', [\App\Http\Controllers\RssController::class, 'feed'])->name('rss.feed');
+Route::get('/feed.rss', [RssController::class, 'feed'])->name('rss.feed');
 
 Route::redirect('/login', '/', 301);
 Route::redirect('/register', '/', 301);
