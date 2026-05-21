@@ -22,8 +22,8 @@ class Comment extends Model
         'is_approved' => 'boolean',
     ];
 
-    /** 
-     * @param \Illuminate\Database\Eloquent\Builder<static> $query
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder<static>  $query
      * @return \Illuminate\Database\Eloquent\Builder<static>
      */
     public function scopeApproved(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder

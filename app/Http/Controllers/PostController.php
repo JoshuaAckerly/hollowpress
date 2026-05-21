@@ -165,7 +165,7 @@ class PostController extends Controller
     }
 
     /**
-     * @param array<int, string> $columns
+     * @param  array<int, string>  $columns
      * @return array{0: string, 1: array<int, mixed>}
      */
     private function buildSearchScore(string $search, array $columns): array

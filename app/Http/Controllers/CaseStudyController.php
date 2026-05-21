@@ -224,7 +224,9 @@ class CaseStudyController extends Controller
 
     /**
      * Get filter options for the UI
+     *
      * @phpstan-ignore-next-line return.type
+     *
      * @return array<string, array<int, string>>
      */
     private function getFilterOptions(): array
