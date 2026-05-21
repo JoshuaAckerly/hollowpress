@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 
 class CaseStudy extends Model
 {
+    /** @phpstan-ignore missingType.generics */
     use HasFactory;
 
     protected $fillable = [
@@ -38,7 +39,7 @@ class CaseStudy extends Model
     {
         parent::boot();
 
-        static::creating(function ($caseStudy) {
+        static::creating(function (self $caseStudy): void {
             if (empty($caseStudy->slug)) {
                 $caseStudy->slug = Str::slug($caseStudy->title);
             }

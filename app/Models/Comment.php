@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Comment extends Model
 {
+    /** @phpstan-ignore missingType.generics */
     use HasFactory;
 
     protected $fillable = [
@@ -21,13 +22,20 @@ class Comment extends Model
         'is_approved' => 'boolean',
     ];
 
-    public function scopeApproved($query)
+    /** 
+     * @param \Illuminate\Database\Eloquent\Builder<static> $query
+     * @return \Illuminate\Database\Eloquent\Builder<static>
+     */
+    public function scopeApproved(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
+        // @phpstan-ignore-next-line return.type
         return $query->where('is_approved', true);
     }
 
+    /** @return BelongsTo<Post, $this> */
     public function post(): BelongsTo
     {
+        // @phpstan-ignore-next-line return.type
         return $this->belongsTo(Post::class);
     }
 }

@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Artist;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ArtistController extends Controller
 {
-    public function index()
+    public function index(): Response|RedirectResponse
     {
         try {
             $artists = Artist::with(['albums', 'events'])->get();
@@ -20,7 +22,7 @@ class ArtistController extends Controller
         }
     }
 
-    public function show(Artist $artist)
+    public function show(Artist $artist): Response|RedirectResponse
     {
         try {
             return Inertia::render('Artists/Show', [

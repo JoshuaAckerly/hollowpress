@@ -13,6 +13,7 @@ class SitemapController extends Controller
     public function index(): Response
     {
         $baseUrl = config('app.url', 'https://hollowpress.graveyardjokes.com');
+        assert(is_string($baseUrl));
 
         // Static pages with their priorities and change frequencies
         $staticPages = [
@@ -57,7 +58,7 @@ class SitemapController extends Controller
         foreach ($posts as $post) {
             $xml .= "  <url>\n";
             $xml .= "    <loc>{$baseUrl}/posts/{$post->id}</loc>\n";
-            $xml .= "    <lastmod>{$post->updated_at->toDateString()}</lastmod>\n";
+            $xml .= "    <lastmod>{($post->updated_at?->toDateString() ?? now()->toDateString())}</lastmod>\n";
             $xml .= "    <changefreq>weekly</changefreq>\n";
             $xml .= "    <priority>0.8</priority>\n";
             $xml .= "  </url>\n";
@@ -67,7 +68,7 @@ class SitemapController extends Controller
         foreach ($artists as $artist) {
             $xml .= "  <url>\n";
             $xml .= "    <loc>{$baseUrl}/artists/{$artist->id}</loc>\n";
-            $xml .= "    <lastmod>{$artist->updated_at->toDateString()}</lastmod>\n";
+            $xml .= "    <lastmod>{($artist->updated_at?->toDateString() ?? now()->toDateString())}</lastmod>\n";
             $xml .= "    <changefreq>monthly</changefreq>\n";
             $xml .= "    <priority>0.7</priority>\n";
             $xml .= "  </url>\n";
@@ -77,7 +78,7 @@ class SitemapController extends Controller
         foreach ($caseStudies as $caseStudy) {
             $xml .= "  <url>\n";
             $xml .= "    <loc>{$baseUrl}/case-studies/{$caseStudy->slug}</loc>\n";
-            $xml .= "    <lastmod>{$caseStudy->updated_at->toDateString()}</lastmod>\n";
+            $xml .= "    <lastmod>{($caseStudy->updated_at?->toDateString() ?? now()->toDateString())}</lastmod>\n";
             $xml .= "    <changefreq>monthly</changefreq>\n";
             $xml .= "    <priority>0.7</priority>\n";
             $xml .= "  </url>\n";
@@ -87,7 +88,7 @@ class SitemapController extends Controller
         foreach ($projects as $project) {
             $xml .= "  <url>\n";
             $xml .= "    <loc>{$baseUrl}/projects/{$project->slug}</loc>\n";
-            $xml .= "    <lastmod>{$project->updated_at->toDateString()}</lastmod>\n";
+            $xml .= "    <lastmod>{($project->updated_at?->toDateString() ?? now()->toDateString())}</lastmod>\n";
             $xml .= "    <changefreq>monthly</changefreq>\n";
             $xml .= "    <priority>0.7</priority>\n";
             $xml .= "  </url>\n";

@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\NewsletterSubscriber;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 
 class NewsletterController extends Controller
 {
-    public function subscribe(Request $request)
+    public function subscribe(Request $request): JsonResponse
     {
         $key = 'newsletter-subscribe:'.$request->ip();
 
@@ -47,7 +49,7 @@ class NewsletterController extends Controller
         ]);
     }
 
-    public function unsubscribe(string $token)
+    public function unsubscribe(string $token): RedirectResponse
     {
         $subscriber = NewsletterSubscriber::where('unsubscribe_token', $token)->first();
 

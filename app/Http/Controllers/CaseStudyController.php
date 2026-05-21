@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\CaseStudy;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class CaseStudyController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): Response|RedirectResponse
     {
         try {
             $search = trim((string) $request->query('q', ''));
@@ -107,7 +109,8 @@ class CaseStudyController extends Controller
     /**
      * Apply advanced search with query syntax support
      */
-    private function applyAdvancedSearch($query, string $search)
+    /** @param \Illuminate\Database\Eloquent\Builder<CaseStudy> $query */
+    private function applyAdvancedSearch(\Illuminate\Database\Eloquent\Builder $query, string $search): void
     {
         $normalizedSearch = mb_strtolower($search);
         $likeSearch = "%{$normalizedSearch}%";
@@ -158,7 +161,7 @@ class CaseStudyController extends Controller
 
         $terms = [];
         foreach ($matches as $match) {
-            $term = trim($match[1] !== '' ? $match[1] : $match[2]);
+            $term = trim(isset($match[1]) ? $match[1] : ($match[2] ?? ''));
 
             if ($term === '' || in_array(mb_strtolower($term), ['and', 'or'], true)) {
                 continue;
@@ -221,26 +224,28 @@ class CaseStudyController extends Controller
 
     /**
      * Get filter options for the UI
+     * @phpstan-ignore-next-line return.type
+     * @return array<string, array<int, string>>
      */
-    private function getFilterOptions()
+    private function getFilterOptions(): array
     {
-        return Cache::remember('case_studies.filter_options', now()->addMinutes(10), function () {
+        /** @var array<string, array<int, string>> $result */
+        $result = Cache::remember('case_studies.filter_options', now()->addMinutes(10), function () {
             return [
-                'project_types' => CaseStudy::distinct('project_type')
+                'project_types' => CaseStudy::distinct()
                     ->whereNotNull('project_type')
+                    ->orderBy('project_type')
                     ->pluck('project_type')
-                    ->sort()
                     ->values()
                     ->toArray(),
-                'clients' => CaseStudy::distinct('client_name')
+                'clients' => CaseStudy::distinct()
                     ->whereNotNull('client_name')
+                    ->orderBy('client_name')
                     ->pluck('client_name')
-                    ->sort()
                     ->values()
                     ->toArray(),
                 'technologies' => CaseStudy::select('technologies')
                     ->whereNotNull('technologies')
-                    ->get()
                     ->pluck('technologies')
                     ->flatten()
                     ->unique()
@@ -249,9 +254,11 @@ class CaseStudyController extends Controller
                     ->toArray(),
             ];
         });
+
+        return $result;
     }
 
-    public function show($slug)
+    public function show(string $slug): Response|RedirectResponse
     {
         try {
             $caseStudy = CaseStudy::where('slug', $slug)->firstOrFail();

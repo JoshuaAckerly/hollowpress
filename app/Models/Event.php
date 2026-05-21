@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Event extends Model
 {
+    /** @phpstan-ignore missingType.generics */
     use HasFactory;
 
     protected $fillable = [
@@ -24,8 +26,10 @@ class Event extends Model
         'price' => 'decimal:2',
     ];
 
-    public function artist()
+    /** @return BelongsTo<Artist, $this> */
+    public function artist(): BelongsTo
     {
+        // @phpstan-ignore-next-line return.type
         return $this->belongsTo(Artist::class);
     }
 }

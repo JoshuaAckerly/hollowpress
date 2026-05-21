@@ -13,17 +13,19 @@ class EnsureDashboardAdminToken
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $expectedToken = (string) config('services.dashboard.admin_token', '');
+        $configToken = config('services.dashboard.admin_token', '');
+        $expectedToken = is_string($configToken) ? $configToken : '';
 
-        $providedToken = (string) (
-            $request->header('X-Dashboard-Token')
-            ?? $request->input('dashboard_token', '')
-        );
+        $headerToken = $request->header('X-Dashboard-Token') ?? $request->input('dashboard_token', '');
+        $providedToken = is_string($headerToken) ? $headerToken : '';
 
         if ($expectedToken === '' || $providedToken === '' || ! hash_equals($expectedToken, $providedToken)) {
             abort(403, 'Forbidden. Valid dashboard token required.');
         }
 
-        return $next($request);
+        /** @var \Symfony\Component\HttpFoundation\Response $response */
+        $response = $next($request);
+
+        return $response;
     }
 }

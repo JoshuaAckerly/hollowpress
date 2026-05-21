@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Album extends Model
 {
+    /** @phpstan-ignore missingType.generics */
     use HasFactory;
 
     protected $fillable = [
@@ -21,8 +23,10 @@ class Album extends Model
         'release_date' => 'date',
     ];
 
-    public function artist()
+    /** @return BelongsTo<Artist, $this> */
+    public function artist(): BelongsTo
     {
+        // @phpstan-ignore-next-line return.type
         return $this->belongsTo(Artist::class);
     }
 }

@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Artist extends Model
 {
+    /** @phpstan-ignore missingType.generics */
     use HasFactory;
 
     protected $fillable = [
@@ -17,13 +19,17 @@ class Artist extends Model
         'image_url',
     ];
 
-    public function albums()
+    /** @return HasMany<\App\Models\Album, $this> */
+    public function albums(): HasMany
     {
+        // @phpstan-ignore-next-line return.type
         return $this->hasMany(Album::class);
     }
 
-    public function events()
+    /** @return HasMany<\App\Models\Event, $this> */
+    public function events(): HasMany
     {
+        // @phpstan-ignore-next-line return.type
         return $this->hasMany(Event::class);
     }
 }

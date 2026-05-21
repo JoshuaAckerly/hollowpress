@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class PostController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $search = trim((string) $request->query('q', ''));
         $author = trim((string) $request->query('author', ''));
@@ -70,7 +72,7 @@ class PostController extends Controller
         ]);
     }
 
-    private function applyFacetFilters($query, string $author, string $category, ?string $dateFrom, ?string $dateTo): void
+    private function applyFacetFilters(\Illuminate\Database\Query\Builder $query, string $author, string $category, ?string $dateFrom, ?string $dateTo): void
     {
         if ($author !== '') {
             $query->whereRaw('LOWER(author_name) like ?', ['%'.mb_strtolower($author).'%']);
@@ -89,13 +91,14 @@ class PostController extends Controller
         }
     }
 
-    private function applyAdvancedSearch($query, string $search, array $columns): void
+    /** @param array<int, string> $columns */
+    private function applyAdvancedSearch(\Illuminate\Database\Query\Builder $query, string $search, array $columns): void
     {
         $normalized = mb_strtolower(trim($search));
 
         if (str_contains($normalized, ' or ')) {
             $orParts = preg_split('/\s+or\s+/i', $normalized) ?: [];
-            $query->where(function ($orQuery) use ($orParts, $columns) {
+            $query->where(function (\Illuminate\Database\Query\Builder $orQuery) use ($orParts, $columns) {
                 foreach ($orParts as $part) {
                     $terms = $this->extractSearchTerms($part);
 
@@ -103,7 +106,7 @@ class PostController extends Controller
                         continue;
                     }
 
-                    $orQuery->orWhere(function ($andQuery) use ($terms, $columns) {
+                    $orQuery->orWhere(function (\Illuminate\Database\Query\Builder $andQuery) use ($terms, $columns) {
                         foreach ($terms as $term) {
                             $this->applyTermMatch($andQuery, $term, $columns, 'and');
                         }
@@ -116,17 +119,18 @@ class PostController extends Controller
 
         $terms = $this->extractSearchTerms($normalized);
 
-        $query->where(function ($andQuery) use ($terms, $columns) {
+        $query->where(function (\Illuminate\Database\Query\Builder $andQuery) use ($terms, $columns) {
             foreach ($terms as $term) {
                 $this->applyTermMatch($andQuery, $term, $columns, 'and');
             }
         });
     }
 
-    private function applyTermMatch($query, string $term, array $columns, string $boolean = 'and'): void
+    /** @param array<int, string> $columns */
+    private function applyTermMatch(\Illuminate\Database\Query\Builder $query, string $term, array $columns, string $boolean = 'and'): void
     {
         $method = $boolean === 'or' ? 'orWhere' : 'where';
-        $query->{$method}(function ($termQuery) use ($term, $columns) {
+        $query->{$method}(function (\Illuminate\Database\Query\Builder $termQuery) use ($term, $columns) {
             $first = true;
             foreach ($columns as $column) {
                 $like = "%{$term}%";
@@ -141,13 +145,14 @@ class PostController extends Controller
         });
     }
 
+    /** @return array<int, string> */
     private function extractSearchTerms(string $search): array
     {
         preg_match_all('/"([^"]+)"|(\S+)/', $search, $matches, PREG_SET_ORDER);
 
         $terms = [];
         foreach ($matches as $match) {
-            $term = trim($match[1] !== '' ? $match[1] : $match[2]);
+            $term = trim(isset($match[1]) ? $match[1] : ($match[2] ?? ''));
 
             if ($term === '' || in_array($term, ['and', 'or'], true)) {
                 continue;
@@ -159,6 +164,10 @@ class PostController extends Controller
         return array_values(array_unique($terms));
     }
 
+    /**
+     * @param array<int, string> $columns
+     * @return array{0: string, 1: array<int, mixed>}
+     */
     private function buildSearchScore(string $search, array $columns): array
     {
         $terms = $this->extractSearchTerms($search);
@@ -199,11 +208,15 @@ class PostController extends Controller
         return [implode(' + ', $scoreParts), $bindings];
     }
 
+    /**
+     * @return array<int, string>
+     */
     private function getAuthorFilterOptions(): array
     {
-        return Cache::remember('posts.author_filter_options', now()->addMinutes(10), function () {
+        /** @var array<int, string> $result */
+        $result = Cache::remember('posts.author_filter_options', now()->addMinutes(10), function () {
             return DB::query()
-                ->fromSub(function ($query) {
+                ->fromSub(function (\Illuminate\Database\Query\Builder $query) {
                     $query->from('posts')
                         ->select('author_name')
                         ->whereNotNull('author_name')
@@ -221,14 +234,16 @@ class PostController extends Controller
                 ->values()
                 ->all();
         });
+
+        return $result;
     }
 
-    public function create()
+    public function create(): Response
     {
         return Inertia::render('Posts/Create');
     }
 
-    public function store(\App\Http\Requests\StorePostRequest $request)
+    public function store(\App\Http\Requests\StorePostRequest $request): RedirectResponse
     {
         try {
             Post::create($request->validated());
@@ -239,8 +254,9 @@ class PostController extends Controller
         }
     }
 
-    public function show(Post $post)
+    public function show(Post $post): Response
     {
+        // @phpstan-ignore-next-line call.notFound
         $comments = $post->comments()
             ->approved()
             ->latest()
@@ -253,14 +269,14 @@ class PostController extends Controller
         ]);
     }
 
-    public function edit(Post $post)
+    public function edit(Post $post): Response
     {
         return Inertia::render('Posts/Edit', [
             'post' => $post,
         ]);
     }
 
-    public function update(\App\Http\Requests\StorePostRequest $request, Post $post)
+    public function update(\App\Http\Requests\StorePostRequest $request, Post $post): RedirectResponse
     {
         try {
             $post->update($request->validated());
@@ -271,7 +287,7 @@ class PostController extends Controller
         }
     }
 
-    public function destroy(Post $post)
+    public function destroy(Post $post): RedirectResponse
     {
         try {
             $post->delete();

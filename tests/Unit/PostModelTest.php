@@ -10,7 +10,7 @@ class PostModelTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_post_has_fillable_attributes()
+    public function test_post_has_fillable_attributes(): void
     {
         $post = new Post;
         $fillable = ['title', 'content', 'author_name', 'author_type'];
@@ -18,7 +18,7 @@ class PostModelTest extends TestCase
         $this->assertEquals($fillable, $post->getFillable());
     }
 
-    public function test_post_can_be_created_with_valid_data()
+    public function test_post_can_be_created_with_valid_data(): void
     {
         $postData = [
             'title' => 'Test Title',
@@ -34,7 +34,7 @@ class PostModelTest extends TestCase
         $this->assertEquals('artist', $post->author_type);
     }
 
-    public function test_post_has_timestamps()
+    public function test_post_has_timestamps(): void
     {
         $post = Post::factory()->create();
 
@@ -42,7 +42,7 @@ class PostModelTest extends TestCase
         $this->assertNotNull($post->updated_at);
     }
 
-    public function test_post_attributes_are_accessible()
+    public function test_post_attributes_are_accessible(): void
     {
         $post = Post::factory()->create([
             'title' => 'Specific Title',

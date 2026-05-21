@@ -12,6 +12,7 @@ class StoreCommentRequest extends FormRequest
         return true;
     }
 
+    /** @return array<string, mixed> */
     public function rules(): array
     {
         return [
@@ -21,9 +22,9 @@ class StoreCommentRequest extends FormRequest
         ];
     }
 
-    public function withValidator($validator): void
+    public function withValidator(\Illuminate\Contracts\Validation\Validator $validator): void
     {
-        $validator->after(function ($validator) {
+        $validator->after(function (\Illuminate\Contracts\Validation\Validator $validator) {
             $token = $this->input('hcaptcha_token');
 
             if (! $token) {
@@ -42,6 +43,7 @@ class StoreCommentRequest extends FormRequest
         });
     }
 
+    /** @return array<string, string> */
     public function messages(): array
     {
         return [

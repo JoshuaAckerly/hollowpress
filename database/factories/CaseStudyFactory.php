@@ -6,6 +6,7 @@ use App\Models\CaseStudy;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
+/** @extends Factory<CaseStudy> */
 class CaseStudyFactory extends Factory
 {
     protected $model = CaseStudy::class;

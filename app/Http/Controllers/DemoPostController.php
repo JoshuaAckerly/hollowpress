@@ -3,17 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\DemoPost;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\RateLimiter;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class DemoPostController extends Controller
 {
-    public function create()
+    public function create(): Response
     {
         return Inertia::render('Posts/DemoCreate');
     }
 
-    public function store(\App\Http\Requests\StorePostRequest $request)
+    public function store(\App\Http\Requests\StorePostRequest $request): RedirectResponse
     {
         // Rate limiting: 5 demo posts per IP per hour
         $key = 'demo-post:'.$request->ip();
@@ -43,7 +45,7 @@ class DemoPostController extends Controller
         }
     }
 
-    public function destroy(DemoPost $demoPost)
+    public function destroy(DemoPost $demoPost): RedirectResponse
     {
         try {
             $demoPost->delete();

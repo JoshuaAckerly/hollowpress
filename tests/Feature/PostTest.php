@@ -28,13 +28,13 @@ class PostTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_can_view_posts_index()
+    public function test_can_view_posts_index(): void
     {
         $response = $this->get('/posts');
         $response->assertStatus(200);
     }
 
-    public function test_can_create_post()
+    public function test_can_create_post(): void
     {
         $postData = [
             'title' => 'Test Post',
@@ -48,7 +48,7 @@ class PostTest extends TestCase
         $this->assertDatabaseHas('demo_posts', $postData);
     }
 
-    public function test_post_creation_requires_title()
+    public function test_post_creation_requires_title(): void
     {
         $postData = [
             'content' => 'This is test content.',
@@ -60,7 +60,7 @@ class PostTest extends TestCase
         $response->assertSessionHasErrors('title');
     }
 
-    public function test_post_creation_requires_content()
+    public function test_post_creation_requires_content(): void
     {
         $postData = [
             'title' => 'Test Post',
@@ -72,14 +72,14 @@ class PostTest extends TestCase
         $response->assertSessionHasErrors('content');
     }
 
-    public function test_can_view_single_post()
+    public function test_can_view_single_post(): void
     {
         $post = Post::factory()->create();
         $response = $this->get("/posts/{$post->id}");
         $response->assertStatus(200);
     }
 
-    public function test_author_type_must_be_valid()
+    public function test_author_type_must_be_valid(): void
     {
         $postData = [
             'title' => 'Test Post',
@@ -92,7 +92,7 @@ class PostTest extends TestCase
         $response->assertSessionHasErrors('author_type');
     }
 
-    public function test_can_submit_comment_for_post()
+    public function test_can_submit_comment_for_post(): void
     {
         Http::fake([
             'https://hcaptcha.com/siteverify' => Http::response(['success' => true], 200),
@@ -118,7 +118,7 @@ class PostTest extends TestCase
         ]);
     }
 
-    public function test_comment_submission_requires_content()
+    public function test_comment_submission_requires_content(): void
     {
         $post = Post::factory()->create();
 
@@ -129,7 +129,7 @@ class PostTest extends TestCase
         $response->assertSessionHasErrors('content');
     }
 
-    public function test_only_approved_comments_are_visible_on_post_page()
+    public function test_only_approved_comments_are_visible_on_post_page(): void
     {
         $post = Post::factory()->create();
 
@@ -153,7 +153,7 @@ class PostTest extends TestCase
         $response->assertDontSee('This comment is pending and should be hidden.');
     }
 
-    public function test_captcha_verification_must_succeed()
+    public function test_captcha_verification_must_succeed(): void
     {
         Http::fake([
             'https://hcaptcha.com/siteverify' => Http::response(['success' => false], 200),
@@ -174,7 +174,7 @@ class PostTest extends TestCase
         ]);
     }
 
-    public function test_comment_submission_is_rate_limited()
+    public function test_comment_submission_is_rate_limited(): void
     {
         Http::fake([
             'https://hcaptcha.com/siteverify' => Http::response(['success' => true], 200),
@@ -200,7 +200,7 @@ class PostTest extends TestCase
         $response->assertSessionHas('error');
     }
 
-    public function test_can_approve_comment_from_dashboard()
+    public function test_can_approve_comment_from_dashboard(): void
     {
         $post = Post::factory()->create();
 
@@ -223,7 +223,7 @@ class PostTest extends TestCase
         ]);
     }
 
-    public function test_can_unapprove_comment_from_dashboard()
+    public function test_can_unapprove_comment_from_dashboard(): void
     {
         $post = Post::factory()->create();
 
@@ -246,7 +246,7 @@ class PostTest extends TestCase
         ]);
     }
 
-    public function test_dashboard_comment_moderation_requires_valid_token()
+    public function test_dashboard_comment_moderation_requires_valid_token(): void
     {
         $post = Post::factory()->create();
 

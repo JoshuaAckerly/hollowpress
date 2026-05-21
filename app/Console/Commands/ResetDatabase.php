@@ -11,7 +11,7 @@ class ResetDatabase extends Command
 
     protected $description = 'Reset the database by emptying all tables';
 
-    public function handle()
+    public function handle(): void
     {
         if (! $this->input->isInteractive() || $this->confirm('This will empty all database tables. Are you sure?')) {
             $this->info('Resetting database...');

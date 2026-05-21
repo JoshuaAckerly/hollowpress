@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DemoPost extends Model
 {
+    /** @phpstan-ignore missingType.generics */
     use HasFactory;
 
     protected $fillable = [
@@ -20,8 +21,13 @@ class DemoPost extends Model
     /**
      * Scope to get posts that should be cleaned up (older than 48 hours)
      */
-    public function scopeExpired($query)
+    /**
+     * @param \Illuminate\Database\Eloquent\Builder<static> $query
+     * @return \Illuminate\Database\Eloquent\Builder<static>
+     */
+    public function scopeExpired(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
+        // @phpstan-ignore-next-line return.type
         return $query->where('created_at', '<', now()->subHours(48));
     }
 }

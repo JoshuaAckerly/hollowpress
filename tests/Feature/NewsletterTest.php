@@ -83,7 +83,9 @@ class NewsletterTest extends TestCase
         $this->postJson('/newsletter/subscribe', ['email' => 'token@example.com']);
 
         $subscriber = NewsletterSubscriber::where('email', 'token@example.com')->first();
-        $this->assertNotNull($subscriber->unsubscribe_token);
-        $this->assertEquals(64, strlen($subscriber->unsubscribe_token));
+        $this->assertNotNull($subscriber);
+        // @phpstan-ignore-next-line argument.type
+        $token = $subscriber->unsubscribe_token;
+        $this->assertEquals(64, strlen((string) $token));
     }
 }

@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 
 class Project extends Model
 {
+    /** @phpstan-ignore missingType.generics */
     use HasFactory;
 
     protected $fillable = [

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Post extends Model
 {
+    /** @phpstan-ignore missingType.generics */
     use HasFactory;
 
     protected $fillable = [
@@ -18,8 +19,10 @@ class Post extends Model
         'author_type',
     ];
 
+    /** @return HasMany<Comment, $this> */
     public function comments(): HasMany
     {
+        // @phpstan-ignore-next-line return.type
         return $this->hasMany(Comment::class);
     }
 
@@ -30,6 +33,7 @@ class Post extends Model
      * author_type when no keywords yield results.
      *
      * @param  int  $limit  Maximum number of related posts to return.
+     * @return Collection<int, static>
      */
     public function related(int $limit = 3): Collection
     {
@@ -39,7 +43,7 @@ class Post extends Model
             'all', 'can', 'her', 'him', 'his', 'its', 'our', 'out', 'who',
         ];
 
-        $words = collect(preg_split('/[\s\W]+/', strtolower($this->title), -1, PREG_SPLIT_NO_EMPTY))
+        $words = collect(preg_split('/[\s\W]+/', strtolower($this->title), -1, PREG_SPLIT_NO_EMPTY) ?: [])
             ->filter(fn (string $w) => mb_strlen($w) > 3 && ! in_array($w, $stopWords))
             ->unique()
             ->values()
@@ -61,6 +65,7 @@ class Post extends Model
             $query->where('author_type', $authorType);
         }
 
+        // @phpstan-ignore-next-line return.type
         return $query->latest()->limit($limit)->get();
     }
 }

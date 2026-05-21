@@ -6,10 +6,11 @@ use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ProjectController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $search = trim((string) $request->query('q', ''));
         $status = trim((string) $request->query('status', ''));
@@ -53,14 +54,13 @@ class ProjectController extends Controller
             return [
                 'tags' => Project::select('tags')
                     ->whereNotNull('tags')
-                    ->get()
                     ->pluck('tags')
                     ->flatten()
                     ->unique()
                     ->sort()
                     ->values()
                     ->toArray(),
-                'years' => Project::distinct('year')
+                'years' => Project::distinct()
                     ->whereNotNull('year')
                     ->orderByDesc('year')
                     ->pluck('year')
@@ -80,7 +80,7 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function show(string $slug)
+    public function show(string $slug): Response
     {
         $project = Project::where('slug', $slug)->firstOrFail();
 

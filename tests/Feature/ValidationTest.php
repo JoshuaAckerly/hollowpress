@@ -9,7 +9,7 @@ class ValidationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_post_title_is_required()
+    public function test_post_title_is_required(): void
     {
         $response = $this->post('/demo/posts', [
             'content' => 'Test content',
@@ -20,7 +20,7 @@ class ValidationTest extends TestCase
         $response->assertSessionHasErrors('title');
     }
 
-    public function test_post_title_cannot_exceed_255_characters()
+    public function test_post_title_cannot_exceed_255_characters(): void
     {
         $longTitle = str_repeat('a', 256);
 
@@ -34,7 +34,7 @@ class ValidationTest extends TestCase
         $response->assertSessionHasErrors('title');
     }
 
-    public function test_post_content_is_required()
+    public function test_post_content_is_required(): void
     {
         $response = $this->post('/demo/posts', [
             'title' => 'Test Title',
@@ -45,7 +45,7 @@ class ValidationTest extends TestCase
         $response->assertSessionHasErrors('content');
     }
 
-    public function test_post_content_must_be_at_least_10_characters()
+    public function test_post_content_must_be_at_least_10_characters(): void
     {
         $response = $this->post('/demo/posts', [
             'title' => 'Test Title',
@@ -57,7 +57,7 @@ class ValidationTest extends TestCase
         $response->assertSessionHasErrors('content');
     }
 
-    public function test_author_name_is_required()
+    public function test_author_name_is_required(): void
     {
         $response = $this->post('/demo/posts', [
             'title' => 'Test Title',
@@ -68,7 +68,7 @@ class ValidationTest extends TestCase
         $response->assertSessionHasErrors('author_name');
     }
 
-    public function test_author_type_must_be_valid_option()
+    public function test_author_type_must_be_valid_option(): void
     {
         $response = $this->post('/demo/posts', [
             'title' => 'Test Title',
@@ -80,7 +80,7 @@ class ValidationTest extends TestCase
         $response->assertSessionHasErrors('author_type');
     }
 
-    public function test_valid_post_data_passes_validation()
+    public function test_valid_post_data_passes_validation(): void
     {
         $response = $this->post('/demo/posts', [
             'title' => 'Valid Test Title',
