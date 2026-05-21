@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CaseStudy;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -109,8 +110,8 @@ class CaseStudyController extends Controller
     /**
      * Apply advanced search with query syntax support
      */
-    /** @param \Illuminate\Database\Eloquent\Builder<CaseStudy> $query */
-    private function applyAdvancedSearch(\Illuminate\Database\Eloquent\Builder $query, string $search): void
+    /** @param Builder<CaseStudy> $query */
+    private function applyAdvancedSearch(Builder $query, string $search): void
     {
         $normalizedSearch = mb_strtolower($search);
         $likeSearch = "%{$normalizedSearch}%";

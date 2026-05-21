@@ -19,14 +19,14 @@ class Artist extends Model
         'image_url',
     ];
 
-    /** @return HasMany<\App\Models\Album, $this> */
+    /** @return HasMany<Album, $this> */
     public function albums(): HasMany
     {
         // @phpstan-ignore-next-line return.type
         return $this->hasMany(Album::class);
     }
 
-    /** @return HasMany<\App\Models\Event, $this> */
+    /** @return HasMany<Event, $this> */
     public function events(): HasMany
     {
         // @phpstan-ignore-next-line return.type

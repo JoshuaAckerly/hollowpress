@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Album;
 use App\Models\Artist;
 use App\Models\Event;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase;
 
@@ -30,7 +31,7 @@ class ArtistTest extends TestCase
         $artist = Artist::factory()->create();
         $album = Album::factory()->create(['artist_id' => $artist->id]);
 
-        /** @var \Illuminate\Database\Eloquent\Collection<int, \App\Models\Album> $albums */
+        /** @var Collection<int, Album> $albums */
         $albums = $artist->albums;
         $this->assertTrue($albums->contains($album));
     }
@@ -40,7 +41,7 @@ class ArtistTest extends TestCase
         $artist = Artist::factory()->create();
         $event = Event::factory()->create(['artist_id' => $artist->id]);
 
-        /** @var \Illuminate\Database\Eloquent\Collection<int, \App\Models\Event> $events */
+        /** @var Collection<int, Event> $events */
         $events = $artist->events;
         $this->assertTrue($events->contains($event));
     }

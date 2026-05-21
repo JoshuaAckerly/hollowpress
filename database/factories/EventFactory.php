@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Artist;
+use App\Models\Event;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Event>
+ * @extends Factory<Event>
  */
 class EventFactory extends Factory
 {
@@ -17,7 +19,7 @@ class EventFactory extends Factory
     public function definition(): array
     {
         return [
-            'artist_id' => \App\Models\Artist::factory(),
+            'artist_id' => Artist::factory(),
             'title' => $this->faker->sentence(4),
             'description' => $this->faker->paragraph(),
             'event_date' => $this->faker->dateTimeBetween('now', '+1 year'),

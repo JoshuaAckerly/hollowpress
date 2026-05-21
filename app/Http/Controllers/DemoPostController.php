@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostRequest;
 use App\Models\DemoPost;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\RateLimiter;
@@ -15,7 +16,7 @@ class DemoPostController extends Controller
         return Inertia::render('Posts/DemoCreate');
     }
 
-    public function store(\App\Http\Requests\StorePostRequest $request): RedirectResponse
+    public function store(StorePostRequest $request): RedirectResponse
     {
         // Rate limiting: 5 demo posts per IP per hour
         $key = 'demo-post:'.$request->ip();

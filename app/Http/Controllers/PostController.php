@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -72,7 +74,7 @@ class PostController extends Controller
         ]);
     }
 
-    private function applyFacetFilters(\Illuminate\Database\Query\Builder $query, string $author, string $category, ?string $dateFrom, ?string $dateTo): void
+    private function applyFacetFilters(Builder $query, string $author, string $category, ?string $dateFrom, ?string $dateTo): void
     {
         if ($author !== '') {
             $query->whereRaw('LOWER(author_name) like ?', ['%'.mb_strtolower($author).'%']);
@@ -92,13 +94,13 @@ class PostController extends Controller
     }
 
     /** @param array<int, string> $columns */
-    private function applyAdvancedSearch(\Illuminate\Database\Query\Builder $query, string $search, array $columns): void
+    private function applyAdvancedSearch(Builder $query, string $search, array $columns): void
     {
         $normalized = mb_strtolower(trim($search));
 
         if (str_contains($normalized, ' or ')) {
             $orParts = preg_split('/\s+or\s+/i', $normalized) ?: [];
-            $query->where(function (\Illuminate\Database\Query\Builder $orQuery) use ($orParts, $columns) {
+            $query->where(function (Builder $orQuery) use ($orParts, $columns) {
                 foreach ($orParts as $part) {
                     $terms = $this->extractSearchTerms($part);
 
@@ -106,7 +108,7 @@ class PostController extends Controller
                         continue;
                     }
 
-                    $orQuery->orWhere(function (\Illuminate\Database\Query\Builder $andQuery) use ($terms, $columns) {
+                    $orQuery->orWhere(function (Builder $andQuery) use ($terms, $columns) {
                         foreach ($terms as $term) {
                             $this->applyTermMatch($andQuery, $term, $columns, 'and');
                         }
@@ -119,7 +121,7 @@ class PostController extends Controller
 
         $terms = $this->extractSearchTerms($normalized);
 
-        $query->where(function (\Illuminate\Database\Query\Builder $andQuery) use ($terms, $columns) {
+        $query->where(function (Builder $andQuery) use ($terms, $columns) {
             foreach ($terms as $term) {
                 $this->applyTermMatch($andQuery, $term, $columns, 'and');
             }
@@ -127,10 +129,10 @@ class PostController extends Controller
     }
 
     /** @param array<int, string> $columns */
-    private function applyTermMatch(\Illuminate\Database\Query\Builder $query, string $term, array $columns, string $boolean = 'and'): void
+    private function applyTermMatch(Builder $query, string $term, array $columns, string $boolean = 'and'): void
     {
         $method = $boolean === 'or' ? 'orWhere' : 'where';
-        $query->{$method}(function (\Illuminate\Database\Query\Builder $termQuery) use ($term, $columns) {
+        $query->{$method}(function (Builder $termQuery) use ($term, $columns) {
             $first = true;
             foreach ($columns as $column) {
                 $like = "%{$term}%";
@@ -216,7 +218,7 @@ class PostController extends Controller
         /** @var array<int, string> $result */
         $result = Cache::remember('posts.author_filter_options', now()->addMinutes(10), function () {
             return DB::query()
-                ->fromSub(function (\Illuminate\Database\Query\Builder $query) {
+                ->fromSub(function (Builder $query) {
                     $query->from('posts')
                         ->select('author_name')
                         ->whereNotNull('author_name')
@@ -243,7 +245,7 @@ class PostController extends Controller
         return Inertia::render('Posts/Create');
     }
 
-    public function store(\App\Http\Requests\StorePostRequest $request): RedirectResponse
+    public function store(StorePostRequest $request): RedirectResponse
     {
         try {
             Post::create($request->validated());
@@ -276,7 +278,7 @@ class PostController extends Controller
         ]);
     }
 
-    public function update(\App\Http\Requests\StorePostRequest $request, Post $post): RedirectResponse
+    public function update(StorePostRequest $request, Post $post): RedirectResponse
     {
         try {
             $post->update($request->validated());

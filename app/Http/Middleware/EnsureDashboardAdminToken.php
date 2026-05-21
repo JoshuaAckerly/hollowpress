@@ -23,7 +23,7 @@ class EnsureDashboardAdminToken
             abort(403, 'Forbidden. Valid dashboard token required.');
         }
 
-        /** @var \Symfony\Component\HttpFoundation\Response $response */
+        /** @var Response $response */
         $response = $next($request);
 
         return $response;

@@ -1,5 +1,14 @@
 <?php
 
+use App\Http\Controllers\ArtistController;
+use App\Http\Controllers\CaseStudyController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DemoPostController;
+use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Middleware\EnsureDashboardAdminToken;
 use App\Models\Artist;
 use App\Models\CaseStudy;
@@ -52,13 +61,13 @@ Route::get('/dashboard', function () {
 })->name('dashboard');
 
 // Posts routes (view only - no auth required)
-Route::get('/posts', [\App\Http\Controllers\PostController::class, 'index'])->name('posts.index');
-Route::get('/posts/{post}', [\App\Http\Controllers\PostController::class, 'show'])->name('posts.show');
-Route::post('/posts/{post}/comments', [\App\Http\Controllers\CommentController::class, 'store'])->name('posts.comments.store');
-Route::patch('/dashboard/comments/{comment}/approve', [\App\Http\Controllers\CommentController::class, 'approve'])
+Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
+Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('posts.comments.store');
+Route::patch('/dashboard/comments/{comment}/approve', [CommentController::class, 'approve'])
     ->middleware(EnsureDashboardAdminToken::class)
     ->name('dashboard.comments.approve');
-Route::patch('/dashboard/comments/{comment}/unapprove', [\App\Http\Controllers\CommentController::class, 'unapprove'])
+Route::patch('/dashboard/comments/{comment}/unapprove', [CommentController::class, 'unapprove'])
     ->middleware(EnsureDashboardAdminToken::class)
     ->name('dashboard.comments.unapprove');
 Route::get('/posts/{post}/edit', function ($post) {
@@ -66,14 +75,14 @@ Route::get('/posts/{post}/edit', function ($post) {
 });
 
 // Demo posts routes (create/edit/delete without auth)
-Route::get('/demo/posts/create', [\App\Http\Controllers\DemoPostController::class, 'create'])->name('demo.posts.create');
-Route::post('/demo/posts', [\App\Http\Controllers\DemoPostController::class, 'store'])->name('demo.posts.store');
-Route::delete('/demo/posts/{demoPost}', [\App\Http\Controllers\DemoPostController::class, 'destroy'])->name('demo.posts.destroy');
+Route::get('/demo/posts/create', [DemoPostController::class, 'create'])->name('demo.posts.create');
+Route::post('/demo/posts', [DemoPostController::class, 'store'])->name('demo.posts.store');
+Route::delete('/demo/posts/{demoPost}', [DemoPostController::class, 'destroy'])->name('demo.posts.destroy');
 
-Route::resource('artists', \App\Http\Controllers\ArtistController::class)->only(['index', 'show']);
+Route::resource('artists', ArtistController::class)->only(['index', 'show']);
 
 Route::get('/sponsored', function () {
-    $sponsoredArtist = \App\Models\Artist::with(['albums', 'events'])->first();
+    $sponsoredArtist = Artist::with(['albums', 'events'])->first();
 
     return Inertia::render('Sponsored', [
         'artist' => $sponsoredArtist,
@@ -84,20 +93,20 @@ Route::get('/about', function () {
     return Inertia::render('About');
 })->name('about');
 
-Route::get('/contact', [\App\Http\Controllers\ContactController::class, 'index'])->name('contact');
-Route::post('/contact', [\App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
-Route::post('/newsletter/subscribe', [\App\Http\Controllers\NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
-Route::get('/newsletter/unsubscribe/{token}', [\App\Http\Controllers\NewsletterController::class, 'unsubscribe'])->name('newsletter.unsubscribe');
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
+Route::get('/newsletter/unsubscribe/{token}', [NewsletterController::class, 'unsubscribe'])->name('newsletter.unsubscribe');
 
-Route::get('/case-studies', [\App\Http\Controllers\CaseStudyController::class, 'index'])->name('case-studies.index');
-Route::get('/case-studies/{slug}', [\App\Http\Controllers\CaseStudyController::class, 'show'])->name('case-studies.show');
+Route::get('/case-studies', [CaseStudyController::class, 'index'])->name('case-studies.index');
+Route::get('/case-studies/{slug}', [CaseStudyController::class, 'show'])->name('case-studies.show');
 
-Route::get('/projects', [\App\Http\Controllers\ProjectController::class, 'index'])->name('projects.index');
-Route::get('/projects/{slug}', [\App\Http\Controllers\ProjectController::class, 'show'])->name('projects.show');
+Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+Route::get('/projects/{slug}', [ProjectController::class, 'show'])->name('projects.show');
 
 // Dynamic XML Sitemap
-Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 Route::redirect('/login', '/', 301);
 Route::redirect('/register', '/', 301);
