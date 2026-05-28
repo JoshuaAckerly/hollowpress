@@ -11,10 +11,10 @@
 - [ ] Pagination components (if needed beyond current implementation)
 
 ## Development
-- [ ] Set up CI/CD pipeline
+- [x] Set up CI/CD pipeline
   - CI workflow fixed (env order, sequenced jobs)
   - CD workflow created (`.github/workflows/cd.yml`)
-  - **TODO: Add GitHub secrets to repo** — `PROD_SSH_HOST`, `PROD_SSH_USER`, `PROD_SSH_KEY`
+  - GitHub secrets set: `PROD_SSH_HOST`, `PROD_SSH_USER`, `PROD_SSH_KEY`
 - [ ] Implement caching strategy
 - [ ] Add logging configuration
 
