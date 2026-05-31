@@ -65,7 +65,7 @@ export default function Show({ artist }: Props) {
                                 {artist.name.charAt(0)}
                             </div>
                             <div className="flex-1">
-                                <h1 className="mb-2 text-4xl font-bold text-white">{artist.name}</h1>
+                                <h1 className="mb-2 text-2xl font-bold text-white sm:text-4xl">{artist.name}</h1>
                                 <p className="mb-4 text-lg text-gray-400">{artist.genre}</p>
                                 <p className="mb-4 text-gray-300">{artist.bio}</p>
                                 {artist.website && (

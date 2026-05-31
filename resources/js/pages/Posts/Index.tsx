@@ -181,10 +181,10 @@ export default function Index({ posts, filters, filterOptions }: Props) {
                 <div className="bg-gradient-to-r from-black via-gray-900 to-black text-white">
                     <div className="mx-auto max-w-7xl px-6 py-16">
                         <div className="text-center">
-                            <h1 className="mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-5xl font-bold text-transparent">
+                            <h1 className="mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-3xl font-bold text-transparent sm:text-4xl lg:text-5xl">
                                 Creative Stories
                             </h1>
-                            <p className="mx-auto mb-8 max-w-2xl text-xl text-gray-300">
+                            <p className="mx-auto mb-8 max-w-2xl text-base text-gray-300 sm:text-xl">
                                 Discover inspiring tales from artists and creators around the world
                             </p>
                             <Link
@@ -221,6 +221,7 @@ export default function Index({ posts, filters, filterOptions }: Props) {
 
                         <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
                             <select
+                                aria-label="Filter by category"
                                 value={category}
                                 onChange={(event) => setCategory(event.target.value)}
                                 className="rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-gray-100"
@@ -234,6 +235,7 @@ export default function Index({ posts, filters, filterOptions }: Props) {
                             </select>
 
                             <select
+                                aria-label="Filter by author"
                                 value={author}
                                 onChange={(event) => setAuthor(event.target.value)}
                                 className="rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-gray-100"
@@ -247,6 +249,7 @@ export default function Index({ posts, filters, filterOptions }: Props) {
                             </select>
 
                             <select
+                                aria-label="Filter by tag"
                                 value={tag}
                                 onChange={(event) => setTag(event.target.value)}
                                 className="rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-gray-100"
@@ -261,6 +264,7 @@ export default function Index({ posts, filters, filterOptions }: Props) {
 
                             <input
                                 type="date"
+                                aria-label="From date"
                                 value={dateFrom}
                                 onChange={(event) => setDateFrom(event.target.value)}
                                 className="rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-gray-100"
@@ -268,6 +272,7 @@ export default function Index({ posts, filters, filterOptions }: Props) {
 
                             <input
                                 type="date"
+                                aria-label="To date"
                                 value={dateTo}
                                 onChange={(event) => setDateTo(event.target.value)}
                                 className="rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-gray-100"
@@ -292,6 +297,9 @@ export default function Index({ posts, filters, filterOptions }: Props) {
                                             src={`/storage/${post.featured_image}`}
                                             alt={post.title}
                                             className="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                            loading="lazy"
+                                            width="800"
+                                            height="192"
                                         />
                                     </Link>
                                 )}
@@ -389,6 +397,7 @@ export default function Index({ posts, filters, filterOptions }: Props) {
                                             <Link
                                                 href={`/posts/${post.id}/edit`}
                                                 className="rounded-lg p-2 text-gray-500 transition-all duration-200 hover:bg-green-900/30 hover:text-green-400"
+                                                aria-label={`Edit post: ${post.title}`}
                                                 title="Edit post"
                                             >
                                                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -403,6 +412,7 @@ export default function Index({ posts, filters, filterOptions }: Props) {
                                             <button
                                                 onClick={() => handleDelete(post.id, post.is_demo)}
                                                 className="rounded-lg p-2 text-gray-500 transition-all duration-200 hover:bg-red-900/30 hover:text-red-400"
+                                                aria-label={`Delete post: ${post.title}`}
                                                 title="Delete post"
                                             >
                                                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

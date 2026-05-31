@@ -1,6 +1,6 @@
 import MainLayout from '@/layouts/main';
 import { Head, useForm } from '@inertiajs/react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Post {
     id: number;
@@ -38,12 +38,18 @@ export default function Edit({ post }: Props) {
     const [tagsInput, setTagsInput] = useState((post.tags ?? []).join(', '));
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const prevPreviewRef = useRef<string | null>(null);
+
+    useEffect(() => () => { if (prevPreviewRef.current) URL.revokeObjectURL(prevPreviewRef.current); }, []);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] ?? null;
         setData('featured_image', file);
         if (file) {
-            setImagePreview(URL.createObjectURL(file));
+            if (prevPreviewRef.current) URL.revokeObjectURL(prevPreviewRef.current);
+            const url = URL.createObjectURL(file);
+            prevPreviewRef.current = url;
+            setImagePreview(url);
         } else {
             setImagePreview(null);
         }
@@ -68,8 +74,9 @@ export default function Edit({ post }: Props) {
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="mb-1 block text-sm font-medium">Title</label>
+                        <label htmlFor="edit-title" className="mb-1 block text-sm font-medium">Title</label>
                         <input
+                            id="edit-title"
                             type="text"
                             value={data.title}
                             onChange={(e) => setData('title', e.target.value)}
@@ -80,8 +87,9 @@ export default function Edit({ post }: Props) {
                     </div>
 
                     <div>
-                        <label className="mb-1 block text-sm font-medium">Author Name</label>
+                        <label htmlFor="edit-author" className="mb-1 block text-sm font-medium">Author Name</label>
                         <input
+                            id="edit-author"
                             type="text"
                             value={data.author_name}
                             onChange={(e) => setData('author_name', e.target.value)}
@@ -92,8 +100,9 @@ export default function Edit({ post }: Props) {
                     </div>
 
                     <div>
-                        <label className="mb-1 block text-sm font-medium">Author Type</label>
+                        <label htmlFor="edit-author-type" className="mb-1 block text-sm font-medium">Author Type</label>
                         <select
+                            id="edit-author-type"
                             value={data.author_type}
                             onChange={(e) => setData('author_type', e.target.value as 'artist' | 'user')}
                             className="w-full rounded border px-3 py-2"
@@ -105,11 +114,12 @@ export default function Edit({ post }: Props) {
                     </div>
 
                     <div>
-                        <label className="mb-1 block text-sm font-medium">Content</label>
+                        <label htmlFor="edit-content" className="mb-1 block text-sm font-medium">Content</label>
                         <textarea
+                            id="edit-content"
                             value={data.content}
                             onChange={(e) => setData('content', e.target.value)}
-                            className="h-32 w-full rounded border px-3 py-2"
+                            className="min-h-[128px] w-full rounded border px-3 py-2"
                             required
                         />
                         {errors.content && <p className="text-sm text-red-500">{errors.content}</p>}
@@ -117,7 +127,7 @@ export default function Edit({ post }: Props) {
 
                     {/* Featured Image */}
                     <div>
-                        <label className="mb-1 block text-sm font-medium">Featured Image</label>
+                        <label htmlFor="edit-image" className="mb-1 block text-sm font-medium">Featured Image</label>
                         {post.featured_image && !imagePreview && (
                             <div className="mb-2">
                                 <img src={`/storage/${post.featured_image}`} alt="Current featured image" className="h-32 rounded object-cover" />
@@ -131,6 +141,7 @@ export default function Edit({ post }: Props) {
                         )}
                         <input
                             ref={fileInputRef}
+                            id="edit-image"
                             type="file"
                             accept="image/jpeg,image/png,image/gif,image/webp"
                             onChange={handleImageChange}
@@ -142,8 +153,9 @@ export default function Edit({ post }: Props) {
 
                     {/* Tags */}
                     <div>
-                        <label className="mb-1 block text-sm font-medium">Tags</label>
+                        <label htmlFor="edit-tags" className="mb-1 block text-sm font-medium">Tags</label>
                         <input
+                            id="edit-tags"
                             type="text"
                             value={tagsInput}
                             onChange={(e) => setTagsInput(e.target.value)}
@@ -158,7 +170,7 @@ export default function Edit({ post }: Props) {
                         <button
                             type="submit"
                             disabled={processing}
-                            className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
+                            className="rounded bg-blue-500 px-6 py-3 text-white hover:bg-blue-600 disabled:opacity-50"
                         >
                             {processing ? (
                                 <span className="flex items-center gap-2">
@@ -176,7 +188,7 @@ export default function Edit({ post }: Props) {
                                 'Update Post'
                             )}
                         </button>
-                        <a href={`/posts/${post.id}`} className="rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600">
+                        <a href={`/posts/${post.id}`} className="rounded bg-gray-500 px-6 py-3 text-white hover:bg-gray-600">
                             Cancel
                         </a>
                     </div>

@@ -1,6 +1,6 @@
 import MainLayout from '@/layouts/main';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function Create() {
     const form = useForm<{
@@ -24,12 +24,18 @@ export default function Create() {
     const [tagsInput, setTagsInput] = useState('');
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const prevPreviewRef = useRef<string | null>(null);
+
+    useEffect(() => () => { if (prevPreviewRef.current) URL.revokeObjectURL(prevPreviewRef.current); }, []);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] ?? null;
         setData('featured_image', file);
         if (file) {
-            setImagePreview(URL.createObjectURL(file));
+            if (prevPreviewRef.current) URL.revokeObjectURL(prevPreviewRef.current);
+            const url = URL.createObjectURL(file);
+            prevPreviewRef.current = url;
+            setImagePreview(url);
         } else {
             setImagePreview(null);
         }
@@ -62,7 +68,7 @@ export default function Create() {
                 <div className="bg-gradient-to-r from-black to-gray-900 text-white">
                     <div className="mx-auto max-w-4xl px-6 py-12">
                         <div className="text-center">
-                            <h1 className="mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-4xl font-bold text-transparent">
+                            <h1 className="mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-2xl font-bold text-transparent sm:text-4xl">
                                 Share Your Creative Story
                             </h1>
                             <p className="text-lg text-gray-300">Inspire others with your unique journey and creative insights</p>
@@ -77,8 +83,9 @@ export default function Create() {
                             <form onSubmit={handleSubmit} className="space-y-8">
                                 {/* Title Field */}
                                 <div className="space-y-2">
-                                    <label className="mb-2 block text-sm font-semibold text-gray-200">Story Title</label>
+                                    <label htmlFor="post-title" className="mb-2 block text-sm font-semibold text-gray-200">Story Title</label>
                                     <input
+                                        id="post-title"
                                         type="text"
                                         value={data.title}
                                         onChange={(e) => setData('title', e.target.value)}
@@ -97,8 +104,9 @@ export default function Create() {
                                 {/* Author Info */}
                                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                                     <div className="space-y-2">
-                                        <label className="mb-2 block text-sm font-semibold text-gray-200">Your Name</label>
+                                        <label htmlFor="post-author" className="mb-2 block text-sm font-semibold text-gray-200">Your Name</label>
                                         <input
+                                            id="post-author"
                                             type="text"
                                             value={data.author_name}
                                             onChange={(e) => setData('author_name', e.target.value)}
@@ -161,8 +169,9 @@ export default function Create() {
 
                                 {/* Content Field */}
                                 <div className="space-y-2">
-                                    <label className="mb-2 block text-sm font-semibold text-gray-200">Your Story</label>
+                                    <label htmlFor="post-content" className="mb-2 block text-sm font-semibold text-gray-200">Your Story</label>
                                     <textarea
+                                        id="post-content"
                                         value={data.content}
                                         onChange={(e) => setData('content', e.target.value)}
                                         className="w-full resize-none rounded-xl border border-gray-600 bg-gray-700 px-4 py-3 text-gray-200 transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-gray-500"
@@ -209,10 +218,12 @@ export default function Create() {
                                     </div>
                                     <input
                                         ref={fileInputRef}
+                                        id="post-image"
                                         type="file"
                                         accept="image/jpeg,image/png,image/gif,image/webp"
                                         onChange={handleImageChange}
                                         className="hidden"
+                                        aria-label="Featured image upload"
                                     />
                                     {errors.featured_image && (
                                         <p className="mt-2 flex items-center text-sm text-red-400">
@@ -224,8 +235,9 @@ export default function Create() {
 
                                 {/* Tags */}
                                 <div className="space-y-2">
-                                    <label className="mb-2 block text-sm font-semibold text-gray-200">Tags</label>
+                                    <label htmlFor="post-tags" className="mb-2 block text-sm font-semibold text-gray-200">Tags</label>
                                     <input
+                                        id="post-tags"
                                         type="text"
                                         value={tagsInput}
                                         onChange={(e) => setTagsInput(e.target.value)}

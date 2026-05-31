@@ -1,4 +1,4 @@
-import React, { MouseEvent, useState } from 'react';
+import React, { MouseEvent, useEffect, useState } from 'react';
 import { getLoginUrl } from '../env';
 
 const MobileMenu: React.FC = () => {
@@ -9,6 +9,15 @@ const MobileMenu: React.FC = () => {
         setIsOpen(!isOpen);
     };
 
+    useEffect(() => {
+        if (!isOpen) return;
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') setIsOpen(false);
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [isOpen]);
+
     return (
         <div className="relative">
             {/* Hamburger Button */}
@@ -16,7 +25,8 @@ const MobileMenu: React.FC = () => {
                 onClick={toggleMenu}
                 aria-label="Toggle Menu"
                 aria-expanded={isOpen}
-                className="relative z-[9999] text-[var(--foreground)] focus:outline-none"
+                aria-controls="mobile-nav"
+                className="relative z-[9999] flex min-h-[44px] min-w-[44px] items-center justify-center text-[var(--foreground)] focus:outline-none focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2"
             >
                 <div className="space-y-2">
                     <span className={`block h-0.5 w-7 bg-current transition-transform ${isOpen ? 'translate-y-[10px] rotate-45' : ''}`} />
@@ -29,10 +39,20 @@ const MobileMenu: React.FC = () => {
             {isOpen && (
                 <>
                     {/* Backdrop */}
-                    <div className="fixed inset-0 z-[9990] bg-[var(--background)] opacity-90 backdrop-blur-md" onClick={() => setIsOpen(false)} />
+                    <div
+                        className="fixed inset-0 z-[9990] bg-[var(--background)] opacity-90 backdrop-blur-md"
+                        onClick={() => setIsOpen(false)}
+                        aria-hidden="true"
+                    />
 
                     {/* Menu */}
-                    <nav className="fixed inset-0 z-[9995] flex items-center justify-center" aria-label="Mobile navigation">
+                    <nav
+                        id="mobile-nav"
+                        className="fixed inset-0 z-[9995] flex items-center justify-center"
+                        aria-label="Mobile navigation"
+                        role="dialog"
+                        aria-modal="true"
+                    >
                         <ul className="flex flex-col space-y-4 text-center text-lg font-semibold">
                             <li>
                                 <a className="text-gray-900 hover:underline dark:text-white" href="/" onClick={() => setIsOpen(false)}>

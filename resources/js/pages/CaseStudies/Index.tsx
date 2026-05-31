@@ -197,7 +197,7 @@ export default function Index({ caseStudies, filters, filterOptions, searchQuery
                     </div>
                     <div className="relative mx-auto max-w-6xl px-6 py-20">
                         <div className="text-center">
-                            <h1 className="mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-6xl font-bold text-transparent">
+                            <h1 className="mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-3xl font-bold text-transparent sm:text-5xl lg:text-6xl">
                                 Case Studies
                             </h1>
                             <p className="mx-auto max-w-3xl text-2xl leading-relaxed text-gray-300">
@@ -229,7 +229,9 @@ export default function Index({ caseStudies, filters, filterOptions, searchQuery
                                             />
                                         </svg>
                                         <input
+                                            id="case-search"
                                             type="search"
+                                            aria-label="Search case studies"
                                             value={query}
                                             onChange={(event) => setQuery(event.target.value)}
                                             placeholder='Search case studies... Try: "web design" OR mobile OR "e-commerce"'
@@ -247,7 +249,7 @@ export default function Index({ caseStudies, filters, filterOptions, searchQuery
                                         </svg>
                                         Search
                                     </button>
-                                    <button type="button" onClick={() => setShowFilters(!showFilters)} className="btn btn-outline">
+                                    <button type="button" onClick={() => setShowFilters(!showFilters)} aria-expanded={showFilters} aria-controls="case-filters-panel" className="btn btn-outline">
                                         <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path
                                                 strokeLinecap="round"
@@ -288,22 +290,15 @@ export default function Index({ caseStudies, filters, filterOptions, searchQuery
 
                             {/* Filters Panel */}
                             {showFilters && (
-                                <div className="border-t border-gray-700 pt-6">
+                                <div id="case-filters-panel" className="border-t border-gray-700 pt-6">
                                     <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                                         {/* Project Type Filter */}
                                         <div>
-                                            <label className="mb-2 block text-sm font-medium text-gray-300">
-                                                <svg className="mr-1 inline h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth={2}
-                                                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                                                    />
-                                                </svg>
+                                            <label htmlFor="filter-project-type" className="mb-2 block text-sm font-medium text-gray-300">
                                                 Project Type
                                             </label>
                                             <select
+                                                id="filter-project-type"
                                                 value={localFilters.project_type}
                                                 onChange={(e) => handleFilterChange('project_type', e.target.value)}
                                                 className="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-gray-100"
@@ -319,18 +314,11 @@ export default function Index({ caseStudies, filters, filterOptions, searchQuery
 
                                         {/* Client Filter */}
                                         <div>
-                                            <label className="mb-2 block text-sm font-medium text-gray-300">
-                                                <svg className="mr-1 inline h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth={2}
-                                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                                                    />
-                                                </svg>
+                                            <label htmlFor="filter-client" className="mb-2 block text-sm font-medium text-gray-300">
                                                 Client
                                             </label>
                                             <select
+                                                id="filter-client"
                                                 value={localFilters.client_name}
                                                 onChange={(e) => handleFilterChange('client_name', e.target.value)}
                                                 className="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-gray-100"
@@ -346,8 +334,9 @@ export default function Index({ caseStudies, filters, filterOptions, searchQuery
 
                                         {/* Technology Filter */}
                                         <div>
-                                            <label className="mb-2 block text-sm font-medium text-gray-300">Technology</label>
+                                            <label htmlFor="filter-technology" className="mb-2 block text-sm font-medium text-gray-300">Technology</label>
                                             <select
+                                                id="filter-technology"
                                                 value={localFilters.technology}
                                                 onChange={(e) => handleFilterChange('technology', e.target.value)}
                                                 className="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-gray-100"
@@ -363,18 +352,11 @@ export default function Index({ caseStudies, filters, filterOptions, searchQuery
 
                                         {/* Date Range */}
                                         <div>
-                                            <label className="mb-2 block text-sm font-medium text-gray-300">
-                                                <svg className="mr-1 inline h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth={2}
-                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                                    />
-                                                </svg>
+                                            <label htmlFor="filter-date-from" className="mb-2 block text-sm font-medium text-gray-300">
                                                 From Date
                                             </label>
                                             <input
+                                                id="filter-date-from"
                                                 type="date"
                                                 value={localFilters.date_from}
                                                 onChange={(e) => handleFilterChange('date_from', e.target.value)}
@@ -383,18 +365,11 @@ export default function Index({ caseStudies, filters, filterOptions, searchQuery
                                         </div>
 
                                         <div>
-                                            <label className="mb-2 block text-sm font-medium text-gray-300">
-                                                <svg className="mr-1 inline h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth={2}
-                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                                    />
-                                                </svg>
+                                            <label htmlFor="filter-date-to" className="mb-2 block text-sm font-medium text-gray-300">
                                                 To Date
                                             </label>
                                             <input
+                                                id="filter-date-to"
                                                 type="date"
                                                 value={localFilters.date_to}
                                                 onChange={(e) => handleFilterChange('date_to', e.target.value)}
@@ -404,8 +379,9 @@ export default function Index({ caseStudies, filters, filterOptions, searchQuery
 
                                         {/* Sort Options */}
                                         <div>
-                                            <label className="mb-2 block text-sm font-medium text-gray-300">Sort By</label>
+                                            <label htmlFor="filter-sort" className="mb-2 block text-sm font-medium text-gray-300">Sort By</label>
                                             <select
+                                                id="filter-sort"
                                                 value={localFilters.sort}
                                                 onChange={(e) => handleFilterChange('sort', e.target.value)}
                                                 className="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-gray-100"

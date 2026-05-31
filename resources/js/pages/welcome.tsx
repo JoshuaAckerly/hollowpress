@@ -81,7 +81,7 @@ const Welcome: React.FC<Props> = ({ posts = [], artists = [] }) => {
                 <div className="bg-black/40">
                     <div className="container py-28 text-center">
                         <div className="card mx-auto max-w-3xl bg-black/60">
-                            <h2 className="text-5xl font-extrabold text-white">Hollow Press</h2>
+                            <h1 className="text-5xl font-extrabold text-white">Hollow Press</h1>
                             <h3 className="mt-3 text-2xl text-white/90">Faith in Shadows</h3>
                             <div className="mt-6">
                                 <a className="btn btn-primary" href="#about">
@@ -101,7 +101,7 @@ const Welcome: React.FC<Props> = ({ posts = [], artists = [] }) => {
                         <div className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-3">
                             <div className="rounded-xl border border-gray-700 bg-gray-800 p-6 shadow-lg">
                                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-gray-600 to-slate-600">
-                                    <span className="text-2xl text-white">✍️</span>
+                                    <span aria-hidden="true" className="text-2xl text-white">✍️</span>
                                 </div>
                                 <h3 className="mb-3 text-xl font-semibold text-white">Artist Blogging Platform</h3>
                                 <p className="text-gray-300">
@@ -111,7 +111,7 @@ const Welcome: React.FC<Props> = ({ posts = [], artists = [] }) => {
                             </div>
                             <div className="rounded-xl border border-gray-700 bg-gray-800 p-6 shadow-lg">
                                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-slate-600 to-gray-600">
-                                    <span className="text-2xl text-white">🎨</span>
+                                    <span aria-hidden="true" className="text-2xl text-white">🎨</span>
                                 </div>
                                 <h3 className="mb-3 text-xl font-semibold text-white">Creative Community</h3>
                                 <p className="text-gray-300">
@@ -121,7 +121,7 @@ const Welcome: React.FC<Props> = ({ posts = [], artists = [] }) => {
                             </div>
                             <div className="rounded-xl border border-gray-700 bg-gray-800 p-6 shadow-lg">
                                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-gray-700 to-slate-700">
-                                    <span className="text-2xl text-white">🌐</span>
+                                    <span aria-hidden="true" className="text-2xl text-white">🌐</span>
                                 </div>
                                 <h3 className="mb-3 text-xl font-semibold text-white">Global Reach</h3>
                                 <p className="text-gray-300">
@@ -146,7 +146,7 @@ const Welcome: React.FC<Props> = ({ posts = [], artists = [] }) => {
             <section id="about" className="py-12">
                 <div className="container">
                     <div className="mb-6 flex items-center justify-between">
-                        <h4 className="heading">Featured Artist</h4>
+                        <h3 className="heading">Featured Artist</h3>
                         <a className="muted underline" href="/artists">
                             View All
                         </a>
@@ -156,7 +156,7 @@ const Welcome: React.FC<Props> = ({ posts = [], artists = [] }) => {
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                             {artists.map((artist) => (
                                 <a key={artist.id} href={`/artists/${artist.id}`} className="card text-center transition-shadow hover:shadow-lg">
-                                    <h4 className="mt-4 text-xl font-bold">{artist.name}</h4>
+                                    <h3 className="mt-4 text-xl font-bold">{artist.name}</h3>
                                     <p className="muted mt-2">{artist.bio.substring(0, 100)}...</p>
                                     <div className="mt-2 text-sm text-gray-600">
                                         <span className="rounded bg-gray-100 px-2 py-1">{artist.genre}</span>
@@ -180,7 +180,7 @@ const Welcome: React.FC<Props> = ({ posts = [], artists = [] }) => {
                 <div className="absolute right-1/3 bottom-40 h-16 w-16 rounded-full bg-slate-700/25 blur-lg"></div>
                 <div className="container">
                     <div className="mb-12 text-center">
-                        <h4 className="heading mb-4 text-3xl font-bold text-white">Latest Stories</h4>
+                        <h3 className="heading mb-4 text-3xl font-bold text-white">Latest Stories</h3>
                         <p className="mx-auto max-w-2xl text-gray-300">Fresh writing from artists and creators in the Hollow Press community</p>
                     </div>
 
@@ -209,15 +209,18 @@ const Welcome: React.FC<Props> = ({ posts = [], artists = [] }) => {
                                     <div className="absolute right-0 bottom-0 h-16 w-16 rounded-tl-full bg-gradient-to-tl from-slate-600/30 to-transparent"></div>
 
                                     {/* Floating particles */}
-                                    <div className="absolute top-4 left-4 h-2 w-2 animate-pulse rounded-full bg-gray-400"></div>
-                                    <div className="absolute top-8 left-8 h-1 w-1 animate-ping rounded-full bg-slate-400"></div>
-                                    <div className="absolute bottom-8 left-6 h-1.5 w-1.5 animate-bounce rounded-full bg-gray-500"></div>
+                                    <div aria-hidden="true" className="absolute top-4 left-4 h-2 w-2 animate-pulse rounded-full bg-gray-400"></div>
+                                    <div aria-hidden="true" className="absolute top-8 left-8 h-1 w-1 animate-ping rounded-full bg-slate-400"></div>
+                                    <div aria-hidden="true" className="absolute bottom-8 left-6 h-1.5 w-1.5 animate-bounce rounded-full bg-gray-500"></div>
 
                                     <div className="relative overflow-hidden">
                                         <img
                                             src={blogImages[index % blogImages.length]}
                                             alt={post.title}
                                             className="h-52 w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                            loading="lazy"
+                                            width="800"
+                                            height="208"
                                         />
 
                                         {/* Image overlay gradient */}
@@ -305,14 +308,14 @@ const Welcome: React.FC<Props> = ({ posts = [], artists = [] }) => {
 
                     <div className="relative mt-16 text-center">
                         {/* Decorative elements around button */}
-                        <div className="absolute top-1/2 left-1/2 h-32 w-32 -translate-x-1/2 -translate-y-1/2 transform animate-pulse rounded-full bg-gradient-to-r from-gray-600/10 to-slate-600/10"></div>
-                        <div className="absolute top-1/2 left-1/2 h-24 w-24 -translate-x-1/2 -translate-y-1/2 transform animate-ping rounded-full bg-gradient-to-r from-slate-600/20 to-gray-600/20"></div>
+                        <div aria-hidden="true" className="absolute top-1/2 left-1/2 h-32 w-32 -translate-x-1/2 -translate-y-1/2 transform animate-pulse rounded-full bg-gradient-to-r from-gray-600/10 to-slate-600/10"></div>
+                        <div aria-hidden="true" className="absolute top-1/2 left-1/2 h-24 w-24 -translate-x-1/2 -translate-y-1/2 transform animate-ping rounded-full bg-gradient-to-r from-slate-600/20 to-gray-600/20"></div>
 
                         <a
                             href="/posts"
                             className="bg-size-200 bg-pos-0 hover:bg-pos-100 relative inline-flex transform items-center rounded-2xl bg-gradient-to-r from-gray-700 via-slate-700 to-gray-700 px-8 py-4 font-bold text-white shadow-2xl transition-all duration-500 hover:-translate-y-1 hover:scale-105 hover:shadow-gray-500/25"
                         >
-                            <span className="mr-2">🚀</span>
+                            <span aria-hidden="true" className="mr-2">🚀</span>
                             Explore All Stories
                             <svg className="ml-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />

@@ -98,7 +98,7 @@ export default function Index({ projects, filters, filterOptions }: Props) {
                 {/* Hero */}
                 <div className="relative overflow-hidden bg-gradient-to-r from-black via-gray-900 to-black text-white">
                     <div className="relative mx-auto max-w-6xl px-6 py-20 text-center">
-                        <h1 className="mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-6xl font-bold text-transparent">Projects</h1>
+                        <h1 className="mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-3xl font-bold text-transparent sm:text-5xl lg:text-6xl">Projects</h1>
                         <p className="mx-auto max-w-2xl text-lg text-gray-300">
                             Creative work, ongoing ventures, and completed endeavors from Hollow Press.
                         </p>
@@ -111,6 +111,7 @@ export default function Index({ projects, filters, filterOptions }: Props) {
                         <form onSubmit={handleSearch} className="mb-4 flex gap-3">
                             <input
                                 type="text"
+                                aria-label="Search projects"
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                                 placeholder="Search projects…"
@@ -136,6 +137,7 @@ export default function Index({ projects, filters, filterOptions }: Props) {
                         <div className="flex flex-wrap gap-3">
                             {/* Status filter */}
                             <select
+                                aria-label="Filter by status"
                                 value={status}
                                 onChange={(e) => handleFilter('status', e.target.value)}
                                 className="rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-white focus:outline-none"
@@ -149,6 +151,7 @@ export default function Index({ projects, filters, filterOptions }: Props) {
                             {/* Tag filter */}
                             {filterOptions && filterOptions.tags.length > 0 && (
                                 <select
+                                    aria-label="Filter by tag"
                                     value={tag}
                                     onChange={(e) => handleFilter('tag', e.target.value)}
                                     className="rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-white focus:outline-none"
@@ -165,6 +168,7 @@ export default function Index({ projects, filters, filterOptions }: Props) {
                             {/* Year filter */}
                             {filterOptions && filterOptions.years.length > 0 && (
                                 <select
+                                    aria-label="Filter by year"
                                     value={year}
                                     onChange={(e) => handleFilter('year', e.target.value)}
                                     className="rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-white focus:outline-none"
@@ -258,6 +262,9 @@ function ProjectCard({ project, featured = false }: { project: Project; featured
                             src={project.cover_image}
                             alt={project.title}
                             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            loading="lazy"
+                            width="800"
+                            height="450"
                         />
                     </div>
                 )}

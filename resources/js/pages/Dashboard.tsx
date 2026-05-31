@@ -82,28 +82,28 @@ const Dashboard: React.FC<Props> = ({ stats, recentPosts, recentCaseStudies, rec
                         <p className="muted">Core publishing overview and quick navigation.</p>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    <dl className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
                         <div className="card">
-                            <p className="muted">Published posts</p>
-                            <p className="mt-2 text-3xl font-bold">{stats.publishedPostsCount}</p>
+                            <dt className="muted">Published posts</dt>
+                            <dd className="mt-2 text-3xl font-bold">{stats.publishedPostsCount}</dd>
                         </div>
                         <div className="card">
-                            <p className="muted">Demo drafts</p>
-                            <p className="mt-2 text-3xl font-bold">{stats.draftPostsCount}</p>
+                            <dt className="muted">Demo drafts</dt>
+                            <dd className="mt-2 text-3xl font-bold">{stats.draftPostsCount}</dd>
                         </div>
                         <div className="card">
-                            <p className="muted">Artists</p>
-                            <p className="mt-2 text-3xl font-bold">{stats.artistsCount}</p>
+                            <dt className="muted">Artists</dt>
+                            <dd className="mt-2 text-3xl font-bold">{stats.artistsCount}</dd>
                         </div>
                         <div className="card">
-                            <p className="muted">Case studies</p>
-                            <p className="mt-2 text-3xl font-bold">{stats.caseStudiesCount}</p>
+                            <dt className="muted">Case studies</dt>
+                            <dd className="mt-2 text-3xl font-bold">{stats.caseStudiesCount}</dd>
                         </div>
                         <div className="card">
-                            <p className="muted">Projects</p>
-                            <p className="mt-2 text-3xl font-bold">{stats.projectsCount}</p>
+                            <dt className="muted">Projects</dt>
+                            <dd className="mt-2 text-3xl font-bold">{stats.projectsCount}</dd>
                         </div>
-                    </div>
+                    </dl>
 
                     <div className="card">
                         <h2 className="heading">Content health</h2>
