@@ -249,7 +249,13 @@ export default function Index({ caseStudies, filters, filterOptions, searchQuery
                                         </svg>
                                         Search
                                     </button>
-                                    <button type="button" onClick={() => setShowFilters(!showFilters)} aria-expanded={showFilters} aria-controls="case-filters-panel" className="btn btn-outline">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowFilters(!showFilters)}
+                                        aria-expanded={showFilters}
+                                        aria-controls="case-filters-panel"
+                                        className="btn btn-outline"
+                                    >
                                         <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path
                                                 strokeLinecap="round"
@@ -334,7 +340,9 @@ export default function Index({ caseStudies, filters, filterOptions, searchQuery
 
                                         {/* Technology Filter */}
                                         <div>
-                                            <label htmlFor="filter-technology" className="mb-2 block text-sm font-medium text-gray-300">Technology</label>
+                                            <label htmlFor="filter-technology" className="mb-2 block text-sm font-medium text-gray-300">
+                                                Technology
+                                            </label>
                                             <select
                                                 id="filter-technology"
                                                 value={localFilters.technology}
@@ -379,7 +387,9 @@ export default function Index({ caseStudies, filters, filterOptions, searchQuery
 
                                         {/* Sort Options */}
                                         <div>
-                                            <label htmlFor="filter-sort" className="mb-2 block text-sm font-medium text-gray-300">Sort By</label>
+                                            <label htmlFor="filter-sort" className="mb-2 block text-sm font-medium text-gray-300">
+                                                Sort By
+                                            </label>
                                             <select
                                                 id="filter-sort"
                                                 value={localFilters.sort}

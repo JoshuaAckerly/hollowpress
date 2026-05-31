@@ -48,7 +48,9 @@ export default function About() {
                         <div className="rounded-2xl border border-gray-700 bg-gray-800 p-10 shadow-2xl">
                             <div className="mb-8 flex items-center justify-center">
                                 <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-gray-600 to-slate-600">
-                                    <span aria-hidden="true" className="text-4xl">🌙</span>
+                                    <span aria-hidden="true" className="text-4xl">
+                                        🌙
+                                    </span>
                                 </div>
                             </div>
                             <h2 className="mb-6 text-center text-4xl font-bold text-white">Faith in Shadows</h2>
@@ -68,7 +70,9 @@ export default function About() {
                         <div className="space-y-8">
                             <div className="rounded-xl border border-gray-700 bg-gray-800/50 p-8 backdrop-blur-sm">
                                 <h3 className="mb-4 flex items-center text-2xl font-semibold text-white">
-                                    <span aria-hidden="true" className="mr-3 text-3xl">🎨</span>
+                                    <span aria-hidden="true" className="mr-3 text-3xl">
+                                        🎨
+                                    </span>
                                     Born from Passion
                                 </h3>
                                 <p className="leading-relaxed text-gray-300">
@@ -80,7 +84,10 @@ export default function About() {
 
                             <div className="rounded-xl border border-gray-700 bg-gray-800/50 p-8 backdrop-blur-sm">
                                 <h3 className="mb-4 flex items-center text-2xl font-semibold text-white">
-                                    <span aria-hidden="true" className="mr-3 text-3xl">🌍</span>A Global Community
+                                    <span aria-hidden="true" className="mr-3 text-3xl">
+                                        🌍
+                                    </span>
+                                    A Global Community
                                 </h3>
                                 <p className="leading-relaxed text-gray-300">
                                     What started as a small blog has grown into a thriving community of artists, musicians, writers, and creators from
@@ -91,7 +98,9 @@ export default function About() {
 
                             <div className="rounded-xl border border-gray-700 bg-gray-800/50 p-8 backdrop-blur-sm">
                                 <h3 className="mb-4 flex items-center text-2xl font-semibold text-white">
-                                    <span aria-hidden="true" className="mr-3 text-3xl">✨</span>
+                                    <span aria-hidden="true" className="mr-3 text-3xl">
+                                        ✨
+                                    </span>
                                     Future Vision
                                 </h3>
                                 <p className="leading-relaxed text-gray-300">
@@ -111,7 +120,9 @@ export default function About() {
                         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
                             <div className="rounded-xl border border-gray-700 bg-gray-800 p-6 transition-all duration-300 hover:-translate-y-1 hover:transform hover:border-gray-600">
                                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-gray-600 to-slate-600">
-                                    <span aria-hidden="true" className="text-2xl">🎭</span>
+                                    <span aria-hidden="true" className="text-2xl">
+                                        🎭
+                                    </span>
                                 </div>
                                 <h3 className="mb-3 text-center text-xl font-semibold text-white">Authenticity</h3>
                                 <p className="text-center text-gray-300">
@@ -121,7 +132,9 @@ export default function About() {
 
                             <div className="rounded-xl border border-gray-700 bg-gray-800 p-6 transition-all duration-300 hover:-translate-y-1 hover:transform hover:border-gray-600">
                                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-gray-600 to-slate-600">
-                                    <span aria-hidden="true" className="text-2xl">🤝</span>
+                                    <span aria-hidden="true" className="text-2xl">
+                                        🤝
+                                    </span>
                                 </div>
                                 <h3 className="mb-3 text-center text-xl font-semibold text-white">Community</h3>
                                 <p className="text-center text-gray-300">
@@ -131,7 +144,9 @@ export default function About() {
 
                             <div className="rounded-xl border border-gray-700 bg-gray-800 p-6 transition-all duration-300 hover:-translate-y-1 hover:transform hover:border-gray-600">
                                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-gray-600 to-slate-600">
-                                    <span aria-hidden="true" className="text-2xl">🚀</span>
+                                    <span aria-hidden="true" className="text-2xl">
+                                        🚀
+                                    </span>
                                 </div>
                                 <h3 className="mb-3 text-center text-xl font-semibold text-white">Innovation</h3>
                                 <p className="text-center text-gray-300">
@@ -141,7 +156,9 @@ export default function About() {
 
                             <div className="rounded-xl border border-gray-700 bg-gray-800 p-6 transition-all duration-300 hover:-translate-y-1 hover:transform hover:border-gray-600">
                                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-gray-600 to-slate-600">
-                                    <span aria-hidden="true" className="text-2xl">🌟</span>
+                                    <span aria-hidden="true" className="text-2xl">
+                                        🌟
+                                    </span>
                                 </div>
                                 <h3 className="mb-3 text-center text-xl font-semibold text-white">Excellence</h3>
                                 <p className="text-center text-gray-300">
@@ -151,7 +168,9 @@ export default function About() {
 
                             <div className="rounded-xl border border-gray-700 bg-gray-800 p-6 transition-all duration-300 hover:-translate-y-1 hover:transform hover:border-gray-600">
                                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-gray-600 to-slate-600">
-                                    <span aria-hidden="true" className="text-2xl">💡</span>
+                                    <span aria-hidden="true" className="text-2xl">
+                                        💡
+                                    </span>
                                 </div>
                                 <h3 className="mb-3 text-center text-xl font-semibold text-white">Inclusivity</h3>
                                 <p className="text-center text-gray-300">
@@ -161,7 +180,9 @@ export default function About() {
 
                             <div className="rounded-xl border border-gray-700 bg-gray-800 p-6 transition-all duration-300 hover:-translate-y-1 hover:transform hover:border-gray-600">
                                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-gray-600 to-slate-600">
-                                    <span aria-hidden="true" className="text-2xl">🔥</span>
+                                    <span aria-hidden="true" className="text-2xl">
+                                        🔥
+                                    </span>
                                 </div>
                                 <h3 className="mb-3 text-center text-xl font-semibold text-white">Passion</h3>
                                 <p className="text-center text-gray-300">

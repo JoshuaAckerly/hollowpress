@@ -16,7 +16,9 @@ const Main = ({ children }: { children: React.ReactNode }) => {
                 Skip to content
             </a>
             <Header />
-            <main id="main-content" className="flex-grow">{children}</main>
+            <main id="main-content" className="flex-grow">
+                {children}
+            </main>
             <Footer />
             <Toaster position="bottom-right" richColors closeButton />
         </div>

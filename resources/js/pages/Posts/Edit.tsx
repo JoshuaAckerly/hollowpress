@@ -40,7 +40,12 @@ export default function Edit({ post }: Props) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const prevPreviewRef = useRef<string | null>(null);
 
-    useEffect(() => () => { if (prevPreviewRef.current) URL.revokeObjectURL(prevPreviewRef.current); }, []);
+    useEffect(
+        () => () => {
+            if (prevPreviewRef.current) URL.revokeObjectURL(prevPreviewRef.current);
+        },
+        [],
+    );
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] ?? null;
@@ -74,7 +79,9 @@ export default function Edit({ post }: Props) {
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label htmlFor="edit-title" className="mb-1 block text-sm font-medium">Title</label>
+                        <label htmlFor="edit-title" className="mb-1 block text-sm font-medium">
+                            Title
+                        </label>
                         <input
                             id="edit-title"
                             type="text"
@@ -87,7 +94,9 @@ export default function Edit({ post }: Props) {
                     </div>
 
                     <div>
-                        <label htmlFor="edit-author" className="mb-1 block text-sm font-medium">Author Name</label>
+                        <label htmlFor="edit-author" className="mb-1 block text-sm font-medium">
+                            Author Name
+                        </label>
                         <input
                             id="edit-author"
                             type="text"
@@ -100,7 +109,9 @@ export default function Edit({ post }: Props) {
                     </div>
 
                     <div>
-                        <label htmlFor="edit-author-type" className="mb-1 block text-sm font-medium">Author Type</label>
+                        <label htmlFor="edit-author-type" className="mb-1 block text-sm font-medium">
+                            Author Type
+                        </label>
                         <select
                             id="edit-author-type"
                             value={data.author_type}
@@ -114,7 +125,9 @@ export default function Edit({ post }: Props) {
                     </div>
 
                     <div>
-                        <label htmlFor="edit-content" className="mb-1 block text-sm font-medium">Content</label>
+                        <label htmlFor="edit-content" className="mb-1 block text-sm font-medium">
+                            Content
+                        </label>
                         <textarea
                             id="edit-content"
                             value={data.content}
@@ -127,7 +140,9 @@ export default function Edit({ post }: Props) {
 
                     {/* Featured Image */}
                     <div>
-                        <label htmlFor="edit-image" className="mb-1 block text-sm font-medium">Featured Image</label>
+                        <label htmlFor="edit-image" className="mb-1 block text-sm font-medium">
+                            Featured Image
+                        </label>
                         {post.featured_image && !imagePreview && (
                             <div className="mb-2">
                                 <img src={`/storage/${post.featured_image}`} alt="Current featured image" className="h-32 rounded object-cover" />
@@ -153,7 +168,9 @@ export default function Edit({ post }: Props) {
 
                     {/* Tags */}
                     <div>
-                        <label htmlFor="edit-tags" className="mb-1 block text-sm font-medium">Tags</label>
+                        <label htmlFor="edit-tags" className="mb-1 block text-sm font-medium">
+                            Tags
+                        </label>
                         <input
                             id="edit-tags"
                             type="text"

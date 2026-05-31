@@ -113,7 +113,7 @@ export default function Show({ post, comments, relatedPosts }: Props) {
                         <div className="bg-gradient-to-r from-black to-gray-900 p-8 text-white">
                             <div className="mb-6 flex items-start justify-between">
                                 <div className="flex-1">
-                                    <h1 className="mb-4 text-2xl font-bold leading-tight sm:text-4xl">{post.title}</h1>
+                                    <h1 className="mb-4 text-2xl leading-tight font-bold sm:text-4xl">{post.title}</h1>
 
                                     <div className="flex items-center space-x-4">
                                         <div
@@ -167,7 +167,14 @@ export default function Show({ post, comments, relatedPosts }: Props) {
                         {/* Featured Image */}
                         {post.featured_image && (
                             <div className="overflow-hidden">
-                                <img src={`/storage/${post.featured_image}`} alt={post.title} className="h-64 w-full object-cover md:h-96" loading="lazy" width="896" height="384" />
+                                <img
+                                    src={`/storage/${post.featured_image}`}
+                                    alt={post.title}
+                                    className="h-64 w-full object-cover md:h-96"
+                                    loading="lazy"
+                                    width="896"
+                                    height="384"
+                                />
                             </div>
                         )}
 
@@ -232,7 +239,9 @@ export default function Show({ post, comments, relatedPosts }: Props) {
 
                             <form onSubmit={handleCommentSubmit} className="space-y-4">
                                 <div>
-                                    <label htmlFor="comment-author" className="mb-2 block text-sm font-semibold text-gray-200">Your Name</label>
+                                    <label htmlFor="comment-author" className="mb-2 block text-sm font-semibold text-gray-200">
+                                        Your Name
+                                    </label>
                                     <input
                                         id="comment-author"
                                         type="text"
@@ -246,7 +255,9 @@ export default function Show({ post, comments, relatedPosts }: Props) {
                                 </div>
 
                                 <div>
-                                    <label htmlFor="comment-content" className="mb-2 block text-sm font-semibold text-gray-200">Comment</label>
+                                    <label htmlFor="comment-content" className="mb-2 block text-sm font-semibold text-gray-200">
+                                        Comment
+                                    </label>
                                     <textarea
                                         id="comment-content"
                                         value={data.content}

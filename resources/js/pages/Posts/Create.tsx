@@ -26,7 +26,12 @@ export default function Create() {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const prevPreviewRef = useRef<string | null>(null);
 
-    useEffect(() => () => { if (prevPreviewRef.current) URL.revokeObjectURL(prevPreviewRef.current); }, []);
+    useEffect(
+        () => () => {
+            if (prevPreviewRef.current) URL.revokeObjectURL(prevPreviewRef.current);
+        },
+        [],
+    );
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] ?? null;
@@ -83,7 +88,9 @@ export default function Create() {
                             <form onSubmit={handleSubmit} className="space-y-8">
                                 {/* Title Field */}
                                 <div className="space-y-2">
-                                    <label htmlFor="post-title" className="mb-2 block text-sm font-semibold text-gray-200">Story Title</label>
+                                    <label htmlFor="post-title" className="mb-2 block text-sm font-semibold text-gray-200">
+                                        Story Title
+                                    </label>
                                     <input
                                         id="post-title"
                                         type="text"
@@ -104,7 +111,9 @@ export default function Create() {
                                 {/* Author Info */}
                                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                                     <div className="space-y-2">
-                                        <label htmlFor="post-author" className="mb-2 block text-sm font-semibold text-gray-200">Your Name</label>
+                                        <label htmlFor="post-author" className="mb-2 block text-sm font-semibold text-gray-200">
+                                            Your Name
+                                        </label>
                                         <input
                                             id="post-author"
                                             type="text"
@@ -169,7 +178,9 @@ export default function Create() {
 
                                 {/* Content Field */}
                                 <div className="space-y-2">
-                                    <label htmlFor="post-content" className="mb-2 block text-sm font-semibold text-gray-200">Your Story</label>
+                                    <label htmlFor="post-content" className="mb-2 block text-sm font-semibold text-gray-200">
+                                        Your Story
+                                    </label>
                                     <textarea
                                         id="post-content"
                                         value={data.content}
@@ -235,7 +246,9 @@ export default function Create() {
 
                                 {/* Tags */}
                                 <div className="space-y-2">
-                                    <label htmlFor="post-tags" className="mb-2 block text-sm font-semibold text-gray-200">Tags</label>
+                                    <label htmlFor="post-tags" className="mb-2 block text-sm font-semibold text-gray-200">
+                                        Tags
+                                    </label>
                                     <input
                                         id="post-tags"
                                         type="text"
