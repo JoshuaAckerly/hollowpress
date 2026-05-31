@@ -69,6 +69,15 @@ class PostController extends Controller
             ->paginate($perPage)
             ->withQueryString();
 
+        // DB::table() returns raw JSON strings; decode tags so the frontend gets an array
+        $paginatedPosts->getCollection()->transform(function (object $post): object {
+            if (isset($post->tags) && is_string($post->tags)) {
+                $post->tags = json_decode($post->tags, true);
+            }
+
+            return $post;
+        });
+
         return Inertia::render('Posts/Index', [
             'posts' => $paginatedPosts,
             'filters' => [
