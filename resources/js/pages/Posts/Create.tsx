@@ -1,17 +1,8 @@
 import MainLayout from '@/layouts/main';
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { useRef, useState } from 'react';
 
-interface PageProps {
-    [key: string]: unknown;
-    flash: {
-        success?: string;
-        error?: string;
-    };
-}
-
 export default function Create() {
-    const { flash } = usePage<PageProps>().props;
     const form = useForm<{
         title: string;
         content: string;
@@ -80,25 +71,6 @@ export default function Create() {
                 </div>
 
                 <div className="mx-auto max-w-4xl px-6 py-12">
-                    {/* Flash Messages */}
-                    {flash?.success && (
-                        <div className="mb-8 rounded-r-lg border-l-4 border-green-500 bg-green-900/50 p-4 text-green-300 shadow-sm">
-                            <div className="flex items-center">
-                                <span className="mr-2 text-green-400">✓</span>
-                                {flash.success}
-                            </div>
-                        </div>
-                    )}
-
-                    {flash?.error && (
-                        <div className="mb-8 rounded-r-lg border-l-4 border-red-500 bg-red-900/50 p-4 text-red-300 shadow-sm">
-                            <div className="flex items-center">
-                                <span className="mr-2 text-red-400">⚠</span>
-                                {flash.error}
-                            </div>
-                        </div>
-                    )}
-
                     {/* Form Card */}
                     <div className="overflow-hidden rounded-2xl border border-gray-700 bg-gray-800 shadow-xl">
                         <div className="p-8">

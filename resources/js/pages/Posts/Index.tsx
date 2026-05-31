@@ -1,14 +1,6 @@
 import MainLayout from '@/layouts/main';
-import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import React, { useEffect, useRef, useState } from 'react';
-
-interface PageProps {
-    [key: string]: unknown;
-    flash: {
-        success?: string;
-        error?: string;
-    };
-}
 
 interface Post {
     id: number;
@@ -47,7 +39,6 @@ interface Props {
 }
 
 export default function Index({ posts, filters, filterOptions }: Props) {
-    const { flash } = usePage<PageProps>().props;
     const [query, setQuery] = useState(filters?.q ?? '');
     const [author, setAuthor] = useState(filters?.author ?? '');
     const [category, setCategory] = useState(filters?.category ?? '');
@@ -286,25 +277,6 @@ export default function Index({ posts, filters, filterOptions }: Props) {
                         <p className="muted mt-3">Advanced syntax: use quotes for exact phrases and `OR` for alternatives.</p>
                         {filters?.q && <p className="muted mt-1">Results are ranked by relevance, then recency.</p>}
                     </div>
-
-                    {/* Flash Messages */}
-                    {flash?.success && (
-                        <div className="mb-8 rounded-r-lg border-l-4 border-green-500 bg-green-900/50 p-4 text-green-300 shadow-sm">
-                            <div className="flex items-center">
-                                <span className="mr-2 text-green-400">✓</span>
-                                {flash.success}
-                            </div>
-                        </div>
-                    )}
-
-                    {flash?.error && (
-                        <div className="mb-8 rounded-r-lg border-l-4 border-red-500 bg-red-900/50 p-4 text-red-300 shadow-sm">
-                            <div className="flex items-center">
-                                <span className="mr-2 text-red-400">⚠</span>
-                                {flash.error}
-                            </div>
-                        </div>
-                    )}
 
                     {/* Posts Grid */}
                     <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">

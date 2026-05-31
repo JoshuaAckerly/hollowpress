@@ -1,18 +1,9 @@
 import { trackFormSubmission } from '@/hooks/use-google-analytics';
 import MainLayout from '@/layouts/main';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
 
-interface PageProps {
-    [key: string]: unknown;
-    flash?: {
-        success?: string;
-        error?: string;
-    };
-}
-
 export default function Contact() {
-    const { flash } = usePage<PageProps>().props;
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
@@ -144,16 +135,6 @@ export default function Contact() {
                         {/* Contact Form */}
                         <div className="rounded-2xl border border-gray-700 bg-gray-800/50 p-8 backdrop-blur-sm">
                             <h2 className="mb-6 text-3xl font-bold text-white">Send us a Message</h2>
-
-                            {/* Success Message */}
-                            {flash?.success && (
-                                <div className="mb-6 rounded-lg border border-green-700 bg-green-900/50 p-4 text-green-300">{flash.success}</div>
-                            )}
-
-                            {/* Error Message */}
-                            {flash?.error && (
-                                <div className="mb-6 rounded-lg border border-red-700 bg-red-900/50 p-4 text-red-300">{flash.error}</div>
-                            )}
 
                             <form onSubmit={submit} className="space-y-6">
                                 {/* Name Field */}

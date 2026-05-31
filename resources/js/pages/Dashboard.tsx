@@ -1,14 +1,6 @@
 import Main from '@/layouts/main';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import React, { useState } from 'react';
-
-interface PageProps {
-    [key: string]: unknown;
-    flash: {
-        success?: string;
-        error?: string;
-    };
-}
 
 interface DashboardStats {
     publishedPostsCount: number;
@@ -71,7 +63,6 @@ const formatDate = (value: string): string => {
 };
 
 const Dashboard: React.FC<Props> = ({ stats, recentPosts, recentCaseStudies, recentProjects, recentComments }) => {
-    const { flash } = usePage<PageProps>().props;
     const [dashboardToken, setDashboardToken] = useState('');
     const hasAnyPosts = stats.publishedPostsCount + stats.draftPostsCount > 0;
     const hasAnyCaseStudies = stats.caseStudiesCount > 0;
@@ -90,10 +81,6 @@ const Dashboard: React.FC<Props> = ({ stats, recentPosts, recentCaseStudies, rec
                         <h1 className="heading text-3xl">HollowPress Dashboard</h1>
                         <p className="muted">Core publishing overview and quick navigation.</p>
                     </div>
-
-                    {flash?.success && <div className="rounded border border-green-700 bg-green-900/30 p-3 text-green-200">{flash.success}</div>}
-
-                    {flash?.error && <div className="rounded border border-red-700 bg-red-900/30 p-3 text-red-200">{flash.error}</div>}
 
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                         <div className="card">

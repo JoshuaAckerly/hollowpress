@@ -3,18 +3,10 @@ import RelatedPosts from '@/components/RelatedPosts';
 import { trackFormSubmission } from '@/hooks/use-google-analytics';
 import MainLayout from '@/layouts/main';
 import type HCaptchaType from '@hcaptcha/react-hcaptcha';
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { lazy, Suspense, useRef } from 'react';
 
 const HCaptcha = lazy(() => import('@hcaptcha/react-hcaptcha'));
-
-interface PageProps {
-    [key: string]: unknown;
-    flash: {
-        success?: string;
-        error?: string;
-    };
-}
 
 interface Post {
     id: number;
@@ -49,7 +41,6 @@ interface Props {
 }
 
 export default function Show({ post, comments, relatedPosts }: Props) {
-    const { flash } = usePage<PageProps>().props;
     const captchaRef = useRef<HCaptchaType>(null);
     const {
         data,
@@ -117,24 +108,6 @@ export default function Show({ post, comments, relatedPosts }: Props) {
                 </div>
 
                 <div className="mx-auto max-w-4xl px-6 py-12">
-                    {flash?.success && (
-                        <div className="mb-8 rounded-r-lg border-l-4 border-green-500 bg-green-900/50 p-4 text-green-300 shadow-sm">
-                            <div className="flex items-center">
-                                <span className="mr-2 text-green-400">✓</span>
-                                {flash.success}
-                            </div>
-                        </div>
-                    )}
-
-                    {flash?.error && (
-                        <div className="mb-8 rounded-r-lg border-l-4 border-red-500 bg-red-900/50 p-4 text-red-300 shadow-sm">
-                            <div className="flex items-center">
-                                <span className="mr-2 text-red-400">⚠</span>
-                                {flash.error}
-                            </div>
-                        </div>
-                    )}
-
                     <article className="overflow-hidden rounded-2xl border border-gray-700 bg-gray-800 shadow-xl">
                         {/* Article Header */}
                         <div className="bg-gradient-to-r from-black to-gray-900 p-8 text-white">

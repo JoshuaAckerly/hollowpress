@@ -1,16 +1,7 @@
 import MainLayout from '@/layouts/main';
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
-
-interface PageProps {
-    [key: string]: unknown;
-    flash: {
-        success?: string;
-        error?: string;
-    };
-}
+import { Head, Link, useForm } from '@inertiajs/react';
 
 export default function DemoCreate() {
-    const { flash } = usePage<PageProps>().props;
     const { data, setData, post, processing, errors } = useForm({
         title: '',
         content: '',
@@ -46,25 +37,6 @@ export default function DemoCreate() {
                 </div>
 
                 <div className="mx-auto max-w-4xl px-6 py-12">
-                    {/* Flash Messages */}
-                    {flash?.success && (
-                        <div className="mb-8 rounded-r-lg border-l-4 border-green-500 bg-green-900/50 p-4 text-green-300 shadow-sm">
-                            <div className="flex items-center">
-                                <span className="mr-2 text-green-400">✓</span>
-                                {flash.success}
-                            </div>
-                        </div>
-                    )}
-
-                    {flash?.error && (
-                        <div className="mb-8 rounded-r-lg border-l-4 border-red-500 bg-red-900/50 p-4 text-red-300 shadow-sm">
-                            <div className="flex items-center">
-                                <span className="mr-2 text-red-400">⚠</span>
-                                {flash.error}
-                            </div>
-                        </div>
-                    )}
-
                     {/* Info Banner */}
                     <div className="mb-8 rounded-xl border border-blue-700 bg-blue-900/30 p-6">
                         <h3 className="mb-2 flex items-center font-semibold text-blue-300">
