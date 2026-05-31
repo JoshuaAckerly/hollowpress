@@ -77,7 +77,10 @@ class PostTagTest extends TestCase
 
         $response->assertStatus(200);
 
-        $posts = $response->original->getData()['page']['props']['posts']['data'];
+        /** @var mixed $pageData */
+        $pageData = $response->original->getData(); // @phpstan-ignore-line
+        /** @var array<array{title: string}> $posts */
+        $posts = $pageData['page']['props']['posts']['data']; // @phpstan-ignore-line
         $titles = array_column($posts, 'title');
 
         $this->assertContains('Music Post', $titles);
@@ -105,8 +108,11 @@ class PostTagTest extends TestCase
 
         $response->assertStatus(200);
 
-        $posts = $response->original->getData()['page']['props']['posts']['data'];
-        $titles = array_column($posts, 'title');
+        /** @var mixed $pageData2 */
+        $pageData2 = $response->original->getData(); // @phpstan-ignore-line
+        /** @var array<array{title: string}> $posts2 */
+        $posts2 = $pageData2['page']['props']['posts']['data']; // @phpstan-ignore-line
+        $titles = array_column($posts2, 'title');
 
         $this->assertContains('Music Post', $titles);
         $this->assertContains('Untagged Post', $titles);

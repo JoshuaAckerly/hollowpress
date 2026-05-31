@@ -44,6 +44,7 @@ class PostUploadTest extends TestCase
         $post = Post::where('title', 'Test with Image')->first();
         $this->assertNotNull($post);
         $this->assertNotNull($post->featured_image);
+        $this->assertIsString($post->featured_image);
         Storage::disk('public')->assertExists($post->featured_image);
     }
 
@@ -79,6 +80,7 @@ class PostUploadTest extends TestCase
         ]);
 
         $oldPath = $post->featured_image;
+        $this->assertIsString($oldPath);
         Storage::disk('public')->assertExists($oldPath);
 
         $this->put("/posts/{$post->id}", [
@@ -93,6 +95,7 @@ class PostUploadTest extends TestCase
 
         $post->refresh();
         $this->assertNotNull($post->featured_image);
+        $this->assertIsString($post->featured_image);
         $this->assertNotSame($oldPath, $post->featured_image);
         Storage::disk('public')->assertExists($post->featured_image);
     }
@@ -112,6 +115,7 @@ class PostUploadTest extends TestCase
         ]);
 
         $imagePath = $post->featured_image;
+        $this->assertIsString($imagePath);
         Storage::disk('public')->assertExists($imagePath);
 
         $this->delete("/posts/{$post->id}");

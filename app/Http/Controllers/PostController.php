@@ -70,8 +70,8 @@ class PostController extends Controller
             ->withQueryString();
 
         // DB::table() returns raw JSON strings; decode tags so the frontend gets an array
-        $paginatedPosts->getCollection()->transform(function (object $post): object {
-            if (isset($post->tags) && is_string($post->tags)) {
+        $paginatedPosts->getCollection()->transform(function (mixed $post): mixed {
+            if ($post instanceof \stdClass && isset($post->tags) && is_string($post->tags)) {
                 $post->tags = json_decode($post->tags, true);
             }
 
@@ -274,8 +274,8 @@ class PostController extends Controller
                 ->pluck('tags');
 
             return collect($rows)
-                ->flatMap(function (string $json): array {
-                    $decoded = json_decode($json, true);
+                ->flatMap(function (mixed $json): array {
+                    $decoded = json_decode(is_string($json) ? $json : '', true);
 
                     return is_array($decoded) ? $decoded : [];
                 })

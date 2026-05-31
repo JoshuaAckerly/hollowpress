@@ -9,7 +9,8 @@ class RssController extends Controller
 {
     public function feed(): Response
     {
-        $baseUrl = rtrim((string) config('app.url', 'https://hollowpress.graveyardjokes.com'), '/');
+        $configUrl = config('app.url');
+        $baseUrl = rtrim(is_string($configUrl) ? $configUrl : 'https://hollowpress.graveyardjokes.com', '/');
 
         $posts = Post::latest()->take(20)->get();
 

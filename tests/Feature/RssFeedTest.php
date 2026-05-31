@@ -28,7 +28,7 @@ class RssFeedTest extends TestCase
 
         $this->assertStringContainsString(
             'application/rss+xml',
-            $response->headers->get('Content-Type', '')
+            (string) $response->headers->get('Content-Type', '')
         );
     }
 
