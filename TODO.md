@@ -51,6 +51,9 @@
 ## Documentation
 - [ ] Component documentation
 
+## Automation
+- [ ] Add Dependabot (`.github/dependabot.yml`) for npm + composer automated dependency PRs
+
 ## Completed
 - [x] Search functionality (advanced scoring in PostController)
 - [x] Breadcrumbs navigation (Breadcrumb.tsx)
