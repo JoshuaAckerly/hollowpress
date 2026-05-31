@@ -1,5 +1,6 @@
 import MainLayout from '@/layouts/main';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { useRef, useState } from 'react';
 
 interface PageProps {
     [key: string]: unknown;
@@ -11,16 +12,45 @@ interface PageProps {
 
 export default function Create() {
     const { flash } = usePage<PageProps>().props;
-    const { data, setData, post, processing, errors } = useForm({
+    const form = useForm<{
+        title: string;
+        content: string;
+        author_name: string;
+        author_type: 'artist' | 'user';
+        featured_image: File | null;
+        tags: string[];
+    }>({
         title: '',
         content: '',
         author_name: '',
-        author_type: 'user' as 'artist' | 'user',
+        author_type: 'user',
+        featured_image: null,
+        tags: [],
     });
+
+    const { data, setData, errors, processing } = form;
+
+    const [tagsInput, setTagsInput] = useState('');
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] ?? null;
+        setData('featured_image', file);
+        if (file) {
+            setImagePreview(URL.createObjectURL(file));
+        } else {
+            setImagePreview(null);
+        }
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post('/posts');
+        const parsedTags = tagsInput
+            .split(',')
+            .map((t) => t.trim())
+            .filter(Boolean);
+        form.transform((d) => ({ ...d, tags: parsedTags })).post('/posts', { forceFormData: true });
     };
 
     return (
@@ -170,6 +200,60 @@ export default function Create() {
                                         )}
                                         <p className="text-sm text-gray-500">{data.content.length} characters</p>
                                     </div>
+                                </div>
+
+                                {/* Featured Image */}
+                                <div className="space-y-2">
+                                    <label className="mb-2 block text-sm font-semibold text-gray-200">Featured Image</label>
+                                    <div
+                                        className="cursor-pointer rounded-xl border-2 border-dashed border-gray-600 bg-gray-700 p-6 text-center transition-colors hover:border-gray-500"
+                                        onClick={() => fileInputRef.current?.click()}
+                                    >
+                                        {imagePreview ? (
+                                            <img src={imagePreview} alt="Preview" className="mx-auto max-h-48 rounded-lg object-cover" />
+                                        ) : (
+                                            <div className="text-gray-400">
+                                                <svg className="mx-auto mb-2 h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                </svg>
+                                                <p className="text-sm">Click to upload a featured image</p>
+                                                <p className="mt-1 text-xs text-gray-500">JPG, PNG, GIF or WebP — max 2MB</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        accept="image/jpeg,image/png,image/gif,image/webp"
+                                        onChange={handleImageChange}
+                                        className="hidden"
+                                    />
+                                    {errors.featured_image && (
+                                        <p className="mt-2 flex items-center text-sm text-red-400">
+                                            <span className="mr-1">⚠</span>
+                                            {errors.featured_image}
+                                        </p>
+                                    )}
+                                </div>
+
+                                {/* Tags */}
+                                <div className="space-y-2">
+                                    <label className="mb-2 block text-sm font-semibold text-gray-200">Tags</label>
+                                    <input
+                                        type="text"
+                                        value={tagsInput}
+                                        onChange={(e) => setTagsInput(e.target.value)}
+                                        onBlur={handleTagsBlur}
+                                        className="w-full rounded-xl border border-gray-600 bg-gray-700 px-4 py-3 text-gray-200 transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-gray-500"
+                                        placeholder="e.g. music, painting, poetry (comma-separated)"
+                                    />
+                                    <p className="text-xs text-gray-500">Separate tags with commas</p>
+                                    {errors.tags && (
+                                        <p className="mt-2 flex items-center text-sm text-red-400">
+                                            <span className="mr-1">⚠</span>
+                                            {errors.tags}
+                                        </p>
+                                    )}
                                 </div>
 
                                 {/* Action Buttons */}

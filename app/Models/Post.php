@@ -17,6 +17,13 @@ class Post extends Model
         'content',
         'author_name',
         'author_type',
+        'featured_image',
+        'tags',
+    ];
+
+    /** @var array<string, string> */
+    protected $casts = [
+        'tags' => 'array',
     ];
 
     /** @return HasMany<Comment, $this> */

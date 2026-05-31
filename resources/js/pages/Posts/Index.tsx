@@ -18,6 +18,8 @@ interface Post {
     author_type: 'artist' | 'user';
     created_at: string;
     is_demo?: boolean;
+    featured_image?: string | null;
+    tags?: string[] | null;
 }
 
 interface Props {
@@ -33,12 +35,14 @@ interface Props {
         q?: string;
         author?: string;
         category?: string;
+        tag?: string;
         date_from?: string;
         date_to?: string;
     };
     filterOptions?: {
         categories: string[];
         authors: string[];
+        tags: string[];
     };
 }
 
@@ -47,17 +51,19 @@ export default function Index({ posts, filters, filterOptions }: Props) {
     const [query, setQuery] = useState(filters?.q ?? '');
     const [author, setAuthor] = useState(filters?.author ?? '');
     const [category, setCategory] = useState(filters?.category ?? '');
+    const [tag, setTag] = useState(filters?.tag ?? '');
     const [dateFrom, setDateFrom] = useState(filters?.date_from ?? '');
     const [dateTo, setDateTo] = useState(filters?.date_to ?? '');
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    const search = (q: string, auth: string, cat: string, from: string, to: string) => {
+    const search = (q: string, auth: string, cat: string, t: string, from: string, to: string) => {
         router.get(
             '/posts',
             {
                 q: q || undefined,
                 author: auth || undefined,
                 category: cat || undefined,
+                tag: t || undefined,
                 date_from: from || undefined,
                 date_to: to || undefined,
             },
@@ -69,7 +75,7 @@ export default function Index({ posts, filters, filterOptions }: Props) {
         setQuery(value);
         if (debounceRef.current) clearTimeout(debounceRef.current);
         debounceRef.current = setTimeout(() => {
-            search(value, author, category, dateFrom, dateTo);
+            search(value, author, category, tag, dateFrom, dateTo);
         }, 450);
     };
 
@@ -139,7 +145,7 @@ export default function Index({ posts, filters, filterOptions }: Props) {
     const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (debounceRef.current) clearTimeout(debounceRef.current);
-        search(query, author, category, dateFrom, dateTo);
+        search(query, author, category, tag, dateFrom, dateTo);
     };
 
     const clearFilters = () => {
@@ -147,6 +153,7 @@ export default function Index({ posts, filters, filterOptions }: Props) {
         setQuery('');
         setAuthor('');
         setCategory('');
+        setTag('');
         setDateFrom('');
         setDateTo('');
         router.get('/posts', {}, { preserveState: true, preserveScroll: true, replace: true });
@@ -214,14 +221,14 @@ export default function Index({ posts, filters, filterOptions }: Props) {
                             <button type="submit" className="btn btn-primary">
                                 Search
                             </button>
-                            {(filters?.q || filters?.author || filters?.category || filters?.date_from || filters?.date_to) && (
+                            {(filters?.q || filters?.author || filters?.category || filters?.tag || filters?.date_from || filters?.date_to) && (
                                 <button type="button" onClick={clearFilters} className="btn btn-outline">
                                     Clear
                                 </button>
                             )}
                         </form>
 
-                        <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
+                        <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
                             <select
                                 value={category}
                                 onChange={(event) => setCategory(event.target.value)}
@@ -244,6 +251,19 @@ export default function Index({ posts, filters, filterOptions }: Props) {
                                 {filterOptions?.authors.map((item) => (
                                     <option key={item} value={item}>
                                         {item}
+                                    </option>
+                                ))}
+                            </select>
+
+                            <select
+                                value={tag}
+                                onChange={(event) => setTag(event.target.value)}
+                                className="rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-gray-100"
+                            >
+                                <option value="">All Tags</option>
+                                {filterOptions?.tags?.map((item) => (
+                                    <option key={item} value={item}>
+                                        #{item}
                                     </option>
                                 ))}
                             </select>
@@ -293,6 +313,17 @@ export default function Index({ posts, filters, filterOptions }: Props) {
                                 key={post.id}
                                 className="group overflow-hidden rounded-2xl border border-gray-700 bg-gray-800 shadow-lg transition-all duration-500 hover:border-gray-600 hover:shadow-2xl"
                             >
+                                {/* Featured Image */}
+                                {post.featured_image && (
+                                    <Link href={`/posts/${post.id}`}>
+                                        <img
+                                            src={`/storage/${post.featured_image}`}
+                                            alt={post.title}
+                                            className="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                        />
+                                    </Link>
+                                )}
+
                                 {/* Post Header */}
                                 <div className="relative p-6 pb-4">
                                     {/* Demo Badge */}
@@ -336,6 +367,24 @@ export default function Index({ posts, filters, filterOptions }: Props) {
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            {post.tags && post.tags.length > 0 && (
+                                                <div className="mt-3 flex flex-wrap gap-1">
+                                                    {post.tags.slice(0, 3).map((t) => (
+                                                        <button
+                                                            key={t}
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setTag(t);
+                                                                search(query, author, category, t, dateFrom, dateTo);
+                                                            }}
+                                                            className="rounded-full border border-gray-600/40 bg-gray-700/50 px-2 py-0.5 text-xs text-gray-400 transition-colors hover:border-gray-500 hover:text-gray-300"
+                                                        >
+                                                            #{t}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
 

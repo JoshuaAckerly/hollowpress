@@ -65,14 +65,17 @@ Route::get('/dashboard', function () {
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
 Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('posts.comments.store');
-Route::patch('/dashboard/comments/{comment}/approve', [CommentController::class, 'approve'])
-    ->middleware(EnsureDashboardAdminToken::class)
-    ->name('dashboard.comments.approve');
-Route::patch('/dashboard/comments/{comment}/unapprove', [CommentController::class, 'unapprove'])
-    ->middleware(EnsureDashboardAdminToken::class)
-    ->name('dashboard.comments.unapprove');
-Route::get('/posts/{post}/edit', function ($post) {
-    return redirect()->route('posts.show', ['post' => $post], 301);
+
+// Posts CRUD (admin only)
+Route::middleware(EnsureDashboardAdminToken::class)->group(function () {
+    Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+    Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
+    Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+
+    Route::patch('/dashboard/comments/{comment}/approve', [CommentController::class, 'approve'])->name('dashboard.comments.approve');
+    Route::patch('/dashboard/comments/{comment}/unapprove', [CommentController::class, 'unapprove'])->name('dashboard.comments.unapprove');
 });
 
 // Demo posts routes (create/edit/delete without auth)

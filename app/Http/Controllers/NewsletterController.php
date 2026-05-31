@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewsletterWelcome;
 use App\Models\NewsletterSubscriber;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 
 class NewsletterController extends Controller
@@ -37,11 +39,15 @@ class NewsletterController extends Controller
 
         RateLimiter::hit($key, 3600);
 
-        NewsletterSubscriber::create([
+        $subscriber = NewsletterSubscriber::create([
             'email' => $request->email,
             'subscribed_at' => now(),
             'unsubscribe_token' => NewsletterSubscriber::generateToken(),
         ]);
+
+        Mail::to($subscriber->email)->send(new NewsletterWelcome($subscriber));
+
+        Log::channel('hollowpress')->info('Newsletter subscription', ['email' => $subscriber->email]);
 
         return response()->json([
             'success' => true,
@@ -59,7 +65,7 @@ class NewsletterController extends Controller
 
         $subscriber->delete();
 
-        Log::info('Newsletter unsubscription', ['email' => $subscriber->email]);
+        Log::channel('hollowpress')->info('Newsletter unsubscription', ['email' => $subscriber->email]);
 
         return redirect()->route('home')->with('success', 'You have been unsubscribed successfully.');
     }

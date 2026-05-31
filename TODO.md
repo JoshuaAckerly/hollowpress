@@ -1,22 +1,22 @@
 # TODO
 
 ## Features
-- [ ] File upload functionality (media attachments for posts)
+- [x] File upload functionality (featured image for posts)
 - [ ] Analytics integration
-- [ ] Email notifications
+- [x] Email notifications (contact form + newsletter welcome)
 - [ ] Related posts feature
 - [ ] Content categorization improvements
-- [ ] Projects archive (separate from blog posts)
-- [ ] RSS feed for blog
-- [ ] Pagination components (if needed beyond current implementation)
+- [x] Projects archive (separate from blog posts)
+- [x] RSS feed for blog
+- [x] Pagination components (if needed beyond current implementation)
 
 ## Development
 - [x] Set up CI/CD pipeline
   - CI workflow fixed (env order, sequenced jobs)
   - CD workflow created (`.github/workflows/cd.yml`)
   - GitHub secrets set: `PROD_SSH_HOST`, `PROD_SSH_USER`, `PROD_SSH_KEY`
-- [ ] Implement caching strategy
-- [ ] Add logging configuration
+- [x] Implement caching strategy (artist list + post filter options)
+- [x] Add logging configuration (hollowpress channel, daily 30-day retention)
 
 ## UI/UX
 - [ ] Add loading states
@@ -40,3 +40,6 @@
 - [x] Dark mode toggle (use-appearance.tsx)
 - [x] Filtering/Sorting options
 - [x] Update documentation to reflect Linux backend setup
+- [x] Related posts (Post::related() method + RelatedPosts.tsx component)
+- [x] Post tags (JSON array, tag filter on posts index)
+- [x] Featured image uploads on posts (public disk storage)

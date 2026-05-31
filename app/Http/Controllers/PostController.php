@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -19,22 +20,31 @@ class PostController extends Controller
         $search = trim((string) $request->query('q', ''));
         $author = trim((string) $request->query('author', ''));
         $category = trim((string) $request->query('category', ''));
+        $tag = trim((string) $request->query('tag', ''));
         $dateFrom = $request->query('date_from');
         $dateTo = $request->query('date_to');
         $perPage = 9;
 
         $postsQuery = DB::table('posts')
-            ->select('id', 'title', 'author_name', 'author_type', 'created_at')
+            ->select('id', 'title', 'author_name', 'author_type', 'created_at', 'featured_image', 'tags')
             ->selectRaw('LEFT(content, 800) as content')
             ->selectRaw('0 as is_demo');
 
         $demoPostsQuery = DB::table('demo_posts')
             ->select('id', 'title', 'author_name', 'author_type', 'created_at')
+            ->selectRaw('NULL as featured_image')
+            ->selectRaw('NULL as tags')
             ->selectRaw('LEFT(content, 800) as content')
             ->selectRaw('1 as is_demo');
 
         $this->applyFacetFilters($postsQuery, $author, $category, $dateFrom, $dateTo);
         $this->applyFacetFilters($demoPostsQuery, $author, $category, $dateFrom, $dateTo);
+
+        if ($tag !== '') {
+            $postsQuery->whereRaw('JSON_CONTAINS(tags, ?)', [json_encode($tag)]);
+            // demo_posts have no tags; exclude them when filtering by tag
+            $demoPostsQuery->whereRaw('1 = 0');
+        }
 
         if ($search !== '') {
             $columns = ['title', 'content', 'author_name'];
@@ -64,12 +74,14 @@ class PostController extends Controller
                 'q' => $search,
                 'author' => $author,
                 'category' => $category,
+                'tag' => $tag,
                 'date_from' => $dateFrom,
                 'date_to' => $dateTo,
             ],
             'filterOptions' => [
                 'categories' => ['artist', 'user'],
                 'authors' => $this->getAuthorFilterOptions(),
+                'tags' => $this->getTagFilterOptions(),
             ],
         ]);
     }
@@ -240,6 +252,33 @@ class PostController extends Controller
         return $result;
     }
 
+    /**
+     * @return array<int, string>
+     */
+    private function getTagFilterOptions(): array
+    {
+        /** @var array<int, string> $result */
+        $result = Cache::remember('posts.tag_filter_options', now()->addMinutes(10), function () {
+            $rows = DB::table('posts')
+                ->whereNotNull('tags')
+                ->pluck('tags');
+
+            return collect($rows)
+                ->flatMap(function (string $json): array {
+                    $decoded = json_decode($json, true);
+
+                    return is_array($decoded) ? $decoded : [];
+                })
+                ->filter(fn ($tag) => is_string($tag) && $tag !== '')
+                ->unique()
+                ->sort()
+                ->values()
+                ->all();
+        });
+
+        return $result;
+    }
+
     public function create(): Response
     {
         return Inertia::render('Posts/Create');
@@ -248,7 +287,16 @@ class PostController extends Controller
     public function store(StorePostRequest $request): RedirectResponse
     {
         try {
-            Post::create($request->validated());
+            $validated = $request->validated();
+
+            if ($request->hasFile('featured_image')) {
+                /** @var \Illuminate\Http\UploadedFile $file */
+                $file = $request->file('featured_image');
+                $validated['featured_image'] = $file->store('posts', 'public');
+            }
+
+            Post::create($validated);
+            Cache::forget('posts.tag_filter_options');
 
             return redirect()->route('posts.index')->with('success', 'Post created successfully!');
         } catch (\Exception $e) {
@@ -281,7 +329,21 @@ class PostController extends Controller
     public function update(StorePostRequest $request, Post $post): RedirectResponse
     {
         try {
-            $post->update($request->validated());
+            $validated = $request->validated();
+
+            if ($request->hasFile('featured_image')) {
+                if ($post->featured_image) {
+                    Storage::disk('public')->delete($post->featured_image);
+                }
+                /** @var \Illuminate\Http\UploadedFile $file */
+                $file = $request->file('featured_image');
+                $validated['featured_image'] = $file->store('posts', 'public');
+            } else {
+                unset($validated['featured_image']);
+            }
+
+            $post->update($validated);
+            Cache::forget('posts.tag_filter_options');
 
             return redirect()->route('posts.index')->with('success', 'Post updated successfully!');
         } catch (\Exception $e) {
@@ -292,7 +354,12 @@ class PostController extends Controller
     public function destroy(Post $post): RedirectResponse
     {
         try {
+            if ($post->featured_image) {
+                Storage::disk('public')->delete($post->featured_image);
+            }
+
             $post->delete();
+            Cache::forget('posts.tag_filter_options');
 
             return redirect()->route('posts.index')->with('success', 'Post deleted successfully!');
         } catch (\Exception $e) {

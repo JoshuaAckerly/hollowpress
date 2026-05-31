@@ -13,7 +13,7 @@ class PostModelTest extends TestCase
     public function test_post_has_fillable_attributes(): void
     {
         $post = new Post;
-        $fillable = ['title', 'content', 'author_name', 'author_type'];
+        $fillable = ['title', 'content', 'author_name', 'author_type', 'featured_image', 'tags'];
 
         $this->assertEquals($fillable, $post->getFillable());
     }

@@ -61,4 +61,6 @@ return [
         'secret' => env('HCAPTCHA_SECRET'),
     ],
 
+    'admin_email' => env('ADMIN_EMAIL'),
+
 ];

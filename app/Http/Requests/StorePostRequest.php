@@ -22,6 +22,9 @@ class StorePostRequest extends FormRequest
             'content' => 'required|string|min:10',
             'author_name' => 'required|string|max:255',
             'author_type' => 'required|in:artist,user',
+            'featured_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
+            'tags' => 'nullable|array',
+            'tags.*' => 'string|max:50',
         ];
     }
 
@@ -36,6 +39,11 @@ class StorePostRequest extends FormRequest
             'author_name.required' => 'The author name field is required.',
             'author_type.required' => 'Please select an author type.',
             'author_type.in' => 'The author type must be either artist or user.',
+            'featured_image.image' => 'The featured image must be an image file.',
+            'featured_image.mimes' => 'The featured image must be a JPG, PNG, GIF, or WebP.',
+            'featured_image.max' => 'The featured image may not be larger than 2MB.',
+            'tags.array' => 'Tags must be an array.',
+            'tags.*.max' => 'Each tag may not be greater than 50 characters.',
         ];
     }
 }

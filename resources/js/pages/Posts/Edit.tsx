@@ -1,5 +1,6 @@
 import MainLayout from '@/layouts/main';
 import { Head, useForm, usePage } from '@inertiajs/react';
+import { useRef, useState } from 'react';
 
 interface PageProps {
     [key: string]: unknown;
@@ -15,6 +16,8 @@ interface Post {
     content: string;
     author_name: string;
     author_type: 'artist' | 'user';
+    featured_image: string | null;
+    tags: string[] | null;
 }
 
 interface Props {
@@ -23,16 +26,45 @@ interface Props {
 
 export default function Edit({ post }: Props) {
     const { flash } = usePage<PageProps>().props;
-    const { data, setData, put, processing, errors } = useForm({
+    const form = useForm<{
+        title: string;
+        content: string;
+        author_name: string;
+        author_type: 'artist' | 'user';
+        featured_image: File | null;
+        tags: string[];
+    }>({
         title: post.title,
         content: post.content,
         author_name: post.author_name,
         author_type: post.author_type,
+        featured_image: null,
+        tags: post.tags ?? [],
     });
+
+    const { data, setData, errors, processing } = form;
+
+    const [tagsInput, setTagsInput] = useState((post.tags ?? []).join(', '));
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] ?? null;
+        setData('featured_image', file);
+        if (file) {
+            setImagePreview(URL.createObjectURL(file));
+        } else {
+            setImagePreview(null);
+        }
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        put(`/posts/${post.id}`);
+        const parsedTags = tagsInput
+            .split(',')
+            .map((t) => t.trim())
+            .filter(Boolean);
+        form.transform((d) => ({ ...d, tags: parsedTags })).put(`/posts/${post.id}`, { forceFormData: true });
     };
 
     return (
@@ -93,6 +125,49 @@ export default function Edit({ post }: Props) {
                             required
                         />
                         {errors.content && <p className="text-sm text-red-500">{errors.content}</p>}
+                    </div>
+
+                    {/* Featured Image */}
+                    <div>
+                        <label className="mb-1 block text-sm font-medium">Featured Image</label>
+                        {post.featured_image && !imagePreview && (
+                            <div className="mb-2">
+                                <img
+                                    src={`/storage/${post.featured_image}`}
+                                    alt="Current featured image"
+                                    className="h-32 rounded object-cover"
+                                />
+                                <p className="mt-1 text-xs text-gray-500">Current image — upload a new one to replace it</p>
+                            </div>
+                        )}
+                        {imagePreview && (
+                            <div className="mb-2">
+                                <img src={imagePreview} alt="New image preview" className="h-32 rounded object-cover" />
+                            </div>
+                        )}
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/jpeg,image/png,image/gif,image/webp"
+                            onChange={handleImageChange}
+                            className="w-full rounded border px-3 py-2 text-sm"
+                        />
+                        <p className="mt-1 text-xs text-gray-500">JPG, PNG, GIF or WebP — max 2MB</p>
+                        {errors.featured_image && <p className="text-sm text-red-500">{errors.featured_image}</p>}
+                    </div>
+
+                    {/* Tags */}
+                    <div>
+                        <label className="mb-1 block text-sm font-medium">Tags</label>
+                        <input
+                            type="text"
+                            value={tagsInput}
+                            onChange={(e) => setTagsInput(e.target.value)}
+                            className="w-full rounded border px-3 py-2"
+                            placeholder="e.g. music, painting, poetry (comma-separated)"
+                        />
+                        <p className="mt-1 text-xs text-gray-500">Separate tags with commas</p>
+                        {errors.tags && <p className="text-sm text-red-500">{errors.tags}</p>}
                     </div>
 
                     <div className="flex gap-2">

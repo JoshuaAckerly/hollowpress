@@ -118,6 +118,14 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'hollowpress' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/hollowpress.log'),
+            'level' => 'info',
+            'days' => 30,
+            'replace_placeholders' => true,
+        ],
+
         'null' => [
             'driver' => 'monolog',
             'handler' => NullHandler::class,
