@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             PostSeeder::class,
             ArtistSeeder::class,
             CaseStudySeeder::class,
+            ProjectSeeder::class,
         ]);
     }
 }
