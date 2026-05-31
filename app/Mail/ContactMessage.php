@@ -21,7 +21,7 @@ class ContactMessage extends Mailable
     {
         return new Envelope(
             replyTo: [$this->formData['email']],
-            subject: 'Contact Form: ' . $this->formData['subject'],
+            subject: 'Contact Form: '.$this->formData['subject'],
         );
     }
 

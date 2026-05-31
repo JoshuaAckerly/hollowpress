@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Artist;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
@@ -13,7 +14,7 @@ class ArtistController extends Controller
     public function index(): Response|RedirectResponse
     {
         try {
-            /** @var \Illuminate\Database\Eloquent\Collection<int, Artist> $artists */
+            /** @var Collection<int, Artist> $artists */
             $artists = Cache::remember('artists.all', now()->addMinutes(15), fn () => Artist::with(['albums', 'events'])->get());
 
             return Inertia::render('Artists/Index', [

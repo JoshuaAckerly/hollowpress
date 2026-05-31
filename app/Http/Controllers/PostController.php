@@ -7,6 +7,7 @@ use App\Models\Post;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -290,7 +291,7 @@ class PostController extends Controller
             $validated = $request->validated();
 
             if ($request->hasFile('featured_image')) {
-                /** @var \Illuminate\Http\UploadedFile $file */
+                /** @var UploadedFile $file */
                 $file = $request->file('featured_image');
                 $validated['featured_image'] = $file->store('posts', 'public');
             }
@@ -335,7 +336,7 @@ class PostController extends Controller
                 if ($post->featured_image) {
                     Storage::disk('public')->delete($post->featured_image);
                 }
-                /** @var \Illuminate\Http\UploadedFile $file */
+                /** @var UploadedFile $file */
                 $file = $request->file('featured_image');
                 $validated['featured_image'] = $file->store('posts', 'public');
             } else {
