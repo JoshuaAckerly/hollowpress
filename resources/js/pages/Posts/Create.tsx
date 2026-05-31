@@ -44,13 +44,22 @@ export default function Create() {
         }
     };
 
+    const handleTagsBlur = () => {
+        const parsed = tagsInput
+            .split(',')
+            .map((t) => t.trim())
+            .filter(Boolean);
+        setData('tags', parsed);
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const parsedTags = tagsInput
             .split(',')
             .map((t) => t.trim())
             .filter(Boolean);
-        form.transform((d) => ({ ...d, tags: parsedTags })).post('/posts', { forceFormData: true });
+        form.transform((d) => ({ ...d, tags: parsedTags }));
+        form.post('/posts', { forceFormData: true });
     };
 
     return (

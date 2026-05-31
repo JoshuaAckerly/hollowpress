@@ -64,7 +64,8 @@ export default function Edit({ post }: Props) {
             .split(',')
             .map((t) => t.trim())
             .filter(Boolean);
-        form.transform((d) => ({ ...d, tags: parsedTags })).put(`/posts/${post.id}`, { forceFormData: true });
+        form.transform((d) => ({ ...d, tags: parsedTags }));
+        form.put(`/posts/${post.id}`, { forceFormData: true });
     };
 
     return (
