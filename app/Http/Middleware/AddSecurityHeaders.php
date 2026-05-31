@@ -19,14 +19,17 @@ class AddSecurityHeaders
         $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
         $response->headers->set('X-Content-Type-Options', 'nosniff');
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
-        $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+        $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(), usb=()');
+        $response->headers->set('X-Permitted-Cross-Domain-Policies', 'none');
+        $response->headers->set('Cross-Origin-Opener-Policy', 'same-origin');
+        $response->headers->set('Cross-Origin-Resource-Policy', 'same-site');
+        $response->headers->remove('X-Powered-By');
 
         if ($request->isSecure()) {
-            $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+            $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
         }
 
-        // @phpstan-ignore-next-line larastan.noEnvCallsOutsideOfConfig
-        $isNonProd = app()->environment('local', 'testing') || env('VITE_SERVER_ENV') !== 'production';
+        $isNonProd = app()->environment('local', 'testing');
 
         $csp = "default-src 'self'";
         if ($isNonProd) {
@@ -36,19 +39,23 @@ class AddSecurityHeaders
         if ($isNonProd) {
             $csp .= ' http:';
         }
-        $csp .= "; style-src 'self' 'unsafe-inline'";
+        $csp .= "; style-src 'self' 'unsafe-inline' https://fonts.bunny.net";
         if ($isNonProd) {
             $csp .= ' http:';
         }
-        $csp .= " https://fonts.bunny.net; img-src 'self' data: https:";
+        $csp .= "; img-src 'self' data: https:";
         if ($isNonProd) {
             $csp .= ' http:';
         }
-        $csp .= "; font-src 'self' data: https:";
+        $csp .= "; font-src 'self' data: https://fonts.bunny.net";
         if ($isNonProd) {
             $csp .= ' http:';
         }
-        $csp .= " https://fonts.bunny.net; connect-src 'self' https: http: ws: wss:; frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self';";
+        $csp .= "; connect-src 'self' https:";
+        if ($isNonProd) {
+            $csp .= ' http: ws: wss:';
+        }
+        $csp .= "; frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self';";
 
         $response->headers->set('Content-Security-Policy', $csp);
 
