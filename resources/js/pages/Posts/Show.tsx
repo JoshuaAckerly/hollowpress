@@ -99,9 +99,7 @@ export default function Show({ post, comments, relatedPosts }: Props) {
                 <meta property="og:description" content={excerpt} />
                 <meta property="og:type" content="article" />
                 <meta property="og:url" content={`https://hollowpress.graveyardjokes.com/posts/${post.id}`} />
-                {post.featured_image && (
-                    <meta property="og:image" content={`/storage/${post.featured_image}`} />
-                )}
+                {post.featured_image && <meta property="og:image" content={`/storage/${post.featured_image}`} />}
                 <meta property="article:author" content={post.author_name} />
                 <meta property="article:published_time" content={post.created_at} />
 
@@ -196,11 +194,7 @@ export default function Show({ post, comments, relatedPosts }: Props) {
                         {/* Featured Image */}
                         {post.featured_image && (
                             <div className="overflow-hidden">
-                                <img
-                                    src={`/storage/${post.featured_image}`}
-                                    alt={post.title}
-                                    className="h-64 w-full object-cover md:h-96"
-                                />
+                                <img src={`/storage/${post.featured_image}`} alt={post.title} className="h-64 w-full object-cover md:h-96" />
                             </div>
                         )}
 

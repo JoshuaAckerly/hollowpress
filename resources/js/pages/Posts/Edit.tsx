@@ -132,11 +132,7 @@ export default function Edit({ post }: Props) {
                         <label className="mb-1 block text-sm font-medium">Featured Image</label>
                         {post.featured_image && !imagePreview && (
                             <div className="mb-2">
-                                <img
-                                    src={`/storage/${post.featured_image}`}
-                                    alt="Current featured image"
-                                    className="h-32 rounded object-cover"
-                                />
+                                <img src={`/storage/${post.featured_image}`} alt="Current featured image" className="h-32 rounded object-cover" />
                                 <p className="mt-1 text-xs text-gray-500">Current image — upload a new one to replace it</p>
                             </div>
                         )}
