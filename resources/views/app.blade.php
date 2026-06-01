@@ -21,7 +21,7 @@
 
         {{-- Background styling is handled in `resources/css/app.css` now --}}
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <title data-inertia>{{ config('app.name', 'Laravel') }}</title>
 
         @if(config('services.google_analytics.tracking_id'))
         <script async src="https://www.googletagmanager.com/gtag/js?id={{ config('services.google_analytics.tracking_id') }}"></script>
