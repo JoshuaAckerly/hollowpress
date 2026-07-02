@@ -66,7 +66,7 @@ class SearchRelevanceTest extends TestCase
         $response = $this->get('/posts?q=Signal&category=artist');
 
         $response->assertOk();
-        $response->assertSee('q=Signal&amp;category=artist&amp;page=2', false);
+        $response->assertSee('q=Signal&category=artist&page=2', false);
     }
 
     public function test_posts_search_pagination_keeps_full_filter_query_string(): void
@@ -188,7 +188,7 @@ class SearchRelevanceTest extends TestCase
         $response = $this->get('/case-studies?q=Atlas');
 
         $response->assertOk();
-        $response->assertSee('q=Atlas&amp;page=2', false);
+        $response->assertSee('q=Atlas&page=2', false);
     }
 
     public function test_case_studies_search_pagination_keeps_full_filter_query_string(): void
