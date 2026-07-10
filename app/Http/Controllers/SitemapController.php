@@ -26,6 +26,9 @@ class SitemapController extends Controller
             ['loc' => '/projects', 'priority' => '0.8', 'changefreq' => 'weekly'],
             ['loc' => '/sponsored', 'priority' => '0.6', 'changefreq' => 'weekly'],
             ['loc' => '/demo/posts/create', 'priority' => '0.5', 'changefreq' => 'monthly'],
+            ['loc' => '/privacy', 'priority' => '0.3', 'changefreq' => 'yearly'],
+            ['loc' => '/terms', 'priority' => '0.3', 'changefreq' => 'yearly'],
+            ['loc' => '/cookies', 'priority' => '0.3', 'changefreq' => 'yearly'],
         ];
 
         // Get all posts

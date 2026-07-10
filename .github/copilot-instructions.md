@@ -5,9 +5,9 @@ Laravel + React CMS/blog boilerplate with artist profile management. Functions a
 
 ## Tech Stack
 - **Backend**: Laravel 12, PHP 8.2+, Sanctum (session), Spatie Sitemap
-- **Frontend**: React 19, TypeScript, Inertia.js 2, Tailwind CSS 4, Radix UI, Headless UI, Vite
+- **Frontend**: React 19, TypeScript, Inertia.js 3, Tailwind CSS 4, Radix UI, Headless UI, Vite
 - **Auth**: Laravel Breeze + hCaptcha on registration, custom `EnsureDashboardAdminToken` middleware for dashboard write actions
-- **Testing**: PHPUnit 11 (`php artisan test`)
+- **Testing**: PHPUnit 11 (`php artisan test`), Vitest + React Testing Library
 - **Storage**: MySQL (primary), file cache, database queue
 
 ## Architecture
@@ -53,6 +53,7 @@ Laravel + React CMS/blog boilerplate with artist profile management. Functions a
 ## Build & Test
 ```bash
 php artisan test
+npm run test            # Vitest
 npm run build:ssr
 npm run lint
 ./vendor/bin/pint
