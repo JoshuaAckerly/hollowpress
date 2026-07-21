@@ -29,7 +29,11 @@ export default defineConfig(({ mode }) => {
             host: '0.0.0.0',
             origin: 'http://hollowpress.graveyardjokes.local:8082',
             cors: {
-                origin: 'http://hollowpress.graveyardjokes.local',
+                origin: [
+                    'http://hollowpress.graveyardjokes.local',
+                    'http://hollowpress.graveyardjokes.local:8001',
+                    'http://localhost:8001',
+                ],
                 credentials: true
             },
             allowedHosts: ['hollowpress.graveyardjokes.local'],
